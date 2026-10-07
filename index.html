@@ -201,7 +201,7 @@
     <div class="settings-inner">
       <h3 style="font-weight:400; margin-bottom:0.4em; opacity:0.7">下班时间</h3>
       <label>
-        <input type="time" id="endTime" value="18:00">
+        <input type="time" id="endTime" value="17:00">
       </label>
       <div>
         <button id="saveBtn">保存</button>
@@ -230,8 +230,8 @@
   function loadConfig() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : { endTime: '18:00' };
-    } catch { return { endTime: '18:00' }; }
+      return raw ? JSON.parse(raw) : { endTime: '17:00' };
+    } catch { return { endTime: '17:00' }; }
   }
 
   function saveConfig() {
