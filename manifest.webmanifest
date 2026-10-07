@@ -1,0 +1,19 @@
+{
+  "name": "Desk Clock",
+  "short_name": "Clock",
+  "description": "极简桌面时钟 · 下班倒计时",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#080808",
+  "theme_color": "#080808",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

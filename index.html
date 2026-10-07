@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#080808">
+<title>Desk Clock</title>
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    overscroll-behavior: none;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  body {
+    background: #080808;
+    color: #f0f0f0;
+    font-family: -apple-system, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    /* 防烧屏：极缓慢的整体亮度呼吸 */
+    animation: breathe 18s ease-in-out infinite;
+  }
+
+  @keyframes breathe {
+    0%, 100% { filter: brightness(1); }
+    50%      { filter: brightness(0.94); }
+  }
+
+  /* 主时钟数字 */
+  .time-face {
+    display: flex;
+    align-items: baseline;
+    gap: 0.02em;
+    line-height: 1;
+    font-size: clamp(22vw, 30vh, 38vw);
+    font-weight: 200;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+    will-change: contents;
+  }
+
+  .time-face .num {
+    display: inline-block;
+    min-width: 1.45em;
+    text-align: center;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    position: relative;
+  }
+  .time-face .num.changing {
+    opacity: 0.6;
+    transform: scale(0.985);
+  }
+
+  .colon {
+    display: inline-block;
+    width: 0.3em;
+    text-align: center;
+    opacity: 0.85;
+    animation: blink 1.6s infinite ease-in-out;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 0.9; }
+    50%      { opacity: 0.25; }
+  }
+
+  /* 日期 */
+  .date-line {
+    margin-top: 0.6em;
+    font-size: clamp(4vw, 5vh, 6vw);
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    opacity: 0.75;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+  .date-line .dot { margin: 0 0.5em; opacity: 0.35; }
+
+  /* 下班倒计时 */
+  .countdown {
+    margin-top: 0.7em;
+    padding: 0.42em 1.4em;
+    font-size: clamp(3.5vw, 4.2vh, 5vw);
+    font-weight: 300;
+    border: 1px solid #262626;
+    border-radius: 999px;
+    opacity: 0.92;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+    background: rgba(255,255,255,0.015);
+    transition: opacity 0.25s ease;
+  }
+  .countdown.over { opacity: 0.4; }
+
+  /* 设置按钮（隐藏交互入口） */
+  .settings-trigger {
+    position: fixed;
+    top: 14px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .settings-trigger:hover,
+  .settings-trigger:focus-visible { opacity: 1; }
+  .settings-trigger::before {
+    content: '⚙';
+    font-size: 18px;
+    color: #666;
+  }
+
+  /* 极简设置浮窗 */
+  .settings-panel {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 4.5vw;
+  }
+  .settings-panel.open { display: flex; }
+  .settings-inner { text-align: center; }
+  .settings-inner label {
+    display: block;
+    margin: 0.6em 0;
+    opacity: 0.8;
+    font-size: 4vw;
+  }
+  .settings-inner input {
+    background: transparent;
+    border: 1px solid #333;
+    color: inherit;
+    font-size: 5vw;
+    text-align: center;
+    padding: 0.25em 0.6em;
+    border-radius: 4px;
+    width: 6em;
+  }
+  .settings-inner button {
+    margin-top: 1.2em;
+    background: transparent;
+    color: inherit;
+    border: 1px solid #444;
+    padding: 0.35em 1.2em;
+    border-radius: 999px;
+    font-size: 4vw;
+    cursor: pointer;
+  }
+  .settings-inner button:hover { background: rgba(255,255,255,0.05); }
+
+  /* 暗色模式下的细微纹理（防 OLED 图像残留） */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(255,255,255,0.012) 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(255,255,255,0.008) 0%, transparent 35%);
+    mix-blend-mode: screen;
+  }
+
+  @media (orientation: landscape) {
+    .time-face { font-size: clamp(20vw, 35vh, 34vw); }
+    .date-line { font-size: clamp(2.5vw, 3.5vh, 4vw); }
+    .countdown  { font-size: clamp(2.5vw, 3.5vh, 4vw); }
+  }
+</style>
+</head>
+<body>
+
+  <button class="settings-trigger" id="settingsBtn" aria-label="设置下班时间"></button>
+
+  <main>
+    <div class="time-face">
+      <span class="num" id="hour">--</span>
+      <span class="colon">:</span>
+      <span class="num" id="minute">--</span>
+    </div>
+
+    <div class="date-line" id="dateLine">--</div>
+
+    <div class="countdown" id="countdown">--</div>
+  </main>
+
+  <div class="settings-panel" id="panel">
+    <div class="settings-inner">
+      <h3 style="font-weight:400; margin-bottom:0.4em; opacity:0.7">下班时间</h3>
+      <label>
+        <input type="time" id="endTime" value="18:00">
+      </label>
+      <div>
+        <button id="saveBtn">保存</button>
+        <button id="cancelBtn" style="margin-left:0.4em">取消</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+(() => {
+  // ── 元素 ──
+  const $hour = document.getElementById('hour');
+  const $minute = document.getElementById('minute');
+  const $dateLine = document.getElementById('dateLine');
+  const $countdown = document.getElementById('countdown');
+  const $panel = document.getElementById('panel');
+  const $endTime = document.getElementById('endTime');
+  const $settingsBtn = document.getElementById('settingsBtn');
+  const $saveBtn = document.getElementById('saveBtn');
+  const $cancelBtn = document.getElementById('cancelBtn');
+
+  // ── 状态 ──
+  const STORAGE_KEY = 'deskclock_config';
+  let config = loadConfig();
+
+  function loadConfig() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : { endTime: '18:00' };
+    } catch { return { endTime: '18:00' }; }
+  }
+
+  function saveConfig() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(config)); } catch {}
+  }
+
+  // ── 工具 ──
+  const pad2 = n => String(n).padStart(2, '0');
+
+  function setNum(el, next) {
+    const current = el.textContent;
+    if (current === next) return;
+    el.classList.add('changing');
+    el.textContent = next;
+    setTimeout(() => el.classList.remove('changing'), 200);
+  }
+
+  // ── 日期格式化 ──
+  function updateDate(now) {
+    const year  = now.getFullYear();
+    const month = now.getMonth() + 1;
+    const day   = now.getDate();
+    const weekDays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+    const week = weekDays[now.getDay()];
+    $dateLine.innerHTML =
+      '<span>' + year + '</span><span class="dot">·</span><span>' + pad2(month) + '-' + pad2(day) + '</span><span class="dot">·</span><span>' + week + '</span>';
+  }
+
+  // ── 下班倒计时 ──
+  function updateCountdown(now) {
+    const [h, m] = config.endTime.split(':').map(Number);
+    const end = new Date(now);
+    end.setHours(h, m, 0, 0);
+
+    // 如果今天已过，默认指向明天（周末场景）
+    if (end <= now) {
+      end.setDate(end.getDate() + 1);
+    }
+
+    const diff = end - now;
+    // 限制显示范围：超过 8 小时显示"休息中"避免无意义
+    if (diff > 8 * 3600 * 1000) {
+      $countdown.textContent = '今日已收工 ✦';
+      $countdown.classList.add('over');
+      return;
+    }
+
+    $countdown.classList.remove('over');
+    const totalMin = Math.floor(diff / 60000);
+    const hh = Math.floor(totalMin / 60);
+    const mm = totalMin % 60;
+    $countdown.textContent =
+      (hh > 0 ? '离下班还有 ' + hh + ' 小时 ' + mm + ' 分钟' : '离下班还有 ' + mm + ' 分钟');
+  }
+
+  // ── 主循环 ──
+  function tick() {
+    const now = new Date();
+    setNum($hour, pad2(now.getHours()));
+    setNum($minute, pad2(now.getMinutes()));
+    updateDate(now);
+    updateCountdown(now);
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  // ── 设置面板 ──
+  $endTime.value = config.endTime;
+  $settingsBtn.addEventListener('click', function() { $panel.classList.add('open'); });
+  $panel.addEventListener('click', function(e) {
+    if (e.target === $panel) $panel.classList.remove('open');
+  });
+  $saveBtn.addEventListener('click', function() {
+    const v = $endTime.value;
+    if (v && /^\d{2}:\d{2}$/.test(v)) {
+      config.endTime = v;
+      saveConfig();
+      tick();
+    }
+    $panel.classList.remove('open');
+  });
+  $cancelBtn.addEventListener('click', function() {
+    $endTime.value = config.endTime;
+    $panel.classList.remove('open');
+  });
+
+  // ── 锁屏常亮（Android + Chrome 可用） ──
+  let wakeLock = null;
+  async function tryAcquireWakeLock() {
+    if (!('wakeLock' in navigator)) return;
+    try {
+      wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release', function() { wakeLock = null; });
+    } catch (e) { /* 用户未与页面交互过时会失败，后续再请求 */ }
+  }
+  ['click', 'touchstart', 'visibilitychange'].forEach(function(evt) {
+    document.addEventListener(evt, function() {
+      if (document.visibilityState === 'visible') tryAcquireWakeLock();
+    });
+  });
+
+  // ── PWA 注册 ──
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(function() {});
+  }
+})();
+</script>
+
+</body>
+</html>
