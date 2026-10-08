@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-<meta name="theme-color" content="#080808">
-<title>Desk Clock · 纸条</title>
+<meta name-color="#080808">
+<title>Desk Clock · 活</title>
 <link rel="manifest" href="manifest.webmanifest">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -16,8 +16,8 @@
     user-select: none;
   }
   body {
-    background: #080808;
-    color: #f0f0f0;
+    background: var(--bg, #080808);
+    color: var(--fg, #f0f0f0);
     font-family: -apple-system, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
     display: flex;
     flex-direction: column;
@@ -26,21 +26,54 @@
     min-height: 100vh;
     min-height: 100dvh;
     padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-    animation: breathe 18s ease-in-out infinite;
+    transition: background 4s ease, color 3s ease;
   }
 
-  @keyframes breathe {
-    0%, 100% { filter: brightness(1); }
-    50%      { filter: brightness(0.94); }
+  /* 流动背景层 */
+  .bg-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+    background: var(--bg-grad, none);
+    transition: background 8s ease;
   }
 
-  /* ── 顶部时钟区 ── */
   .clock-section {
     display: flex;
     flex-direction: column;
     align-items: center;
     flex-shrink: 0;
-    margin-bottom: 1.2vh;
+    margin-bottom: 1.5vh;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* 整点环绕光晕 */
+  .time-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: baseline;
+  }
+  .time-glow {
+    position: absolute;
+    inset: -8% -4%;
+    border-radius: 50%;
+    background: var(--glow, transparent);
+    opacity: 0;
+    transition: opacity 1.5s ease;
+    pointer-events: none;
+    filter: blur(40px);
+    z-index: -1;
+  }
+  .time-glow.pulse {
+    opacity: 0.25;
+    animation: glowPulse 3s ease-out;
+  }
+  @keyframes glowPulse {
+    0% { opacity: 0.5; transform: scale(1.05); }
+    100% { opacity: 0; transform: scale(0.95); }
   }
 
   .time-face {
@@ -48,11 +81,11 @@
     align-items: baseline;
     gap: 0.02em;
     line-height: 1;
-    font-size: clamp(14vw, 18vh, 24vw);
+    font-size: clamp(14vw, 20vh, 26vw);
     font-weight: 200;
     letter-spacing: -0.03em;
     font-variant-numeric: tabular-nums;
-    will-change: contents;
+    transition: font-weight 1s ease, letter-spacing 1s ease;
   }
 
   .time-face .num {
@@ -78,11 +111,12 @@
     50%      { opacity: 0.25; }
   }
 
-  .seconds {
+  /* 秒数 — 数字模式 */
+  .seconds-num {
     display: inline-block;
     font-size: 0.3em;
     font-weight: 200;
-    opacity: 0.3;
+    opacity: 0.35;
     min-width: 2em;
     text-align: left;
     margin-left: 0.05em;
@@ -90,21 +124,59 @@
     font-variant-numeric: tabular-nums;
     align-self: baseline;
     padding-bottom: 0.06em;
+    transition: opacity 0.8s ease;
+  }
+
+  /* 秒数 — 进度条模式 */
+  .seconds-bar {
+    display: none;
+    width: clamp(80px, 18vw, 200px);
+    height: 2px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 1px;
+    margin-top: 0.3em;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+  .seconds-bar.active { display: block; opacity: 1; }
+  .seconds-bar-fill {
+    height: 100%;
+    background: rgba(255,255,255,0.5);
+    border-radius: 1px;
+    transition: width 0.9s linear;
+  }
+
+  /* 秒数 — 呼吸圆模式 */
+  .seconds-breathe {
+    display: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    animation: secBreathe 1.6s ease-in-out infinite;
+  }
+  .seconds-breathe.active { display: inline-block; opacity: 0.5; }
+  @keyframes secBreathe {
+    0%, 100% { transform: scale(0.5); opacity: 0.3; }
+    50%      { transform: scale(1.2); opacity: 0.7; }
   }
 
   .date-line {
-    margin-top: 0.4em;
+    margin-top: 0.5em;
     font-size: clamp(3vw, 3.5vh, 4.5vw);
     font-weight: 300;
     letter-spacing: 0.04em;
-    opacity: 0.7;
-    font-variant-numeric: tabular-nums;
+    opacity: 0.75;
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.4em;
     flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
   }
   .date-line .dot { margin: 0 0.35em; opacity: 0.35; }
 
@@ -112,7 +184,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.3em;
-    opacity: 0.55;
+    opacity: 0.6;
     font-size: 0.85em;
     transition: opacity 0.4s ease;
   }
@@ -124,26 +196,29 @@
     padding: 0.3em 1.2em;
     font-size: clamp(2.8vw, 3.2vh, 4vw);
     font-weight: 300;
-    border: 1px solid #262626;
+    border: 1px solid rgba(255,255,255,0.12);
     border-radius: 999px;
     opacity: 0.85;
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.02em;
-    background: rgba(255,255,255,0.015);
+    background: rgba(255,255,255,0.02);
     transition: opacity 0.25s ease;
+    position: relative;
+    z-index: 1;
   }
   .countdown.over { opacity: 0.35; }
 
-  /* ── 分隔线 ── */
+  /* 分隔线 */
   .divider {
     width: clamp(60px, 20vw, 120px);
     height: 1px;
-    background: linear-gradient(90deg, transparent, #333, transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
     margin: 0.8vh 0;
-    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
   }
 
-  /* ── 纸条区 ── */
+  /* 纸条区 */
   .ticker-section {
     flex: 1;
     display: flex;
@@ -154,12 +229,11 @@
     min-height: 0;
     width: 100%;
     overflow: hidden;
+    position: relative;
+    z-index: 1;
   }
 
-  .ticker-card {
-    text-align: center;
-    max-width: 100%;
-  }
+  .ticker-card { text-align: center; max-width: 100%; }
 
   .ticker-icon {
     font-size: clamp(5vw, 6vh, 8vw);
@@ -171,20 +245,21 @@
   .ticker-main {
     font-size: clamp(6vw, 8vh, 10vw);
     font-weight: 300;
-    line-height: 1.35;
+    line-height: 1.4;
     letter-spacing: 0.05em;
-    opacity: 0.95;
-    transition: opacity 0.6s ease, transform 0.6s ease;
+    opacity: 0.92;
+    white-space: pre-line;
+    transition: opacity 0.7s ease, transform 0.7s ease;
   }
 
   .ticker-sub {
     font-size: clamp(4vw, 5vh, 7vw);
     font-weight: 200;
-    opacity: 0.5;
+    opacity: 0.45;
     margin-top: 0.15em;
     letter-spacing: 0.06em;
     font-variant-numeric: tabular-nums;
-    transition: opacity 0.6s ease;
+    transition: opacity 0.7s ease;
   }
 
   .ticker-progress {
@@ -194,34 +269,21 @@
     transform: translateX(-50%);
     display: flex;
     gap: 6px;
-    opacity: 0.3;
+    opacity: 0.2;
     transition: opacity 0.3s ease;
+    z-index: 10;
   }
-  .ticker-progress:hover { opacity: 0.7; }
+  .ticker-progress:hover { opacity: 0.6; }
   .ticker-progress .dot {
-    width: 5px;
-    height: 5px;
+    width: 5px; height: 5px;
     border-radius: 50%;
-    background: #555;
-    transition: background 0.4s ease;
+    background: currentColor;
+    opacity: 0.4;
+    transition: opacity 0.4s ease, width 0.4s ease;
   }
-  .ticker-progress .dot.active { background: #f0f0f0; }
+  .ticker-progress .dot.active { opacity: 1; width: 18px; border-radius: 3px; }
 
-  /* 纸条切换动画 */
-  .ticker-card.fade-out .ticker-icon,
-  .ticker-card.fade-out .ticker-main,
-  .ticker-card.fade-out .ticker-sub {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  .ticker-card.fade-in .ticker-icon,
-  .ticker-card.fade-in .ticker-main,
-  .ticker-card.fade-in .ticker-sub {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-
-  /* 外卖提醒横幅 */
+  /* 外卖提醒 */
   .takeout-reminder {
     position: fixed;
     bottom: clamp(2vh, 4vh, 6vh);
@@ -249,258 +311,145 @@
     0%, 100% { box-shadow: 0 0 0 0 rgba(232, 184, 75, 0.15); }
     50%      { box-shadow: 0 0 20px 4px rgba(232, 184, 75, 0.12); }
   }
-  @keyframes reminderDrift {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50%      { transform: translateX(-50%) translateY(-6px); }
-  }
-  .takeout-reminder.show {
-    animation: reminderPulse 2.4s ease-in-out infinite, reminderDrift 24s ease-in-out infinite;
-  }
+  .takeout-reminder.show { animation: reminderPulse 2.4s ease-in-out; }
 
   /* 设置按钮 */
   .settings-trigger {
-    position: fixed;
-    top: 14px;
-    right: 16px;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    position: fixed; top: 14px; right: 16px;
+    width: 32px; height: 32px;
+    border-radius: 50%; background: transparent; border: none;
+    cursor: pointer; opacity: 0; transition: opacity 0.3s ease;
     z-index: 150;
   }
   .settings-trigger:hover { opacity: 1; }
-  .settings-trigger::before {
-    content: '⚙';
-    font-size: 18px;
-    color: #666;
-  }
+  .settings-trigger::before { content: '⚙'; font-size: 18px; color: #666; }
 
-  /* 设置浮窗 */
+  /* 设置面板 */
   .settings-panel {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.9);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 200;
-    overflow-y: auto;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.92);
+    display: none; align-items: center; justify-content: center;
+    z-index: 200; overflow-y: auto;
   }
   .settings-panel.open { display: flex; }
-  .settings-inner {
-    text-align: center;
-    width: 85%;
-    max-width: 420px;
-    padding: 2em 0;
-  }
-  .settings-inner h3 {
-    font-weight: 400;
-    margin-bottom: 0.6em;
-    opacity: 0.7;
-    font-size: 5vw;
-  }
-  .settings-inner .field {
-    margin: 1em 0;
-    text-align: left;
-  }
-  .settings-inner label {
-    display: block;
-    margin-bottom: 0.3em;
-    opacity: 0.6;
-    font-size: 3.5vw;
-  }
-  .settings-inner .field-row {
-    display: flex;
-    gap: 0.6em;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  .settings-inner input[type="time"],
-  .settings-inner input[type="number"] {
-    background: transparent;
-    border: 1px solid #333;
-    color: inherit;
-    font-size: 4.5vw;
-    text-align: center;
-    padding: 0.3em 0.6em;
-    border-radius: 4px;
-    width: 5em;
+  .settings-inner { text-align: center; width: 85%; max-width: 420px; padding: 2em 0; }
+  .settings-inner h3 { font-weight: 400; margin-bottom: 0.6em; opacity: 0.7; }
+  .settings-inner .field { margin: 1em 0; text-align: left; }
+  .settings-inner label { display: block; margin-bottom: 0.3em; opacity: 0.6; font-size: 3.5vw; }
+  .settings-inner .field-row { display: flex; gap: 0.6em; align-items: center; flex-wrap: wrap; }
+  .settings-inner input[type="time"], .settings-inner input[type="number"] {
+    background: transparent; border: 1px solid #333; color: inherit;
+    font-size: 4.5vw; text-align: center; padding: 0.3em 0.6em; border-radius: 4px; width: 5em;
   }
   .settings-inner input[type="number"] { width: 4em; }
-  .settings-inner .checkbox-label {
-    display: flex;
-    align-items: center;
-    opacity: 0.8;
-    font-size: 3.8vw;
-    cursor: pointer;
-    gap: 0.4em;
-  }
-  .settings-inner input[type="checkbox"] {
-    transform: scale(1.4);
-    accent-color: #e8b84b;
-  }
+  .settings-inner .checkbox-label { display: flex; align-items: center; opacity: 0.8; cursor: pointer; gap: 0.4em; }
+  .settings-inner input[type="checkbox"] { transform: scale(1.4); }
   .settings-inner textarea {
-    width: 100%;
-    background: transparent;
-    border: 1px solid #333;
-    color: inherit;
-    font-size: 3.5vw;
-    font-family: inherit;
-    padding: 0.6em 0.8em;
-    border-radius: 6px;
-    resize: vertical;
-    min-height: 6em;
-    line-height: 1.6;
+    width: 100%; background: transparent; border: 1px solid #333; color: inherit;
+    font-size: 3.5vw; font-family: inherit; padding: 0.6em 0.8em; border-radius: 6px;
+    resize: vertical; min-height: 5em; line-height: 1.6;
   }
   .settings-inner textarea:focus { border-color: #555; outline: none; }
-  .settings-inner .hint {
-    text-align: left;
-    font-size: 2.8vw;
-    opacity: 0.35;
-    margin-top: 0.3em;
-    line-height: 1.5;
-  }
-  .settings-inner .btn-row {
-    margin-top: 1.5em;
-    display: flex;
-    gap: 0.6em;
-    justify-content: center;
-  }
+  .settings-inner .hint { text-align: left; font-size: 2.8vw; opacity: 0.35; margin-top: 0.3em; line-height: 1.5; }
+  .settings-inner .btn-row { margin-top: 1.5em; display: flex; gap: 0.6em; justify-content: center; }
   .settings-inner button {
-    background: transparent;
-    color: inherit;
-    border: 1px solid #444;
-    padding: 0.4em 1.4em;
-    border-radius: 999px;
-    font-size: 4vw;
-    cursor: pointer;
-  }
-  .settings-inner button:hover { background: rgba(255,255,255,0.05); }
-
-  /* 防烧屏纹理 */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background:
-      radial-gradient(circle at 20% 30%, rgba(255,255,255,0.012) 0%, transparent 40%),
-      radial-gradient(circle at 80% 70%, rgba(255,255,255,0.008) 0%, transparent 35%);
-    mix-blend-mode: screen;
+    background: transparent; color: inherit; border: 1px solid #444;
+    padding: 0.4em 1.4em; border-radius: 999px; font-size: 4vw; cursor: pointer;
   }
 
   @media (orientation: landscape) {
     body { flex-direction: row; padding: 0 clamp(2vw, 4vw, 8vw); }
-    .clock-section { margin-bottom: 0; margin-right: clamp(2vw, 4vw, 6vw); flex: 0 0 auto; }
+    .clock-section { margin-bottom: 0; margin-right: clamp(2vw, 4vw, 6vw); }
     .time-face { font-size: clamp(10vh, 14vw, 18vh); }
-    .date-line { font-size: clamp(2vh, 2.5vw, 3vh); }
-    .countdown { font-size: clamp(1.8vh, 2.2vw, 2.8vh); }
     .divider {
-      width: 1px;
-      height: clamp(80px, 24vh, 160px);
-      margin: 0 clamp(2vw, 4vw, 5vw);
-      background: linear-gradient(180deg, transparent, #333, transparent);
+      width: 1px; height: clamp(80px, 24vh, 160px); margin: 0 clamp(2vw, 4vw, 5vw);
+      background: linear-gradient(180deg, transparent, rgba(255,255,255,0.2), transparent);
     }
     .ticker-section { padding: 0; text-align: left; }
     .ticker-card { text-align: left; }
     .ticker-main { font-size: clamp(5vh, 6vw, 8vh); }
-    .ticker-sub { font-size: clamp(3vh, 4vw, 5vh); }
     .ticker-icon { font-size: clamp(4vh, 5vw, 6vh); }
-    .settings-inner h3 { font-size: 3.5vw; }
-    .settings-inner label { font-size: 2.5vw; }
-    .settings-inner input[type="time"],
-    .settings-inner input[type="number"] { font-size: 3.5vw; }
-    .settings-inner textarea { font-size: 2.8vw; }
-    .settings-inner button { font-size: 3vw; }
-    .settings-inner .checkbox-label { font-size: 2.8vw; }
-    .takeout-reminder { font-size: clamp(2.5vh, 3vw, 3.5vh); }
   }
 </style>
 </head>
 <body>
 
-  <button class="settings-trigger" id="settingsBtn" aria-label="设置"></button>
+  <div class="bg-layer" id="bgLayer"></div>
+  <button class="settings-trigger" id="settingsBtn"></button>
 
-  <!-- 顶部时钟 -->
   <div class="clock-section">
-    <div class="time-face">
-      <span class="num" id="hour">--</span>
-      <span class="colon">:</span>
-      <span class="num" id="minute">--</span>
-      <span class="seconds" id="seconds">--</span>
+    <div class="time-wrapper">
+      <div class="time-glow" id="timeGlow"></div>
+      <div class="time-face">
+        <span class="num" id="hour">--</span>
+        <span class="colon">:</span>
+        <span class="num" id="minute">--</span>
+        <span class="seconds-num" id="secNum">--</span>
+      </div>
     </div>
+    <div class="seconds-bar" id="secBar"><div class="seconds-bar-fill" id="secFill"></div></div>
+    <div class="seconds-breathe" id="secBreath"></div>
 
     <div class="date-line" id="dateLine">
       <span class="date-text">--</span>
       <span class="weather-info loading" id="weatherInfo">
         <span class="weather-icon">--</span>
-        <span class="weather-temp">定位中…</span>
+        <span class="weather-temp">--°</span>
       </span>
     </div>
-
     <div class="countdown" id="countdown">--</div>
   </div>
 
-  <!-- 分隔线 -->
   <div class="divider"></div>
 
-  <!-- 纸条区 -->
   <div class="ticker-section">
     <div class="ticker-card" id="tickerCard">
       <div class="ticker-icon" id="tickerIcon">📌</div>
-      <div class="ticker-main" id="tickerMain">今日已收工 ✦</div>
+      <div class="ticker-main" id="tickerMain">—</div>
       <div class="ticker-sub" id="tickerSub"></div>
     </div>
   </div>
 
-  <!-- 纸条进度指示 -->
   <div class="ticker-progress" id="tickerProgress"></div>
-
-  <!-- 外卖提醒 -->
   <div class="takeout-reminder" id="takeoutReminder">🍜 该点外卖了！</div>
 
-  <!-- 设置面板 -->
   <div class="settings-panel" id="panel">
     <div class="settings-inner">
       <h3>设置</h3>
-
       <div class="field">
         <label>下班时间</label>
         <input type="time" id="endTime" value="17:00">
       </div>
-
       <div class="field">
         <input type="number" id="tickerInterval" value="8" min="3" max="30" step="1">
-        <label style="margin-top:0.3em">纸条切换间隔（秒）</label>
+        <label>纸条切换间隔（秒）</label>
       </div>
-
       <div class="field">
         <div class="field-row">
           <input type="time" id="takeoutStart" value="10:30">
           <span style="opacity:0.4">—</span>
           <input type="time" id="takeoutEnd" value="11:00">
         </div>
-        <label style="margin-top:0.3em">外卖提醒时间段</label>
+        <label>外卖提醒时间段</label>
       </div>
-
       <div class="field">
-        <label>纸条内容（每行一条，可包含变量）</label>
+        <label>纸条内容（每行一条）</label>
         <textarea id="tickerText" spellcheck="false"></textarea>
         <div class="hint">
-          变量：{worked} 连续工作分钟 {toFriday} 距周五天数<br>
-          {countdown} 下班倒计时 {weather} 天气 {temp} 温度<br>
-          定时：[10:30] 只在 10:30 前后显示 · [14:00-15:00] 时段显示
+          变量：{worked} {toFriday} {countdown} {weather} {temp} {weatherTip}<br>
+          定时：[10:30] [14:00-15:00]
         </div>
       </div>
-
+      <div class="field">
+        <label class="checkbox-label">
+          <input type="checkbox" id="secondsCycle" checked>
+          <span>自动切换秒数样式</span>
+        </label>
+      </div>
       <div class="field">
         <label class="checkbox-label">
           <input type="checkbox" id="notifyEnabled" checked>
-          <span>系统通知提醒</span>
+          <span>系统通知</span>
         </label>
       </div>
       <div class="field">
@@ -509,7 +458,6 @@
           <span>显示本地天气</span>
         </label>
       </div>
-
       <div class="btn-row">
         <button id="saveBtn">保存</button>
         <button id="cancelBtn">取消</button>
@@ -519,10 +467,17 @@
 
 <script>
 (() => {
-  // ═══════════ DOM ═══════════
+  'use strict';
+
+  // ── DOM ──
   const $hour = document.getElementById('hour');
   const $minute = document.getElementById('minute');
-  const $seconds = document.getElementById('seconds');
+  const $secNum = document.getElementById('secNum');
+  const $secBar = document.getElementById('secBar');
+  const $secFill = document.getElementById('secFill');
+  const $secBreath = document.getElementById('secBreath');
+  const $bgLayer = document.getElementById('bgLayer');
+  const $timeGlow = document.getElementById('timeGlow');
   const $dateLine = document.getElementById('dateLine');
   const $dateText = $dateLine.querySelector('.date-text');
   const $weatherInfo = document.getElementById('weatherInfo');
@@ -531,13 +486,13 @@
   const $countdown = document.getElementById('countdown');
   const $panel = document.getElementById('panel');
   const $endTime = document.getElementById('endTime');
+  const $tickerInterval = document.getElementById('tickerInterval');
   const $takeoutStart = document.getElementById('takeoutStart');
   const $takeoutEnd = document.getElementById('takeoutEnd');
   const $notifyEnabled = document.getElementById('notifyEnabled');
   const $weatherEnabled = document.getElementById('weatherEnabled');
-  const $tickerInterval = document.getElementById('tickerInterval');
+  const $secondsCycle = document.getElementById('secondsCycle');
   const $tickerText = document.getElementById('tickerText');
-  const $settingsBtn = document.getElementById('settingsBtn');
   const $saveBtn = document.getElementById('saveBtn');
   const $cancelBtn = document.getElementById('cancelBtn');
   const $takeoutReminder = document.getElementById('takeoutReminder');
@@ -546,382 +501,294 @@
   const $tickerMain = document.getElementById('tickerMain');
   const $tickerSub = document.getElementById('tickerSub');
   const $tickerProgress = document.getElementById('tickerProgress');
+  const weekDays = ['日','一','二','三','四','五','六'];
 
-  // ═══════════ 配置 ═══════════
-  const STORAGE_KEY = 'deskclock_config';
-
+  // ── 配置 ──
+  const SK = 'deskclock_cfg_v2';
   const DEFAULT_TICKERS = [
     '{countdown}',
-    '已持续工作 {worked} 分钟\n起来动一动',
+    '连续专注 {worked} 分钟了\n起来活动一下',
     '{weather} {temp}°\n{weatherTip}',
     '[10:30-11:00] 🍜 别忘了点外卖\n趁现在还有好选择',
-    '靠窗坐的话可以看看窗外 🌿\n让眼睛休息一下',
-    '距离周五还有 {toFriday} 天\n加油',
-    '今天也要开心 ☀️\n你已经做得很好了'
+    '🌿 20-20-20 法则\n远眺 20 秒，放松眼睛',
+    '距周五还有 {toFriday} 天\n再撑一下',
+    '深呼吸三次 🌊\n感受当下的平静',
+    '你已经做得很好了 ✨\n给自己一个肯定',
+    '喝杯水 💧\n保持水分很重要',
+    '肩颈放松一下 🙆\n转转头，耸耸肩',
+    '[14:00-15:00] 午后小憩片刻\n站起来走走',
+    '🧘 正念时刻\n感受一呼一吸',
+    '今天的小确幸\n就是在平凡中看见光 ✨',
   ];
 
   let config = loadConfig();
-  let takeoutNotified = false;
-  let currentTickerIndex = -1;
-  let tickerTimer = null;
-  let weatherData = null;
+  let tickerIdx = -1, tickerTimer = null;
+  let weatherCache = null;
+  let secMode = 0; // 0=num, 1=bar, 2=breathe
+  let secModeTimer = null;
+  let prevMin = -1;
 
   function loadConfig() {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
+      const raw = localStorage.getItem(SK);
       if (raw) {
-        const parsed = JSON.parse(raw);
+        const p = JSON.parse(raw);
         return Object.assign({
-          endTime: '17:00',
-          takeoutStart: '10:30',
-          takeoutEnd: '11:00',
-          notifyEnabled: true,
-          weatherEnabled: true,
-          tickerInterval: 8,
-          tickers: DEFAULT_TICKERS.slice()
-        }, parsed);
+          endTime: '17:00', takeoutStart: '10:30', takeoutEnd: '11:00',
+          notifyEnabled: true, weatherEnabled: true, secondsCycle: true,
+          tickerInterval: 8, tickers: DEFAULT_TICKERS.slice()
+        }, p);
       }
-    } catch {}
+    } catch(e) {}
     return {
-      endTime: '17:00',
-      takeoutStart: '10:30',
-      takeoutEnd: '11:00',
-      notifyEnabled: true,
-      weatherEnabled: true,
-      tickerInterval: 8,
-      tickers: DEFAULT_TICKERS.slice()
+      endTime: '17:00', takeoutStart: '10:30', takeoutEnd: '11:00',
+      notifyEnabled: true, weatherEnabled: true, secondsCycle: true,
+      tickerInterval: 8, tickers: DEFAULT_TICKERS.slice()
     };
   }
+  function saveConfig() { try { localStorage.setItem(SK, JSON.stringify(config)); } catch(e) {} }
 
-  function saveConfig() {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(config)); } catch {}
-  }
-
-  // ═══════════ 工具 ═══════════
+  // ── 工具 ──
   const pad2 = n => String(n).padStart(2, '0');
-  function timeToMinutes(hhmm) {
-    const [h, m] = hhmm.split(':').map(Number);
-    return h * 60 + m;
-  }
-
-  function setNum(el, next) {
-    if (el.textContent === next) return;
+  const timeMin = s => { const [h, m] = s.split(':').map(Number); return h*60+m; };
+  function setNum(el, v) {
+    if (el.textContent === v) return;
+    el.textContent = v;
     el.classList.add('changing');
-    el.textContent = next;
-    setTimeout(() => el.classList.remove('changing'), 200);
+    setTimeout(() => el.classList.remove('changing'), 180);
   }
 
-  function getWorkedMinutes(now) {
-    const start = new Date(now);
-    start.setHours(8, 20, 0, 0);
+  // ── 主题引擎 ──
+  const THEMES = [
+    // [startHour, startMin, bg, fg, bgGrad, glow]
+    [0, 0, '#0a0a12', '#c8c8e0', 'radial-gradient(ellipse at 30% 20%, rgba(60,60,100,0.15) 0%, transparent 60%)', 'rgba(100,100,180,0.15)'],
+    [6, 0, '#1a1510', '#e8d8b8', 'radial-gradient(ellipse at 20% 10%, rgba(255,180,80,0.12) 0%, transparent 50%)', 'rgba(255,180,80,0.12)'],
+    [9, 0, '#101012', '#f0f0f0', 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.03) 0%, transparent 40%)', 'rgba(255,255,255,0.05)'],
+    [12, 0, '#0e0e10', '#f5f5f5', 'radial-gradient(circle at 70% 30%, rgba(255,220,180,0.04) 0%, transparent 40%)', 'rgba(255,220,180,0.04)'],
+    [15, 0, '#101010', '#e8e8e8', 'radial-gradient(ellipse at 80% 70%, rgba(200,180,255,0.03) 0%, transparent 40%)', 'rgba(200,180,255,0.03)'],
+    [18, 0, '#14100e', '#e8c8a0', 'radial-gradient(ellipse at 60% 80%, rgba(255,150,60,0.1) 0%, transparent 50%)', 'rgba(255,150,60,0.1)'],
+    [21, 0, '#0a0a14', '#b8b8d0', 'radial-gradient(ellipse at 50% 50%, rgba(80,80,140,0.08) 0%, transparent 40%)', 'rgba(80,80,140,0.08)'],
+  ];
+
+  function applyTheme(now) {
+    const t = now.getHours() * 60 + now.getMinutes();
+    let theme = THEMES[0];
+    for (const th of THEMES) {
+      if (t >= th[0] * 60 + th[1]) theme = th;
+    }
+    document.body.style.setProperty('--bg', theme[2]);
+    document.body.style.setProperty('--fg', theme[3]);
+    $bgLayer.style.setProperty('--bg-grad', theme[4]);
+    document.body.style.setProperty('--glow', theme[5]);
+  }
+
+  // ── 秒数显示模式切换 ──
+  function setSecMode(mode) {
+    secMode = mode;
+    $secNum.style.display = mode === 0 ? 'inline-block' : 'none';
+    $secNum.style.opacity = mode === 0 ? '' : '0';
+    $secBar.classList.toggle('active', mode === 1);
+    $secBreath.classList.toggle('active', mode === 2);
+  }
+
+  function cycleSecMode() {
+    if (!config.secondsCycle) { setSecMode(0); return; }
+    setSecMode((secMode + 1) % 3);
+    secModeTimer = setTimeout(cycleSecMode, 12000);
+  }
+
+  function stopSecCycle() { if (secModeTimer) { clearTimeout(secModeTimer); secModeTimer = null; } }
+
+  function updateSeconds(now) {
+    const s = now.getSeconds();
+    setNum($secNum, pad2(s));
+    $secFill.style.width = ((s / 60) * 100) + '%';
+  }
+
+  // ── 纸条 ──
+  function workedMins(now) {
+    const start = new Date(now); start.setHours(8, 20, 0, 0);
     return Math.max(0, Math.floor((now - start) / 60000));
   }
-
-  function getDaysToFriday(now) {
-    const day = now.getDay();
-    return (5 - day + 7) % 7 || 7;
-  }
-
-  function getCountdownMin(now) {
+  function toFriday(now) { const d = now.getDay(); return (5 - d + 7) % 7 || 7; }
+  function countdownMin(now) {
     const [h, m] = config.endTime.split(':').map(Number);
-    const end = new Date(now);
-    end.setHours(h, m, 0, 0);
+    const end = new Date(now); end.setHours(h, m, 0, 0);
     if (end <= now) end.setDate(end.getDate() + 1);
     return Math.max(0, Math.floor((end - now) / 60000));
   }
-
-  function getCountdownText(now) {
-    const min = getCountdownMin(now);
-    const hh = Math.floor(min / 60);
-    const mm = min % 60;
+  function countdownText(now) {
+    const min = countdownMin(now);
+    const hh = Math.floor(min / 60), mm = min % 60;
     if (hh > 0) return '离下班还有 ' + hh + ' 小时 ' + mm + ' 分钟';
     if (mm > 0) return '离下班还有 ' + mm + ' 分钟';
     return '今日已收工 ✦';
   }
 
-  function getWeatherText() {
-    if (!weatherData) return '';
-    const code = weatherData.code;
-    if (code === 0) return '晴空万里';
-    if (code <= 2) return '多云';
-    if (code === 3) return '阴天';
-    if (code <= 48) return '有雾';
-    if (code <= 55) return '毛毛雨';
-    if (code <= 65) return '下雨了';
-    if (code <= 77) return '有雪';
-    if (code <= 82) return '阵雨';
-    if (code <= 86) return '阵雪';
-    if (code <= 99) return '雷暴';
+  function weatherText() {
+    if (!weatherCache) return '';
+    const c = weatherCache.code;
+    if (c === 0) return '晴'; if (c <= 2) return '多云'; if (c === 3) return '阴';
+    if (c <= 48) return '有雾'; if (c <= 55) return '毛毛雨'; if (c <= 65) return '雨';
+    if (c <= 77) return '有雪'; if (c <= 82) return '阵雨'; if (c <= 86) return '阵雪';
+    return '雷暴';
+  }
+  function weatherTip() {
+    if (!weatherCache) return '';
+    const c = weatherCache.code, t = weatherCache.temp;
+    if (c <= 2 && t > 18) return '适合开窗';
+    if (c >= 51) return '出门带伞';
+    if (t >= 30) return '注意补水';
+    if (t <= 5) return '注意保暖';
     return '';
   }
 
-  function getWeatherTemp() {
-    return weatherData ? weatherData.temp : '';
+  function fillVars(t, now) {
+    return t
+      .replace(/\{worked\}/g, workedMins(now))
+      .replace(/\{toFriday\}/g, toFriday(now))
+      .replace(/\{countdown\}/g, countdownText(now))
+      .replace(/\{weather\}/g, weatherText())
+      .replace(/\{temp\}/g, weatherCache ? weatherCache.temp : '--')
+      .replace(/\{weatherTip\}/g, weatherTip());
   }
 
-  function getWeatherTip() {
-    if (!weatherData) return '';
-    const code = weatherData.code;
-    const temp = weatherData.temp;
-    if (code <= 2 && temp > 18) return '适合开窗通风';
-    if (code >= 51) return '出门记得带伞';
-    if (temp >= 30) return '记得补水';
-    if (temp <= 5) return '注意保暖';
-    return '';
-  }
-
-  function replaceVars(text, now) {
-    return text
-      .replace(/\{worked\}/g, getWorkedMinutes(now))
-      .replace(/\{toFriday\}/g, getDaysToFriday(now))
-      .replace(/\{countdown\}/g, getCountdownText(now))
-      .replace(/\{weather\}/g, getWeatherText())
-      .replace(/\{temp\}/g, getWeatherTemp())
-      .replace(/\{weatherTip\}/g, getWeatherTip());
-  }
-
-  function getTickerIcon(mainText) {
-    if (mainText.includes('外卖')) return '🍜';
-    if (mainText.includes('工作') || mainText.includes('起来')) return '💪';
-    if (mainText.includes('下班') || mainText.includes('收工')) return '⏰';
-    if (mainText.includes('周五') || mainText.includes('加油')) return '🎯';
-    if (mainText.includes('窗外') || mainText.includes('眼睛')) return '🌿';
-    if (mainText.includes('开心') || mainText.includes('做得很好')) return '✨';
-    if (mainText.includes('晴')) return '☀️';
-    if (mainText.includes('雨')) return '☔';
-    if (mainText.includes('云') || mainText.includes('多云')) return '⛅';
-    if (mainText.includes('雾')) return '🌫';
-    if (mainText.includes('雪')) return '❄️';
-    if (mainText.includes('雷')) return '⛈';
+  function tickerIcon(text) {
+    if (text.includes('外卖')) return '🍜';
+    if (text.includes('专注') || text.includes('起来') || text.includes('肩颈')) return '💪';
+    if (text.includes('下班') || text.includes('收工')) return '⏰';
+    if (text.includes('周五')) return '🎯';
+    if (text.includes('眼睛') || text.includes('远眺') || text.includes('窗外')) return '🌿';
+    if (text.includes('呼吸') || text.includes('正念') || text.includes('平静')) return '🌊';
+    if (text.includes('水')) return '💧';
+    if (text.includes('好') || text.includes('光') || text.includes('✨')) return '✨';
+    if (text.includes('小憩') || text.includes('走走')) return '🙆';
+    if (text.includes('晴')) return '☀️';
+    if (text.includes('雨')) return '☔';
     return '📌';
   }
 
-  // ═══════════ ═══════════
-  function updateDate(now) {
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1;
-    const day = now.getDate();
-    const weekDays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-    $dateText.innerHTML =
-      '<span>' + year + '</span><span class="dot">·</span><span>' + pad2(month) + '-' + pad2(day) + '</span><span class="dot">·</span><span>' + weekDays[now.getDay()] + '</span>';
-  }
-
-  function updateSeconds(now) {
-    setNum($seconds, pad2(now.getSeconds()));
-  }
-
-  function updateCountdown(now) {
-    const min = getCountdownMin(now);
-    if (min <= 0) {
-      $countdown.textContent = '今日已收工 ✦';
-      $countdown.classList.add('over');
-      return;
-    }
-    $countdown.classList.remove('over');
-    const hh = Math.floor(min / 60);
-    const mm = min % 60;
-    $countdown.textContent = (hh > 0 ? hh + ' 小时 ' + mm + ' 分钟' : mm + ' 分钟');
-  }
-
-  // ═══════════ 纸条系统 ═══════════
   function parseTicker(raw) {
-    // 返回 { show, mainLines[], subLines[] }
-    const lines = raw.split('\n');
-    const condMatch = lines[0].match(/^\[(\d{2}:\d{2})(?:-(\d{2}:\d{2}))?\]\s*(.*)/);
-
-    let timeRange = null;
-    if (condMatch) {
-      timeRange = {
-        start: timeToMinutes(condMatch[1]),
-        end: condMatch[2] ? timeToMinutes(condMatch[2]) : condMatch[1] + 30
-      };
+    const m = raw.match(/^\[(\d{2}:\d{2})(?:-(\d{2}:\d{2}))?\]\s*(.*)/);
+    let range = null;
+    let text = raw;
+    if (m) {
+      range = { s: timeMin(m[1]), e: m[2] ? timeMin(m[2]) : timeMin(m[1]) + 30 };
+      text = m[3];
     }
-
-    let text = condMatch ? (condMatch[3] + '\n' + lines.slice(1).join('\n')) : raw;
-    return { timeRange, text: text.trim() };
+    return { range, text };
   }
-
-  function isTickerVisible(parsed, now) {
-    if (!parsed.timeRange) return true;
-    const nowMin = now.getHours() * 60 + now.getMinutes();
-    return nowMin >= parsed.timeRange.start && nowMin < parsed.timeRange.end;
-  }
-
-  function renderTickerItem(rawText, now) {
-    const replaced = replaceVars(rawText, now);
-    const lines = replaced.split('\n').filter(l => l.trim());
-    $tickerMain.textContent = lines[0] || '';
-    $tickerSub.textContent = lines.slice(1).join('  ');
-    $tickerIcon.textContent = getTickerIcon(replaced);
+  function tickerVisible(p, now) {
+    if (!p.range) return true;
+    const n = now.getHours() * 60 + now.getMinutes();
+    return n >= p.range.s && n < p.range.e;
   }
 
   function getVisibleTickers(now) {
-    return config.tickers.filter(t => {
-      const parsed = parseTicker(t);
-      return isTickerVisible(parsed, now);
-    });
+    return config.tickers.filter(t => tickerVisible(parseTicker(t), now));
   }
 
-  function renderProgressDots(count, active) {
-    $tickerProgress.innerHTML = '';
-    if (count <= 1) return;
-    for (let i = 0; i < count; i++) {
-      const dot = document.createElement('div');
-      dot.className = 'dot' + (i === active ? ' active' : '');
-      $tickerProgress.appendChild(dot);
-    }
-  }
-
-  function showNextTicker() {
-    if (!config.tickers || config.tickers.length === 0) {
-      $tickerMain.textContent = '暂无纸条';
-      $tickerSub.textContent = '';
-      return;
-    }
-
+  function showTicker() {
     const now = new Date();
-    const visible = getVisibleTickers(now);
-
-    if (visible.length === 0) {
-      $tickerMain.textContent = '✨';
-      $tickerSub.textContent = '享受当下';
+    const vis = getVisibleTickers(now);
+    if (vis.length === 0) {
+      $tickerMain.textContent = '✨ 享受当下';
+      $tickerSub.textContent = '';
       $tickerIcon.textContent = '📌';
-      renderProgressDots(0, -1);
+      $tickerProgress.innerHTML = '';
       return;
     }
-
-    // 选择下一张纸条
-    currentTickerIndex = (currentTickerIndex + 1) % visible.length;
-    const raw = visible[currentTickerIndex];
-
-    // 切换到解析后的 main 部分
-    const parsed = parseTicker(raw);
-    renderTickerItem(parsed.text, now);
-    renderProgressDots(visible.length, currentTickerIndex);
-  }
-
-  function scheduleTickers() {
-    if (tickerTimer) clearInterval(tickerTimer);
-    const interval = Math.max(3, config.tickerInterval || 8) * 1000;
-    tickerTimer = setInterval(showNextTicker, interval);
-  }
-
-  function refreshTicker() {
-    currentTickerIndex = -1;
-    showNextTicker();
-    scheduleTickers();
-  }
-
-  // ═══════════ 天气 ═══════════
-  const LAT_KEY = 'deskclock_lat';
-  const LON_KEY = 'deskclock_lon';
-  const WEATHER_CACHE_KEY = 'deskclock_weather_cache';
-
-  function wmoToIcon(code) {
-    if (code === 0)  return '☀️';
-    if (code <= 3)  return '🌤';
-    if (code <= 48) return '🌫';
-    if (code <= 57) return '🌦';
-    if (code <= 67) return '🌧';
-    if (code <= 77) return '🌨';
-    if (code <= 82) return '🌧';
-    if (code <= 86) return '🌨';
-    if (code <= 99) return '⛈';
-    return '🌡';
-  }
-
-  function getCachedWeather() {
-    try {
-      const raw = localStorage.getItem(WEATHER_CACHE_KEY);
-      if (!raw) return null;
-      const cache = JSON.parse(raw);
-      if (Date.now() - cache.timestamp < 30 * 60 * 1000) return cache.data;
-    } catch {}
-    return null;
-  }
-
-  function setCachedWeather(data) {
-    try { localStorage.setItem(WEATHER_CACHE_KEY, JSON.stringify({ timestamp: Date.now(), data: data })); } catch {}
-  }
-
-  async function fetchWeather(lat, lon) {
-    try {
-      const url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&current_weather=true&timezone=auto';
-      const resp = await fetch(url);
-      if (!resp.ok) return null;
-      const json = await resp.json();
-      if (!json.current_weather) return null;
-      const w = json.current_weather;
-      return { temp: Math.round(w.temperature), code: w.weathercode };
-    } catch { return null; }
-  }
-
-  async function updateWeather() {
-    if (!config.weatherEnabled) {
-      $weatherInfo.style.display = 'none';
-      return;
-    }
-    $weatherInfo.style.display = 'inline-flex';
-
-    const cached = getCachedWeather();
-    if (cached) {
-      weatherData = cached;
-      $weatherInfo.classList.remove('loading');
-      $weatherIcon.textContent = wmoToIcon(cached.code);
-      $weatherTemp.textContent = cached.temp + '°';
-      refreshTicker(); // 天气变化可能影响纸条内容
-      return;
-    }
-
-    const lat = localStorage.getItem(LAT_KEY);
-    const lon = localStorage.getItem(LON_KEY);
-    if (lat && lon) {
-      const data = await fetchWeather(parseFloat(lat), parseFloat(lon));
-      if (data) {
-        weatherData = data;
-        setCachedWeather(data);
-        $weatherInfo.classList.remove('loading');
-        $weatherIcon.textContent = wmoToIcon(data.code);
-        $weatherTemp.textContent = data.temp + '°';
-        refreshTicker();
-      } else {
-        $weatherTemp.textContent = '--°';
-        $weatherIcon.textContent = '🌡';
+    tickerIdx = (tickerIdx + 1) % vis.length;
+    const raw = vis[tickerIdx];
+    const p = parseTicker(raw);
+    const text = fillVars(p.text, now);
+    const lines = text.split('\n').filter(l => l.trim());
+    $tickerMain.textContent = lines[0] || '';
+    $tickerSub.textContent = lines.slice(1).join('  ');
+    $tickerIcon.textContent = tickerIcon(text);
+    $tickerProgress.innerHTML = '';
+    if (vis.length > 1) {
+      for (let i = 0; i < vis.length; i++) {
+        const d = document.createElement('div');
+        d.className = 'dot' + (i === tickerIdx ? ' active' : '');
+        $tickerProgress.appendChild(d);
       }
     }
   }
 
-  function requestGeolocation() {
-    if (!('geolocation' in navigator)) { $weatherTemp.textContent = '无定位'; return; }
+  function scheduleTickers() {
+    if (tickerTimer) clearInterval(tickerTimer);
+    tickerTimer = setInterval(showTicker, Math.max(3, config.tickerInterval || 8) * 1000);
+  }
+  function refreshTicker() { tickerIdx = -1; showTicker(); scheduleTickers(); }
+
+  // ── 天气 ──
+  const LAT = 'dk_lat', LON = 'dk_lon', WX_CACHE = 'dk_wx_cache';
+  const WMO_ICON = c => {
+    if (c === 0) return '☀️'; if (c <= 3) return '🌤'; if (c <= 48) return '🌫';
+    if (c <= 57) return '🌦'; if (c <= 67) return '🌧'; if (c <= 77) return '🌨';
+    if (c <= 82) return '🌧'; if (c <= 86) return '🌨'; if (c <= 99) return '⛈';
+    return '🌡';
+  };
+
+  function cachedWx() {
+    try { const c = JSON.parse(localStorage.getItem(WX_CACHE)); if (Date.now() - c.t < 1800000) return c.d; } catch(e) {}
+    return null;
+  }
+  function setCachedWx(d) { try { localStorage.setItem(WX_CACHE, JSON.stringify({t: Date.now(), d})); } catch(e) {} }
+
+  async function fetchWx(lat, lon) {
+    try {
+      const r = await fetch('https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+'&current_weather=true&timezone=auto');
+      if (!r.ok) return null;
+      const j = await r.json();
+      if (!j.current_weather) return null;
+      const w = j.current_weather;
+      return { temp: Math.round(w.temperature), code: w.weathercode };
+    } catch(e) { return null; }
+  }
+
+  async function updateWeather() {
+    if (!config.weatherEnabled) { $weatherInfo.style.display = 'none'; return; }
+    $weatherInfo.style.display = 'inline-flex';
+    const c = cachedWx();
+    if (c) {
+      weatherCache = c;
+      $weatherInfo.classList.remove('loading');
+      $weatherIcon.textContent = WMO_ICON(c.code);
+      $weatherTemp.textContent = c.temp + '°';
+      refreshTicker();
+      return;
+    }
+    const lat = localStorage.getItem(LAT), lon = localStorage.getItem(LON);
+    if (lat && lon) {
+      const d = await fetchWx(parseFloat(lat), parseFloat(lon));
+      if (d) { weatherCache = d; setCachedWx(d); $weatherInfo.classList.remove('loading'); $weatherIcon.textContent = WMO_ICON(d.code); $weatherTemp.textContent = d.temp + '°'; refreshTicker(); }
+      else { $weatherTemp.textContent = '--°'; }
+    }
+  }
+
+  function requestGeo() {
+    if (!('geolocation' in navigator)) { $weatherTemp.textContent = '无法定位'; return; }
     navigator.geolocation.getCurrentPosition(
-      function(pos) {
-        localStorage.setItem(LAT_KEY, pos.coords.latitude.toFixed(2));
-        localStorage.setItem(LON_KEY, pos.coords.longitude.toFixed(2));
-        updateWeather();
-      },
-      function() { $weatherTemp.textContent = '定位失败'; $weatherIcon.textContent = '--'; },
+      p => { localStorage.setItem(LAT, p.coords.latitude.toFixed(2)); localStorage.setItem(LON, p.coords.longitude.toFixed(2)); updateWeather(); },
+      () => { $weatherTemp.textContent = '定位失败'; },
       { timeout: 10000, maximumAge: 86400000 }
     );
   }
 
-  function initWeather() {
-    if (!config.weatherEnabled) { $weatherInfo.style.display = 'none'; return; }
-    updateWeather();
-    setInterval(updateWeather, 30 * 60 * 1000);
-  }
-
-  // ═══════════ 外卖提醒 ═══════════
-  function updateTakeoutReminder(now) {
-    const startMin = timeToMinutes(config.takeoutStart);
-    const endMin = timeToMinutes(config.takeoutEnd);
-    const nowMin = now.getHours() * 60 + now.getMinutes();
-    const isWeekend = (now.getDay() === 0 || now.getDay() === 6);
-    const inWindow = !isWeekend && nowMin >= startMin && nowMin < endMin;
-
-    if (inWindow) {
+  // ── 外卖 ──
+  let takeoutNotified = false;
+  function updateTakeout(now) {
+    const sm = timeMin(config.takeoutStart), em = timeMin(config.takeoutEnd);
+    const nm = now.getHours() * 60 + now.getMinutes();
+    const weekend = (now.getDay() === 0 || now.getDay() === 6);
+    const inWin = !weekend && nm >= sm && nm < em;
+    if (inWin) {
       $takeoutReminder.classList.add('show');
       if (!takeoutNotified && config.notifyEnabled) {
-        sendNotification('🍜 该点外卖了！', '趁现在还有好选择');
+        if ('Notification' in window && Notification.permission === 'granted')
+          new Notification('🍜 该点外卖了！', { body: '趁现在还有好选择', icon: 'icon.svg' });
         takeoutNotified = true;
       }
     } else {
@@ -930,100 +797,116 @@
     }
   }
 
-  function sendNotification(title, body) {
-    if (!('Notification' in window)) return;
-    if (Notification.permission === 'granted') new Notification(title, { body, icon: 'icon.svg' });
-    else if (Notification.permission !== 'default') Notification.requestPermission().then(p => {
-      if (p === 'granted') new Notification(title, { body, icon: 'icon.svg' });
-    });
+  // ── 整点脉冲 ──
+  function hourlyPulse(now) {
+    if (prevMin !== -1 && now.getMinutes() === 0 && prevMin === 59) {
+      $timeGlow.classList.add('pulse');
+      setTimeout(() => $timeGlow.classList.remove('pulse'), 3000);
+    }
+    prevMin = now.getMinutes();
   }
 
-  // ═══════════ 主循环 ═══════════
+  // ── 主循环 ──
   function tick() {
     const now = new Date();
-    setNum($hour, pad2(now.getHours()));
-    setNum($minute, pad2(now.getMinutes()));
+    const h = now.getHours(), m = now.getMinutes();
+    if (h === 0 && m === 0) applyTheme(now);
+
+    setNum($hour, pad2(h));
+    setNum($minute, pad2(m));
     updateSeconds(now);
-    updateDate(now);
-    updateCountdown(now);
-    updateTakeoutReminder(now);
+
+    // 日期
+    const year = now.getFullYear(), mo = now.getMonth()+1, day = now.getDate();
+    $dateText.innerHTML = '<span>' + year + '</span><span class="dot">·</span><span>' + pad2(mo) + '-' + pad2(day) + '</span><span class="dot">·</span><span>' + weekDays[now.getDay()] + '日</span>';
+
+    // 倒计时
+    const cmin = countdownMin(now);
+    if (cmin <= 0) { $countdown.textContent = '今日已收工 ✦'; $countdown.classList.add('over'); }
+    else {
+      $countdown.classList.remove('over');
+      $countdown.textContent = (Math.floor(cmin/60) || '') + (cmin < 60 ? cmin+' 分钟' : Math.floor(cmin/60)+'h '+(cmin%60)+'min');
+    }
+
+    updateTakeout(now);
+    hourlyPulse(now);
   }
 
-  // ═══════════ 设置面板 ═══════════
-  function populateSettings() {
+  // ── 初始化 ──
+  function init() {
+    applyTheme(new Date());
+    tick();
+    setInterval(tick, 1000);
+    refreshTicker();
+
+    if (config.secondsCycle) {
+      secModeTimer = setTimeout(cycleSecMode, 12000);
+    }
+
+    updateWeather();
+    setInterval(updateWeather, 30 * 60 * 1000);
+
+    if (config.weatherEnabled && !localStorage.getItem(LAT)) requestGeo();
+
+    // 6点/12点/18点切换背景主题
+    setInterval(() => applyTheme(new Date()), 5 * 60 * 1000);
+  }
+
+  // ── 设置面板 ──
+  function fillSettings() {
     $endTime.value = config.endTime;
+    $tickerInterval.value = config.tickerInterval || 8;
     $takeoutStart.value = config.takeoutStart;
     $takeoutEnd.value = config.takeoutEnd;
     $notifyEnabled.checked = config.notifyEnabled;
     $weatherEnabled.checked = config.weatherEnabled;
-    $tickerInterval.value = config.tickerInterval || 8;
+    $secondsCycle.checked = config.secondsCycle;
     $tickerText.value = (config.tickers || DEFAULT_TICKERS).join('\n');
   }
 
-  $settingsBtn.addEventListener('click', function() {
-    populateSettings();
-    $panel.classList.add('open');
-  });
-
-  $panel.addEventListener('click', function(e) {
-    if (e.target === $panel) $panel.classList.remove('open');
-  });
+  $settingsBtn.addEventListener('click', () => { fillSettings(); $panel.classList.add('open'); });
+  $panel.addEventListener('click', e => { if (e.target === $panel) $panel.classList.remove('open'); });
 
   $notifyEnabled.addEventListener('change', function() {
     if (this.checked && 'Notification' in window) Notification.requestPermission();
   });
 
-  $saveBtn.addEventListener('click', function() {
-    if ($endTime.value && /^\d{2}:\d{2}$/.test($endTime.value)) config.endTime = $endTime.value;
-    if ($takeoutStart.value && /^\d{2}:\d{2}$/.test($takeoutStart.value)) config.takeoutStart = $takeoutStart.value;
-    if ($takeoutEnd.value && /^\d{2}:\d{2}$/.test($takeoutEnd.value)) config.takeoutEnd = $takeoutEnd.value;
+  $saveBtn.addEventListener('click', () => {
+    if ($endTime.value) config.endTime = $endTime.value;
+    if ($takeoutStart.value) config.takeoutStart = $takeoutStart.value;
+    if ($takeoutEnd.value) config.takeoutEnd = $takeoutEnd.value;
     config.notifyEnabled = $notifyEnabled.checked;
     config.weatherEnabled = $weatherEnabled.checked;
-
-    const interval = parseInt($tickerInterval.value) || 8;
-    config.tickerInterval = Math.max(3, Math.min(30, interval));
-
-    const tickerStr = $tickerText.value.trim();
-    config.tickers = tickerStr ? tickerStr.split('\n').filter(l => l.trim()) : DEFAULT_TICKERS.slice();
-
+    config.secondsCycle = $secondsCycle.checked;
+    config.tickerInterval = Math.max(3, Math.min(30, parseInt($tickerInterval.value) || 8));
+    config.tickers = $tickerText.value.trim().split('\n').filter(l => l.trim());
     saveConfig();
     takeoutNotified = false;
-    refreshTicker();
     updateWeather();
-    tick();
+    refreshTicker();
+
+    if (config.secondsCycle) stopSecCycle(); cycleSecMode();
+    else { stopSecCycle(); setSecMode(0); }
+
     $panel.classList.remove('open');
   });
 
-  $cancelBtn.addEventListener('click', function() { $panel.classList.remove('open'); });
+  $cancelBtn.addEventListener('click', () => $panel.classList.remove('open'));
 
-  // ═══════════ 锁屏常亮 ═══════════
+  // ── 锁屏常亮 ──
   let wakeLock = null;
-  async function tryAcquireWakeLock() {
+  async function acquireWakeLock() {
     if (!('wakeLock' in navigator)) return;
-    try {
-      wakeLock = await navigator.wakeLock.request('screen');
-      wakeLock.addEventListener('release', function() { wakeLock = null; });
-    } catch {}
+    try { wakeLock = await navigator.wakeLock.request('screen'); } catch(e) {}
   }
-  ['click', 'touchstart', 'visibilitychange'].forEach(evt => {
-    document.addEventListener(evt, function() {
-      if (document.visibilityState === 'visible') tryAcquireWakeLock();
-    });
+  ['click', 'touchstart', 'visibilitychange'].forEach(ev => {
+    document.addEventListener(ev, () => { if (document.visibilityState === 'visible') acquireWakeLock(); });
   });
 
-  // ═══════════ PWA ═══════════
+  // ── PWA ──
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 
-  // ═══════════ 初始化 ═══════════
-  tick();
-  setInterval(tick, 1000);
-  refreshTicker();
-  initWeather();
-
-  // 天气首次定位
-  if (config.weatherEnabled && !localStorage.getItem(LAT_KEY)) {
-    requestGeolocation();
-  }
+  init();
 })();
 </script>
 
