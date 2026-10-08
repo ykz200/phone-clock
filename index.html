@@ -26,7 +26,6 @@
     min-height: 100vh;
     min-height: 100dvh;
     padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-    /* 防烧屏：极缓慢的整体亮度呼吸 */
     animation: breathe 18s ease-in-out infinite;
   }
 
@@ -35,7 +34,13 @@
     50%      { filter: brightness(0.94); }
   }
 
-  /* 主时钟数字 */
+  /* 主时钟区域 */
+  .clock-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
   .time-face {
     display: flex;
     align-items: baseline;
@@ -72,7 +77,22 @@
     50%      { opacity: 0.25; }
   }
 
-  /* 日期 */
+  /* 秒数 */
+  .seconds {
+    display: inline-block;
+    font-size: 0.35em;
+    font-weight: 200;
+    opacity: 0.35;
+    min-width: 2em;
+    text-align: left;
+    margin-left: 0.1em;
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+    align-self: baseline;
+    padding-bottom: 0.08em;
+  }
+
+  /* 日期 + 天气 */
   .date-line {
     margin-top: 0.6em;
     font-size: clamp(4vw, 5vh, 6vw);
@@ -81,8 +101,32 @@
     opacity: 0.75;
     font-variant-numeric: tabular-nums;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    flex-wrap: wrap;
   }
-  .date-line .dot { margin: 0 0.5em; opacity: 0.35; }
+  .date-line .dot { margin: 0 0.4em; opacity: 0.35; }
+
+  .weather-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    opacity: 0.6;
+    font-size: 0.85em;
+    transition: opacity 0.4s ease;
+  }
+  .weather-info .weather-icon {
+    font-size: 1.1em;
+    line-height: 1;
+  }
+  .weather-info .weather-temp {
+    font-variant-numeric: tabular-nums;
+  }
+  .weather-info.loading .weather-temp {
+    opacity: 0.4;
+  }
 
   /* 下班倒计时 */
   .countdown {
@@ -124,22 +168,20 @@
   .takeout-reminder.show {
     transform: translateX(-50%) translateY(0);
     opacity: 1;
-    animation: reminderPulse 2.4s ease-in-out infinite;
   }
   @keyframes reminderPulse {
     0%, 100% { box-shadow: 0 0 0 0 rgba(232, 184, 75, 0.15); }
     50%      { box-shadow: 0 0 20px 4px rgba(232, 184, 75, 0.12); }
   }
-  /* 防烧屏：提醒位置缓慢漂移 */
-  .takeout-reminder.show {
-    animation: reminderPulse 2.4s ease-in-out, reminderDrift 24s ease-in-out infinite;
-  }
   @keyframes reminderDrift {
     0%, 100% { transform: translateX(-50%) translateY(0); }
     50%      { transform: translateX(-50%) translateY(-6px); }
   }
+  .takeout-reminder.show {
+    animation: reminderPulse 2.4s ease-in-out infinite, reminderDrift 24s ease-in-out infinite;
+  }
 
-  /* 设置按钮（隐藏交互入口） */
+  /* 设置按钮 */
   .settings-trigger {
     position: fixed;
     top: 14px;
@@ -161,7 +203,7 @@
     color: #666;
   }
 
-  /* 极简设置浮窗 */
+  /* 设置浮窗 */
   .settings-panel {
     position: fixed;
     inset: 0;
@@ -208,14 +250,14 @@
   .settings-inner input[type="checkbox"] {
     width: auto;
     transform: scale(1.4);
-    margin-right: 0.4em;
   }
-  .settings-inner .field-row label {
-    display: inline-flex;
+  .settings-inner .checkbox-label {
+    display: flex;
     align-items: center;
     opacity: 0.8;
     font-size: 3.8vw;
-    margin-bottom: 0;
+    cursor: pointer;
+    gap: 0.4em;
   }
   .settings-inner .btn-row {
     margin-top: 1.2em;
@@ -234,7 +276,7 @@
   }
   .settings-inner button:hover { background: rgba(255,255,255,0.05); }
 
-  /* 暗色模式下的细微纹理（防 OLED 图像残留） */
+  /* 暗色纹理（防 OLED 烧屏） */
   body::after {
     content: '';
     position: fixed;
@@ -263,18 +305,26 @@
   <button class="settings-trigger" id="settingsBtn" aria-label="设置"></button>
 
   <main>
-    <div class="time-face">
-      <span class="num" id="hour">--</span>
-      <span class="colon">:</span>
-      <span class="num" id="minute">--</span>
+    <div class="clock-section">
+      <div class="time-face">
+        <span class="num" id="hour">--</span>
+        <span class="colon">:</span>
+        <span class="num" id="minute">--</span>
+        <span class="seconds" id="seconds">--</span>
+      </div>
+
+      <div class="date-line" id="dateLine">
+        <span class="date-text">--</span>
+        <span class="weather-info loading" id="weatherInfo">
+          <span class="weather-icon">--</span>
+          <span class="weather-temp">定位中…</span>
+        </span>
+      </div>
+
+      <div class="countdown" id="countdown">--</div>
     </div>
-
-    <div class="date-line" id="dateLine">--</div>
-
-    <div class="countdown" id="countdown">--</div>
   </main>
 
-  <!-- 外卖提醒 -->
   <div class="takeout-reminder" id="takeoutReminder">🍜 该点外卖了！</div>
 
   <div class="settings-panel" id="panel">
@@ -293,8 +343,16 @@
         <label style="margin-top:0.2em">外卖提醒时间段</label>
       </div>
       <div class="field">
-        <input type="checkbox" id="notifyEnabled" checked>
-        <label for="notifyEnabled">启用系统通知提醒</label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="notifyEnabled" checked>
+          <span>启用系统通知提醒</span>
+        </label>
+      </div>
+      <div class="field">
+        <label class="checkbox-label">
+          <input type="checkbox" id="weatherEnabled" checked>
+          <span>显示本地天气</span>
+        </label>
       </div>
       <div class="btn-row">
         <button id="saveBtn">保存</button>
@@ -305,22 +363,28 @@
 
 <script>
 (() => {
-  // ── 元素 ──
+  // ── DOM 引用 ──
   const $hour = document.getElementById('hour');
   const $minute = document.getElementById('minute');
+  const $seconds = document.getElementById('seconds');
   const $dateLine = document.getElementById('dateLine');
+  const $dateText = $dateLine.querySelector('.date-text');
+  const $weatherInfo = document.getElementById('weatherInfo');
+  const $weatherIcon = $weatherInfo.querySelector('.weather-icon');
+  const $weatherTemp = $weatherInfo.querySelector('.weather-temp');
   const $countdown = document.getElementById('countdown');
   const $panel = document.getElementById('panel');
   const $endTime = document.getElementById('endTime');
   const $takeoutStart = document.getElementById('takeoutStart');
   const $takeoutEnd = document.getElementById('takeoutEnd');
   const $notifyEnabled = document.getElementById('notifyEnabled');
+  const $weatherEnabled = document.getElementById('weatherEnabled');
   const $settingsBtn = document.getElementById('settingsBtn');
   const $saveBtn = document.getElementById('saveBtn');
   const $cancelBtn = document.getElementById('cancelBtn');
   const $takeoutReminder = document.getElementById('takeoutReminder');
 
-  // ── 状态 ──
+  // ── 配置 ──
   const STORAGE_KEY = 'deskclock_config';
   let config = loadConfig();
   let takeoutNotified = false;
@@ -330,17 +394,23 @@
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
-        return Object.assign({ endTime: '17:00', takeoutStart: '10:30', takeoutEnd: '11:00', notifyEnabled: true }, parsed);
+        return Object.assign({
+          endTime: '17:00',
+          takeoutStart: '10:30',
+          takeoutEnd: '11:00',
+          notifyEnabled: true,
+          weatherEnabled: true
+        }, parsed);
       }
     } catch {}
-    return { endTime: '17:00', takeoutStart: '10:30', takeoutEnd: '11:00', notifyEnabled: true };
+    return { endTime: '17:00', takeoutStart: '10:30', takeoutEnd: '11:00', notifyEnabled: true, weatherEnabled: true };
   }
 
   function saveConfig() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(config)); } catch {}
   }
 
-  // ── 工具 ──
+  // ── 工具函数 ──
   const pad2 = n => String(n).padStart(2, '0');
 
   function timeToMinutes(hhmm) {
@@ -363,8 +433,144 @@
     const day   = now.getDate();
     const weekDays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
     const week = weekDays[now.getDay()];
-    $dateLine.innerHTML =
+    $dateText.innerHTML =
       '<span>' + year + '</span><span class="dot">·</span><span>' + pad2(month) + '-' + pad2(day) + '</span><span class="dot">·</span><span>' + week + '</span>';
+  }
+
+  // ── 秒数 ──
+  function updateSeconds(now) {
+    setNum($seconds, pad2(now.getSeconds()));
+  }
+
+  // ── 天气 (Open-Meteo, 免费无 Key) ──
+  const LAT_KEY = 'deskclock_lat';
+  const LON_KEY = 'deskclock_lon';
+  const WEATHER_CACHE_KEY = 'deskclock_weather_cache';
+
+  // WMO 天气代码 → 图标 + 描述
+  function wmoToIcon(code) {
+    if (code === 0)  return '☀️';
+    if (code <= 3)  return '🌤';
+    if (code <= 48) return '🌫';
+    if (code <= 57) return '🌦';
+    if (code <= 67) return '🌧';
+    if (code <= 77) return '🌨';
+    if (code <= 82) return '🌧';
+    if (code <= 86) return '🌨';
+    if (code <= 99) return '⛈';
+    return '🌡';
+  }
+
+  function getCachedWeather() {
+    try {
+      const raw = localStorage.getItem(WEATHER_CACHE_KEY);
+      if (!raw) return null;
+      const cache = JSON.parse(raw);
+      // 缓存有效期 30 分钟
+      if (Date.now() - cache.timestamp < 30 * 60 * 1000) {
+        return cache.data;
+      }
+    } catch {}
+    return null;
+  }
+
+  function setCachedWeather(data) {
+    try {
+      localStorage.setItem(WEATHER_CACHE_KEY, JSON.stringify({ timestamp: Date.now(), data: data }));
+    } catch {}
+  }
+
+  async function fetchWeather(lat, lon) {
+    try {
+      const url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&current_weather=true&timezone=auto';
+      const resp = await fetch(url);
+      if (!resp.ok) return null;
+      const json = await resp.json();
+      if (!json.current_weather) return null;
+      const w = json.current_weather;
+      return {
+        temp: Math.round(w.temperature),
+        code: w.weathercode
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  async function updateWeather() {
+    if (!config.weatherEnabled) {
+      $weatherInfo.style.display = 'none';
+      return;
+    }
+    $weatherInfo.style.display = 'inline-flex';
+
+    // 优先用缓存
+    const cached = getCachedWeather();
+    if (cached) {
+      $weatherInfo.classList.remove('loading');
+      $weatherIcon.textContent = wmoToIcon(cached.code);
+      $weatherTemp.textContent = cached.temp + '°';
+      return;
+    }
+
+    // 获取位置
+    const lat = localStorage.getItem(LAT_KEY);
+    const lon = localStorage.getItem(LON_KEY);
+
+    if (lat && lon) {
+      const data = await fetchWeather(parseFloat(lat), parseFloat(lon));
+      if (data) {
+        setCachedWeather(data);
+        $weatherInfo.classList.remove('loading');
+        $weatherIcon.textContent = wmoToIcon(data.code);
+        $weatherTemp.textContent = data.temp + '°';
+      } else {
+        $weatherTemp.textContent = '--°';
+        $weatherIcon.textContent = '🌡';
+      }
+    } else {
+      $weatherTemp.textContent = '定位中…';
+      $weatherIcon.textContent = '--';
+    }
+  }
+
+  function requestGeolocation() {
+    if (!('geolocation' in navigator)) {
+      $weatherTemp.textContent = '无定位';
+      $weatherIcon.textContent = '--';
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      function(pos) {
+        const lat = pos.coords.latitude.toFixed(2);
+        const lon = pos.coords.longitude.toFixed(2);
+        localStorage.setItem(LAT_KEY, lat);
+        localStorage.setItem(LON_KEY, lon);
+        updateWeather();
+      },
+      function() {
+        $weatherTemp.textContent = '定位失败';
+        $weatherIcon.textContent = '--';
+      },
+      { timeout: 10000, maximumAge: 86400000 }
+    );
+  }
+
+  // 启动天气流程
+  function initWeather() {
+    if (!config.weatherEnabled) {
+      $weatherInfo.style.display = 'none';
+      return;
+    }
+    // 如果没缓存 → 尝试定位
+    const cached = getCachedWeather();
+    if (!cached) {
+      requestGeolocation();
+    }
+    updateWeather();
+    // 每 30 分钟刷新一次
+    setInterval(updateWeather, 30 * 60 * 1000);
   }
 
   // ── 下班倒计时 ──
@@ -373,13 +579,11 @@
     const end = new Date(now);
     end.setHours(h, m, 0, 0);
 
-    // 如果今天已过，默认指向明天（周末场景）
     if (end <= now) {
       end.setDate(end.getDate() + 1);
     }
 
     const diff = end - now;
-    // 限制显示范围：超过 8 小时显示"休息中"避免无意义
     if (diff > 8 * 3600 * 1000) {
       $countdown.textContent = '今日已收工 ✦';
       $countdown.classList.add('over');
@@ -400,20 +604,17 @@
     const endMin = timeToMinutes(config.takeoutEnd);
     const nowMin = now.getHours() * 60 + now.getMinutes();
 
-    // 判断当前是否在提醒时间段内（工作日才提醒）
     const isWeekend = (now.getDay() === 0 || now.getDay() === 6);
     const inWindow = !isWeekend && nowMin >= startMin && nowMin < endMin;
 
     if (inWindow) {
       $takeoutReminder.classList.add('show');
-      // 仅在窗口第一次进入时发送系统通知
       if (!takeoutNotified && config.notifyEnabled) {
         sendTakeoutNotification();
         takeoutNotified = true;
       }
     } else {
       $takeoutReminder.classList.remove('show');
-      // 离开窗口后重置通知标志，明天可再触发
       if (!inWindow) takeoutNotified = false;
     }
   }
@@ -421,18 +622,11 @@
   function sendTakeoutNotification() {
     if (!('Notification' in window)) return;
     if (Notification.permission === 'granted') {
-      new Notification('🍜 该点外卖了！', {
-        body: '别忘了点午饭，趁现在还有好选择。',
-        icon: 'icon.svg',
-        silent: false
-      });
+      new Notification('🍜 该点外卖了！', { body: '趁现在还有好选择', icon: 'icon.svg' });
     } else if (Notification.permission !== 'denied') {
       Notification.requestPermission().then(function(perm) {
         if (perm === 'granted') {
-          new Notification('🍜 该点外卖了！', {
-            body: '别忘了点午饭，趁现在还有好选择。',
-            icon: 'icon.svg'
-          });
+          new Notification('🍜 该点外卖了！', { body: '趁现在还有好选择', icon: 'icon.svg' });
         }
       });
     }
@@ -443,6 +637,7 @@
     const now = new Date();
     setNum($hour, pad2(now.getHours()));
     setNum($minute, pad2(now.getMinutes()));
+    updateSeconds(now);
     updateDate(now);
     updateCountdown(now);
     updateTakeoutReminder(now);
@@ -455,48 +650,62 @@
   $takeoutStart.value = config.takeoutStart;
   $takeoutEnd.value = config.takeoutEnd;
   $notifyEnabled.checked = config.notifyEnabled;
+  $weatherEnabled.checked = config.weatherEnabled;
 
   $settingsBtn.addEventListener('click', function() { $panel.classList.add('open'); });
   $panel.addEventListener('click', function(e) {
     if (e.target === $panel) $panel.classList.remove('open');
   });
+
+  $notifyEnabled.addEventListener('change', function() {
+    if (this.checked && 'Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  });
+
   $saveBtn.addEventListener('click', function() {
     const endTimeVal = $endTime.value;
     const startVal = $takeoutStart.value;
     const endVal = $takeoutEnd.value;
 
-    if (endTimeVal && /^\d{2}:\d{2}$/.test(endTimeVal)) {
-      config.endTime = endTimeVal;
-    }
-    if (startVal && /^\d{2}:\d{2}$/.test(startVal)) {
-      config.takeoutStart = startVal;
-    }
-    if (endVal && /^\d{2}:\d{2}$/.test(endVal)) {
-      config.takeoutEnd = endVal;
-    }
+    if (endTimeVal && /^\d{2}:\d{2}$/.test(endTimeVal)) config.endTime = endTimeVal;
+    if (startVal && /^\d{2}:\d{2}$/.test(startVal)) config.takeoutStart = startVal;
+    if (endVal && /^\d{2}:\d{2}$/.test(endVal)) config.takeoutEnd = endVal;
     config.notifyEnabled = $notifyEnabled.checked;
+    config.weatherEnabled = $weatherEnabled.checked;
 
     saveConfig();
     takeoutNotified = false;
+
+    // 天气开关变更时重新加载
+    updateWeather();
+    if (config.weatherEnabled) {
+      const lat = localStorage.getItem(LAT_KEY);
+      const lon = localStorage.getItem(LON_KEY);
+      if (!lat || !lon) requestGeolocation();
+    }
+
     tick();
     $panel.classList.remove('open');
   });
+
   $cancelBtn.addEventListener('click', function() {
     $endTime.value = config.endTime;
     $takeoutStart.value = config.takeoutStart;
     $takeoutEnd.value = config.takeoutEnd;
     $notifyEnabled.checked = config.notifyEnabled;
+    $weatherEnabled.checked = config.weatherEnabled;
     $panel.classList.remove('open');
   });
 
-  // ── 锁屏常亮（Android + Chrome 可用） ──
+  // ── 锁屏常亮 ──
   let wakeLock = null;
   async function tryAcquireWakeLock() {
     if (!('wakeLock' in navigator)) return;
     try {
       wakeLock = await navigator.wakeLock.request('screen');
       wakeLock.addEventListener('release', function() { wakeLock = null; });
-    } catch (e) { /* 用户未与页面交互过时会失败，后续再请求 */ }
+    } catch {}
   }
   ['click', 'touchstart', 'visibilitychange'].forEach(function(evt) {
     document.addEventListener(evt, function() {
@@ -508,6 +717,9 @@
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(function() {});
   }
+
+  // ── 初始化天气 ──
+  initWeather();
 })();
 </script>
 
