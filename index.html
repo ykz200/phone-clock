@@ -885,7 +885,7 @@
     updateWeather();
     refreshTicker();
 
-    if (config.secondsCycle) stopSecCycle(); cycleSecMode();
+    if (config.secondsCycle) { stopSecCycle(); cycleSecMode(); }
     else { stopSecCycle(); setSecMode(0); }
 
     $panel.classList.remove('open');
