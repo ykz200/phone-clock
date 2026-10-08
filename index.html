@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#080808">
-<title>Desk Clock</title>
+<title>Desk Clock · 纸条</title>
 <link rel="manifest" href="manifest.webmanifest">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -34,11 +34,13 @@
     50%      { filter: brightness(0.94); }
   }
 
-  /* 主时钟区域 */
+  /* ── 顶部时钟区 ── */
   .clock-section {
     display: flex;
     flex-direction: column;
     align-items: center;
+    flex-shrink: 0;
+    margin-bottom: 1.2vh;
   }
 
   .time-face {
@@ -46,7 +48,7 @@
     align-items: baseline;
     gap: 0.02em;
     line-height: 1;
-    font-size: clamp(22vw, 30vh, 38vw);
+    font-size: clamp(14vw, 18vh, 24vw);
     font-weight: 200;
     letter-spacing: -0.03em;
     font-variant-numeric: tabular-nums;
@@ -58,7 +60,6 @@
     min-width: 1.45em;
     text-align: center;
     transition: opacity 0.18s ease, transform 0.18s ease;
-    position: relative;
   }
   .time-face .num.changing {
     opacity: 0.6;
@@ -77,72 +78,148 @@
     50%      { opacity: 0.25; }
   }
 
-  /* 秒数 */
   .seconds {
     display: inline-block;
-    font-size: 0.35em;
+    font-size: 0.3em;
     font-weight: 200;
-    opacity: 0.35;
+    opacity: 0.3;
     min-width: 2em;
     text-align: left;
-    margin-left: 0.1em;
+    margin-left: 0.05em;
     letter-spacing: 0.02em;
     font-variant-numeric: tabular-nums;
     align-self: baseline;
-    padding-bottom: 0.08em;
+    padding-bottom: 0.06em;
   }
 
-  /* 日期 + 天气 */
   .date-line {
-    margin-top: 0.6em;
-    font-size: clamp(4vw, 5vh, 6vw);
+    margin-top: 0.4em;
+    font-size: clamp(3vw, 3.5vh, 4.5vw);
     font-weight: 300;
     letter-spacing: 0.04em;
-    opacity: 0.75;
+    opacity: 0.7;
     font-variant-numeric: tabular-nums;
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5em;
+    gap: 0.4em;
     flex-wrap: wrap;
   }
-  .date-line .dot { margin: 0 0.4em; opacity: 0.35; }
+  .date-line .dot { margin: 0 0.35em; opacity: 0.35; }
 
   .weather-info {
     display: inline-flex;
     align-items: center;
-    gap: 0.35em;
-    opacity: 0.6;
+    gap: 0.3em;
+    opacity: 0.55;
     font-size: 0.85em;
     transition: opacity 0.4s ease;
   }
-  .weather-info .weather-icon {
-    font-size: 1.1em;
-    line-height: 1;
-  }
-  .weather-info .weather-temp {
-    font-variant-numeric: tabular-nums;
-  }
-  .weather-info.loading .weather-temp {
-    opacity: 0.4;
-  }
+  .weather-info .weather-icon { font-size: 1.1em; line-height: 1; }
+  .weather-info.loading .weather-temp { opacity: 0.4; }
 
-  /* 下班倒计时 */
   .countdown {
-    margin-top: 0.7em;
-    padding: 0.42em 1.4em;
-    font-size: clamp(3.5vw, 4.2vh, 5vw);
+    margin-top: 0.5em;
+    padding: 0.3em 1.2em;
+    font-size: clamp(2.8vw, 3.2vh, 4vw);
     font-weight: 300;
     border: 1px solid #262626;
     border-radius: 999px;
-    opacity: 0.92;
+    opacity: 0.85;
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.02em;
     background: rgba(255,255,255,0.015);
-    transition: opacity 0.25s ease, border-color 0.3s ease, background 0.3s ease;
+    transition: opacity 0.25s ease;
   }
-  .countdown.over { opacity: 0.4; }
+  .countdown.over { opacity: 0.35; }
+
+  /* ── 分隔线 ── */
+  .divider {
+    width: clamp(60px, 20vw, 120px);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #333, transparent);
+    margin: 0.8vh 0;
+    flex-shrink: 0;
+  }
+
+  /* ── 纸条区 ── */
+  .ticker-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 clamp(6vw, 10vw, 16vw);
+    min-height: 0;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .ticker-card {
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .ticker-icon {
+    font-size: clamp(5vw, 6vh, 8vw);
+    margin-bottom: 0.3em;
+    opacity: 0.7;
+    transition: opacity 0.6s ease;
+  }
+
+  .ticker-main {
+    font-size: clamp(6vw, 8vh, 10vw);
+    font-weight: 300;
+    line-height: 1.35;
+    letter-spacing: 0.05em;
+    opacity: 0.95;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .ticker-sub {
+    font-size: clamp(4vw, 5vh, 7vw);
+    font-weight: 200;
+    opacity: 0.5;
+    margin-top: 0.15em;
+    letter-spacing: 0.06em;
+    font-variant-numeric: tabular-nums;
+    transition: opacity 0.6s ease;
+  }
+
+  .ticker-progress {
+    position: fixed;
+    bottom: clamp(1.5vh, 3vh, 4vh);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    opacity: 0.3;
+    transition: opacity 0.3s ease;
+  }
+  .ticker-progress:hover { opacity: 0.7; }
+  .ticker-progress .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #555;
+    transition: background 0.4s ease;
+  }
+  .ticker-progress .dot.active { background: #f0f0f0; }
+
+  /* 纸条切换动画 */
+  .ticker-card.fade-out .ticker-icon,
+  .ticker-card.fade-out .ticker-main,
+  .ticker-card.fade-out .ticker-sub {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  .ticker-card.fade-in .ticker-icon,
+  .ticker-card.fade-in .ticker-main,
+  .ticker-card.fade-in .ticker-sub {
+    opacity: 0;
+    transform: translateY(8px);
+  }
 
   /* 外卖提醒横幅 */
   .takeout-reminder {
@@ -162,7 +239,6 @@
     transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
     opacity: 0;
     z-index: 100;
-    font-variant-numeric: tabular-nums;
     pointer-events: none;
   }
   .takeout-reminder.show {
@@ -194,9 +270,9 @@
     cursor: pointer;
     opacity: 0;
     transition: opacity 0.3s ease;
+    z-index: 150;
   }
-  .settings-trigger:hover,
-  .settings-trigger:focus-visible { opacity: 1; }
+  .settings-trigger:hover { opacity: 1; }
   .settings-trigger::before {
     content: '⚙';
     font-size: 18px;
@@ -207,28 +283,33 @@
   .settings-panel {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.85);
+    background: rgba(0,0,0,0.9);
     display: none;
     align-items: center;
     justify-content: center;
-    font-size: 4.5vw;
     z-index: 200;
+    overflow-y: auto;
   }
   .settings-panel.open { display: flex; }
-  .settings-inner { text-align: center; width: 80%; max-width: 400px; }
+  .settings-inner {
+    text-align: center;
+    width: 85%;
+    max-width: 420px;
+    padding: 2em 0;
+  }
   .settings-inner h3 {
     font-weight: 400;
-    margin-bottom: 0.5em;
+    margin-bottom: 0.6em;
     opacity: 0.7;
     font-size: 5vw;
   }
   .settings-inner .field {
-    margin: 0.8em 0;
+    margin: 1em 0;
     text-align: left;
   }
   .settings-inner label {
     display: block;
-    margin-bottom: 0.25em;
+    margin-bottom: 0.3em;
     opacity: 0.6;
     font-size: 3.5vw;
   }
@@ -236,21 +317,20 @@
     display: flex;
     gap: 0.6em;
     align-items: center;
+    flex-wrap: wrap;
   }
-  .settings-inner input {
+  .settings-inner input[type="time"],
+  .settings-inner input[type="number"] {
     background: transparent;
     border: 1px solid #333;
     color: inherit;
-    font-size: 5vw;
+    font-size: 4.5vw;
     text-align: center;
-    padding: 0.25em 0.5em;
+    padding: 0.3em 0.6em;
     border-radius: 4px;
     width: 5em;
   }
-  .settings-inner input[type="checkbox"] {
-    width: auto;
-    transform: scale(1.4);
-  }
+  .settings-inner input[type="number"] { width: 4em; }
   .settings-inner .checkbox-label {
     display: flex;
     align-items: center;
@@ -259,8 +339,33 @@
     cursor: pointer;
     gap: 0.4em;
   }
+  .settings-inner input[type="checkbox"] {
+    transform: scale(1.4);
+    accent-color: #e8b84b;
+  }
+  .settings-inner textarea {
+    width: 100%;
+    background: transparent;
+    border: 1px solid #333;
+    color: inherit;
+    font-size: 3.5vw;
+    font-family: inherit;
+    padding: 0.6em 0.8em;
+    border-radius: 6px;
+    resize: vertical;
+    min-height: 6em;
+    line-height: 1.6;
+  }
+  .settings-inner textarea:focus { border-color: #555; outline: none; }
+  .settings-inner .hint {
+    text-align: left;
+    font-size: 2.8vw;
+    opacity: 0.35;
+    margin-top: 0.3em;
+    line-height: 1.5;
+  }
   .settings-inner .btn-row {
-    margin-top: 1.2em;
+    margin-top: 1.5em;
     display: flex;
     gap: 0.6em;
     justify-content: center;
@@ -269,14 +374,14 @@
     background: transparent;
     color: inherit;
     border: 1px solid #444;
-    padding: 0.35em 1.2em;
+    padding: 0.4em 1.4em;
     border-radius: 999px;
     font-size: 4vw;
     cursor: pointer;
   }
   .settings-inner button:hover { background: rgba(255,255,255,0.05); }
 
-  /* 暗色纹理（防 OLED 烧屏） */
+  /* 防烧屏纹理 */
   body::after {
     content: '';
     position: fixed;
@@ -289,14 +394,30 @@
   }
 
   @media (orientation: landscape) {
-    .time-face { font-size: clamp(20vw, 35vh, 34vw); }
-    .date-line { font-size: clamp(2.5vw, 3.5vh, 4vw); }
-    .countdown  { font-size: clamp(2.5vw, 3.5vh, 4vw); }
-    .takeout-reminder { font-size: clamp(2.5vw, 3.5vh, 4vw); }
+    body { flex-direction: row; padding: 0 clamp(2vw, 4vw, 8vw); }
+    .clock-section { margin-bottom: 0; margin-right: clamp(2vw, 4vw, 6vw); flex: 0 0 auto; }
+    .time-face { font-size: clamp(10vh, 14vw, 18vh); }
+    .date-line { font-size: clamp(2vh, 2.5vw, 3vh); }
+    .countdown { font-size: clamp(1.8vh, 2.2vw, 2.8vh); }
+    .divider {
+      width: 1px;
+      height: clamp(80px, 24vh, 160px);
+      margin: 0 clamp(2vw, 4vw, 5vw);
+      background: linear-gradient(180deg, transparent, #333, transparent);
+    }
+    .ticker-section { padding: 0; text-align: left; }
+    .ticker-card { text-align: left; }
+    .ticker-main { font-size: clamp(5vh, 6vw, 8vh); }
+    .ticker-sub { font-size: clamp(3vh, 4vw, 5vh); }
+    .ticker-icon { font-size: clamp(4vh, 5vw, 6vh); }
     .settings-inner h3 { font-size: 3.5vw; }
     .settings-inner label { font-size: 2.5vw; }
-    .settings-inner input { font-size: 3.5vw; }
+    .settings-inner input[type="time"],
+    .settings-inner input[type="number"] { font-size: 3.5vw; }
+    .settings-inner textarea { font-size: 2.8vw; }
     .settings-inner button { font-size: 3vw; }
+    .settings-inner .checkbox-label { font-size: 2.8vw; }
+    .takeout-reminder { font-size: clamp(2.5vh, 3vw, 3.5vh); }
   }
 </style>
 </head>
@@ -304,48 +425,82 @@
 
   <button class="settings-trigger" id="settingsBtn" aria-label="设置"></button>
 
-  <main>
-    <div class="clock-section">
-      <div class="time-face">
-        <span class="num" id="hour">--</span>
-        <span class="colon">:</span>
-        <span class="num" id="minute">--</span>
-        <span class="seconds" id="seconds">--</span>
-      </div>
-
-      <div class="date-line" id="dateLine">
-        <span class="date-text">--</span>
-        <span class="weather-info loading" id="weatherInfo">
-          <span class="weather-icon">--</span>
-          <span class="weather-temp">定位中…</span>
-        </span>
-      </div>
-
-      <div class="countdown" id="countdown">--</div>
+  <!-- 顶部时钟 -->
+  <div class="clock-section">
+    <div class="time-face">
+      <span class="num" id="hour">--</span>
+      <span class="colon">:</span>
+      <span class="num" id="minute">--</span>
+      <span class="seconds" id="seconds">--</span>
     </div>
-  </main>
 
+    <div class="date-line" id="dateLine">
+      <span class="date-text">--</span>
+      <span class="weather-info loading" id="weatherInfo">
+        <span class="weather-icon">--</span>
+        <span class="weather-temp">定位中…</span>
+      </span>
+    </div>
+
+    <div class="countdown" id="countdown">--</div>
+  </div>
+
+  <!-- 分隔线 -->
+  <div class="divider"></div>
+
+  <!-- 纸条区 -->
+  <div class="ticker-section">
+    <div class="ticker-card" id="tickerCard">
+      <div class="ticker-icon" id="tickerIcon">📌</div>
+      <div class="ticker-main" id="tickerMain">今日已收工 ✦</div>
+      <div class="ticker-sub" id="tickerSub"></div>
+    </div>
+  </div>
+
+  <!-- 纸条进度指示 -->
+  <div class="ticker-progress" id="tickerProgress"></div>
+
+  <!-- 外卖提醒 -->
   <div class="takeout-reminder" id="takeoutReminder">🍜 该点外卖了！</div>
 
+  <!-- 设置面板 -->
   <div class="settings-panel" id="panel">
     <div class="settings-inner">
       <h3>设置</h3>
+
       <div class="field">
         <label>下班时间</label>
         <input type="time" id="endTime" value="17:00">
       </div>
+
+      <div class="field">
+        <input type="number" id="tickerInterval" value="8" min="3" max="30" step="1">
+        <label style="margin-top:0.3em">纸条切换间隔（秒）</label>
+      </div>
+
       <div class="field">
         <div class="field-row">
           <input type="time" id="takeoutStart" value="10:30">
           <span style="opacity:0.4">—</span>
           <input type="time" id="takeoutEnd" value="11:00">
         </div>
-        <label style="margin-top:0.2em">外卖提醒时间段</label>
+        <label style="margin-top:0.3em">外卖提醒时间段</label>
       </div>
+
+      <div class="field">
+        <label>纸条内容（每行一条，可包含变量）</label>
+        <textarea id="tickerText" spellcheck="false"></textarea>
+        <div class="hint">
+          变量：{worked} 连续工作分钟 {toFriday} 距周五天数<br>
+          {countdown} 下班倒计时 {weather} 天气 {temp} 温度<br>
+          定时：[10:30] 只在 10:30 前后显示 · [14:00-15:00] 时段显示
+        </div>
+      </div>
+
       <div class="field">
         <label class="checkbox-label">
           <input type="checkbox" id="notifyEnabled" checked>
-          <span>启用系统通知提醒</span>
+          <span>系统通知提醒</span>
         </label>
       </div>
       <div class="field">
@@ -354,6 +509,7 @@
           <span>显示本地天气</span>
         </label>
       </div>
+
       <div class="btn-row">
         <button id="saveBtn">保存</button>
         <button id="cancelBtn">取消</button>
@@ -363,7 +519,7 @@
 
 <script>
 (() => {
-  // ── DOM 引用 ──
+  // ═══════════ DOM ═══════════
   const $hour = document.getElementById('hour');
   const $minute = document.getElementById('minute');
   const $seconds = document.getElementById('seconds');
@@ -379,15 +535,35 @@
   const $takeoutEnd = document.getElementById('takeoutEnd');
   const $notifyEnabled = document.getElementById('notifyEnabled');
   const $weatherEnabled = document.getElementById('weatherEnabled');
+  const $tickerInterval = document.getElementById('tickerInterval');
+  const $tickerText = document.getElementById('tickerText');
   const $settingsBtn = document.getElementById('settingsBtn');
   const $saveBtn = document.getElementById('saveBtn');
   const $cancelBtn = document.getElementById('cancelBtn');
   const $takeoutReminder = document.getElementById('takeoutReminder');
+  const $tickerCard = document.getElementById('tickerCard');
+  const $tickerIcon = document.getElementById('tickerIcon');
+  const $tickerMain = document.getElementById('tickerMain');
+  const $tickerSub = document.getElementById('tickerSub');
+  const $tickerProgress = document.getElementById('tickerProgress');
 
-  // ── 配置 ──
+  // ═══════════ 配置 ═══════════
   const STORAGE_KEY = 'deskclock_config';
   let config = loadConfig();
   let takeoutNotified = false;
+  let currentTickerIndex = -1;
+  let tickerTimer = null;
+  let weatherData = null;
+
+  const DEFAULT_TICKERS = [
+    '{countdown}',
+    '已持续工作 {worked} 分钟\n起来动一动',
+    '{weather} {temp}°\n{weatherTip}',
+    '[10:30-11:00] 🍜 别忘了点外卖\n趁现在还有好选择',
+    '靠窗坐的话可以看看窗外 🌿\n让眼睛休息一下',
+    '距离周五还有 {toFriday} 天\n加油',
+    '今天也要开心 ☀️\n你已经做得很好了'
+  ];
 
   function loadConfig() {
     try {
@@ -399,55 +575,247 @@
           takeoutStart: '10:30',
           takeoutEnd: '11:00',
           notifyEnabled: true,
-          weatherEnabled: true
+          weatherEnabled: true,
+          tickerInterval: 8,
+          tickers: DEFAULT_TICKERS.slice()
         }, parsed);
       }
     } catch {}
-    return { endTime: '17:00', takeoutStart: '10:30', takeoutEnd: '11:00', notifyEnabled: true, weatherEnabled: true };
+    return {
+      endTime: '17:00',
+      takeoutStart: '10:30',
+      takeoutEnd: '11:00',
+      notifyEnabled: true,
+      weatherEnabled: true,
+      tickerInterval: 8,
+      tickers: DEFAULT_TICKERS.slice()
+    };
   }
 
   function saveConfig() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(config)); } catch {}
   }
 
-  // ── 工具函数 ──
+  // ═══════════ 工具 ═══════════
   const pad2 = n => String(n).padStart(2, '0');
-
   function timeToMinutes(hhmm) {
     const [h, m] = hhmm.split(':').map(Number);
     return h * 60 + m;
   }
 
   function setNum(el, next) {
-    const current = el.textContent;
-    if (current === next) return;
+    if (el.textContent === next) return;
     el.classList.add('changing');
     el.textContent = next;
     setTimeout(() => el.classList.remove('changing'), 200);
   }
 
-  // ── 日期格式化 ──
-  function updateDate(now) {
-    const year  = now.getFullYear();
-    const month = now.getMonth() + 1;
-    const day   = now.getDate();
-    const weekDays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-    const week = weekDays[now.getDay()];
-    $dateText.innerHTML =
-      '<span>' + year + '</span><span class="dot">·</span><span>' + pad2(month) + '-' + pad2(day) + '</span><span class="dot">·</span><span>' + week + '</span>';
+  function getWorkedMinutes(now) {
+    const start = new Date(now);
+    start.setHours(8, 20, 0, 0);
+    return Math.max(0, Math.floor((now - start) / 60000));
   }
 
-  // ── 秒数 ──
+  function getDaysToFriday(now) {
+    const day = now.getDay();
+    return (5 - day + 7) % 7 || 7;
+  }
+
+  function getCountdownMin(now) {
+    const [h, m] = config.endTime.split(':').map(Number);
+    const end = new Date(now);
+    end.setHours(h, m, 0, 0);
+    if (end <= now) end.setDate(end.getDate() + 1);
+    return Math.max(0, Math.floor((end - now) / 60000));
+  }
+
+  function getCountdownText(now) {
+    const min = getCountdownMin(now);
+    const hh = Math.floor(min / 60);
+    const mm = min % 60;
+    if (hh > 0) return '离下班还有 ' + hh + ' 小时 ' + mm + ' 分钟';
+    if (mm > 0) return '离下班还有 ' + mm + ' 分钟';
+    return '今日已收工 ✦';
+  }
+
+  function getWeatherText() {
+    if (!weatherData) return '';
+    const code = weatherData.code;
+    if (code === 0) return '晴空万里';
+    if (code <= 2) return '多云';
+    if (code === 3) return '阴天';
+    if (code <= 48) return '有雾';
+    if (code <= 55) return '毛毛雨';
+    if (code <= 65) return '下雨了';
+    if (code <= 77) return '有雪';
+    if (code <= 82) return '阵雨';
+    if (code <= 86) return '阵雪';
+    if (code <= 99) return '雷暴';
+    return '';
+  }
+
+  function getWeatherTemp() {
+    return weatherData ? weatherData.temp : '';
+  }
+
+  function getWeatherTip() {
+    if (!weatherData) return '';
+    const code = weatherData.code;
+    const temp = weatherData.temp;
+    if (code <= 2 && temp > 18) return '适合开窗通风';
+    if (code >= 51) return '出门记得带伞';
+    if (temp >= 30) return '记得补水';
+    if (temp <= 5) return '注意保暖';
+    return '';
+  }
+
+  function replaceVars(text, now) {
+    return text
+      .replace(/\{worked\}/g, getWorkedMinutes(now))
+      .replace(/\{toFriday\}/g, getDaysToFriday(now))
+      .replace(/\{countdown\}/g, getCountdownText(now))
+      .replace(/\{weather\}/g, getWeatherText())
+      .replace(/\{temp\}/g, getWeatherTemp())
+      .replace(/\{weatherTip\}/g, getWeatherTip());
+  }
+
+  function getTickerIcon(mainText) {
+    if (mainText.includes('外卖')) return '🍜';
+    if (mainText.includes('工作') || mainText.includes('起来')) return '💪';
+    if (mainText.includes('下班') || mainText.includes('收工')) return '⏰';
+    if (mainText.includes('周五') || mainText.includes('加油')) return '🎯';
+    if (mainText.includes('窗外') || mainText.includes('眼睛')) return '🌿';
+    if (mainText.includes('开心') || mainText.includes('做得很好')) return '✨';
+    if (mainText.includes('晴')) return '☀️';
+    if (mainText.includes('雨')) return '☔';
+    if (mainText.includes('云') || mainText.includes('多云')) return '⛅';
+    if (mainText.includes('雾')) return '🌫';
+    if (mainText.includes('雪')) return '❄️';
+    if (mainText.includes('雷')) return '⛈';
+    return '📌';
+  }
+
+  // ═══════════ ═══════════
+  function updateDate(now) {
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
+    const weekDays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+    $dateText.innerHTML =
+      '<span>' + year + '</span><span class="dot">·</span><span>' + pad2(month) + '-' + pad2(day) + '</span><span class="dot">·</span><span>' + weekDays[now.getDay()] + '</span>';
+  }
+
   function updateSeconds(now) {
     setNum($seconds, pad2(now.getSeconds()));
   }
 
-  // ── 天气 (Open-Meteo, 免费无 Key) ──
+  function updateCountdown(now) {
+    const min = getCountdownMin(now);
+    if (min <= 0) {
+      $countdown.textContent = '今日已收工 ✦';
+      $countdown.classList.add('over');
+      return;
+    }
+    $countdown.classList.remove('over');
+    const hh = Math.floor(min / 60);
+    const mm = min % 60;
+    $countdown.textContent = (hh > 0 ? hh + ' 小时 ' + mm + ' 分钟' : mm + ' 分钟');
+  }
+
+  // ═══════════ 纸条系统 ═══════════
+  function parseTicker(raw) {
+    // 返回 { show, mainLines[], subLines[] }
+    const lines = raw.split('\n');
+    const condMatch = lines[0].match(/^\[(\d{2}:\d{2})(?:-(\d{2}:\d{2}))?\]\s*(.*)/);
+
+    let timeRange = null;
+    if (condMatch) {
+      timeRange = {
+        start: timeToMinutes(condMatch[1]),
+        end: condMatch[2] ? timeToMinutes(condMatch[2]) : condMatch[1] + 30
+      };
+    }
+
+    let text = condMatch ? (condMatch[3] + '\n' + lines.slice(1).join('\n')) : raw;
+    return { timeRange, text: text.trim() };
+  }
+
+  function isTickerVisible(parsed, now) {
+    if (!parsed.timeRange) return true;
+    const nowMin = now.getHours() * 60 + now.getMinutes();
+    return nowMin >= parsed.timeRange.start && nowMin < parsed.timeRange.end;
+  }
+
+  function renderTickerItem(rawText, now) {
+    const replaced = replaceVars(rawText, now);
+    const lines = replaced.split('\n').filter(l => l.trim());
+    $tickerMain.textContent = lines[0] || '';
+    $tickerSub.textContent = lines.slice(1).join('  ');
+    $tickerIcon.textContent = getTickerIcon(replaced);
+  }
+
+  function getVisibleTickers(now) {
+    return config.tickers.filter(t => {
+      const parsed = parseTicker(t);
+      return isTickerVisible(parsed, now);
+    });
+  }
+
+  function renderProgressDots(count, active) {
+    $tickerProgress.innerHTML = '';
+    if (count <= 1) return;
+    for (let i = 0; i < count; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (i === active ? ' active' : '');
+      $tickerProgress.appendChild(dot);
+    }
+  }
+
+  function showNextTicker() {
+    if (!config.tickers || config.tickers.length === 0) {
+      $tickerMain.textContent = '暂无纸条';
+      $tickerSub.textContent = '';
+      return;
+    }
+
+    const now = new Date();
+    const visible = getVisibleTickers(now);
+
+    if (visible.length === 0) {
+      $tickerMain.textContent = '✨';
+      $tickerSub.textContent = '享受当下';
+      $tickerIcon.textContent = '📌';
+      renderProgressDots(0, -1);
+      return;
+    }
+
+    // 选择下一张纸条
+    currentTickerIndex = (currentTickerIndex + 1) % visible.length;
+    const raw = visible[currentTickerIndex];
+
+    // 切换到解析后的 main 部分
+    const parsed = parseTicker(raw);
+    renderTickerItem(parsed.text, now);
+    renderProgressDots(visible.length, currentTickerIndex);
+  }
+
+  function scheduleTickers() {
+    if (tickerTimer) clearInterval(tickerTimer);
+    const interval = Math.max(3, config.tickerInterval || 8) * 1000;
+    tickerTimer = setInterval(showNextTicker, interval);
+  }
+
+  function refreshTicker() {
+    currentTickerIndex = -1;
+    showNextTicker();
+    scheduleTickers();
+  }
+
+  // ═══════════ 天气 ═══════════
   const LAT_KEY = 'deskclock_lat';
   const LON_KEY = 'deskclock_lon';
   const WEATHER_CACHE_KEY = 'deskclock_weather_cache';
 
-  // WMO 天气代码 → 图标 + 描述
   function wmoToIcon(code) {
     if (code === 0)  return '☀️';
     if (code <= 3)  return '🌤';
@@ -466,18 +834,13 @@
       const raw = localStorage.getItem(WEATHER_CACHE_KEY);
       if (!raw) return null;
       const cache = JSON.parse(raw);
-      // 缓存有效期 30 分钟
-      if (Date.now() - cache.timestamp < 30 * 60 * 1000) {
-        return cache.data;
-      }
+      if (Date.now() - cache.timestamp < 30 * 60 * 1000) return cache.data;
     } catch {}
     return null;
   }
 
   function setCachedWeather(data) {
-    try {
-      localStorage.setItem(WEATHER_CACHE_KEY, JSON.stringify({ timestamp: Date.now(), data: data }));
-    } catch {}
+    try { localStorage.setItem(WEATHER_CACHE_KEY, JSON.stringify({ timestamp: Date.now(), data: data })); } catch {}
   }
 
   async function fetchWeather(lat, lon) {
@@ -488,13 +851,8 @@
       const json = await resp.json();
       if (!json.current_weather) return null;
       const w = json.current_weather;
-      return {
-        temp: Math.round(w.temperature),
-        code: w.weathercode
-      };
-    } catch {
-      return null;
-    }
+      return { temp: Math.round(w.temperature), code: w.weathercode };
+    } catch { return null; }
   }
 
   async function updateWeather() {
@@ -504,135 +862,82 @@
     }
     $weatherInfo.style.display = 'inline-flex';
 
-    // 优先用缓存
     const cached = getCachedWeather();
     if (cached) {
+      weatherData = cached;
       $weatherInfo.classList.remove('loading');
       $weatherIcon.textContent = wmoToIcon(cached.code);
       $weatherTemp.textContent = cached.temp + '°';
+      refreshTicker(); // 天气变化可能影响纸条内容
       return;
     }
 
-    // 获取位置
     const lat = localStorage.getItem(LAT_KEY);
     const lon = localStorage.getItem(LON_KEY);
-
     if (lat && lon) {
       const data = await fetchWeather(parseFloat(lat), parseFloat(lon));
       if (data) {
+        weatherData = data;
         setCachedWeather(data);
         $weatherInfo.classList.remove('loading');
         $weatherIcon.textContent = wmoToIcon(data.code);
         $weatherTemp.textContent = data.temp + '°';
+        refreshTicker();
       } else {
         $weatherTemp.textContent = '--°';
         $weatherIcon.textContent = '🌡';
       }
-    } else {
-      $weatherTemp.textContent = '定位中…';
-      $weatherIcon.textContent = '--';
     }
   }
 
   function requestGeolocation() {
-    if (!('geolocation' in navigator)) {
-      $weatherTemp.textContent = '无定位';
-      $weatherIcon.textContent = '--';
-      return;
-    }
-
+    if (!('geolocation' in navigator)) { $weatherTemp.textContent = '无定位'; return; }
     navigator.geolocation.getCurrentPosition(
       function(pos) {
-        const lat = pos.coords.latitude.toFixed(2);
-        const lon = pos.coords.longitude.toFixed(2);
-        localStorage.setItem(LAT_KEY, lat);
-        localStorage.setItem(LON_KEY, lon);
+        localStorage.setItem(LAT_KEY, pos.coords.latitude.toFixed(2));
+        localStorage.setItem(LON_KEY, pos.coords.longitude.toFixed(2));
         updateWeather();
       },
-      function() {
-        $weatherTemp.textContent = '定位失败';
-        $weatherIcon.textContent = '--';
-      },
+      function() { $weatherTemp.textContent = '定位失败'; $weatherIcon.textContent = '--'; },
       { timeout: 10000, maximumAge: 86400000 }
     );
   }
 
-  // 启动天气流程
   function initWeather() {
-    if (!config.weatherEnabled) {
-      $weatherInfo.style.display = 'none';
-      return;
-    }
-    // 如果没缓存 → 尝试定位
-    const cached = getCachedWeather();
-    if (!cached) {
-      requestGeolocation();
-    }
+    if (!config.weatherEnabled) { $weatherInfo.style.display = 'none'; return; }
     updateWeather();
-    // 每 30 分钟刷新一次
     setInterval(updateWeather, 30 * 60 * 1000);
   }
 
-  // ── 下班倒计时 ──
-  function updateCountdown(now) {
-    const [h, m] = config.endTime.split(':').map(Number);
-    const end = new Date(now);
-    end.setHours(h, m, 0, 0);
-
-    if (end <= now) {
-      end.setDate(end.getDate() + 1);
-    }
-
-    const diff = end - now;
-    if (diff > 8 * 3600 * 1000) {
-      $countdown.textContent = '今日已收工 ✦';
-      $countdown.classList.add('over');
-      return;
-    }
-
-    $countdown.classList.remove('over');
-    const totalMin = Math.floor(diff / 60000);
-    const hh = Math.floor(totalMin / 60);
-    const mm = totalMin % 60;
-    $countdown.textContent =
-      (hh > 0 ? '离下班还有 ' + hh + ' 小时 ' + mm + ' 分钟' : '离下班还有 ' + mm + ' 分钟');
-  }
-
-  // ── 外卖提醒 ──
+  // ═══════════ 外卖提醒 ═══════════
   function updateTakeoutReminder(now) {
     const startMin = timeToMinutes(config.takeoutStart);
     const endMin = timeToMinutes(config.takeoutEnd);
     const nowMin = now.getHours() * 60 + now.getMinutes();
-
     const isWeekend = (now.getDay() === 0 || now.getDay() === 6);
     const inWindow = !isWeekend && nowMin >= startMin && nowMin < endMin;
 
     if (inWindow) {
       $takeoutReminder.classList.add('show');
       if (!takeoutNotified && config.notifyEnabled) {
-        sendTakeoutNotification();
+        sendNotification('🍜 该点外卖了！', '趁现在还有好选择');
         takeoutNotified = true;
       }
     } else {
       $takeoutReminder.classList.remove('show');
-      if (!inWindow) takeoutNotified = false;
+      takeoutNotified = false;
     }
   }
 
-  function sendTakeoutNotification() {
+  function sendNotification(title, body) {
     if (!('Notification' in window)) return;
-    if (Notification.permission === 'granted') {
-      new Notification('🍜 该点外卖了！', { body: '趁现在还有好选择', icon: 'icon.svg' });
-    } else if (Notification.permission !== 'denied') {
-      Notification.requestPermission().then(function(perm) {
-        if (perm === 'granted') {
-          new Notification('🍜 该点外卖了！', { body: '趁现在还有好选择', icon: 'icon.svg' });
-        }
-      });
-    }
+    if (Notification.permission === 'granted') new Notification(title, { body, icon: 'icon.svg' });
+    else if (Notification.permission !== 'default') Notification.requestPermission().then(p => {
+      if (p === 'granted') new Notification(title, { body, icon: 'icon.svg' });
+    });
   }
 
-  // ── 主循环 ──
+  // ═══════════ 主循环 ═══════════
   function tick() {
     const now = new Date();
     setNum($hour, pad2(now.getHours()));
@@ -642,63 +947,55 @@
     updateCountdown(now);
     updateTakeoutReminder(now);
   }
-  tick();
-  setInterval(tick, 1000);
 
-  // ── 设置面板 ──
-  $endTime.value = config.endTime;
-  $takeoutStart.value = config.takeoutStart;
-  $takeoutEnd.value = config.takeoutEnd;
-  $notifyEnabled.checked = config.notifyEnabled;
-  $weatherEnabled.checked = config.weatherEnabled;
-
-  $settingsBtn.addEventListener('click', function() { $panel.classList.add('open'); });
-  $panel.addEventListener('click', function(e) {
-    if (e.target === $panel) $panel.classList.remove('open');
-  });
-
-  $notifyEnabled.addEventListener('change', function() {
-    if (this.checked && 'Notification' in window && Notification.permission === 'default') {
-      Notification.requestPermission();
-    }
-  });
-
-  $saveBtn.addEventListener('click', function() {
-    const endTimeVal = $endTime.value;
-    const startVal = $takeoutStart.value;
-    const endVal = $takeoutEnd.value;
-
-    if (endTimeVal && /^\d{2}:\d{2}$/.test(endTimeVal)) config.endTime = endTimeVal;
-    if (startVal && /^\d{2}:\d{2}$/.test(startVal)) config.takeoutStart = startVal;
-    if (endVal && /^\d{2}:\d{2}$/.test(endVal)) config.takeoutEnd = endVal;
-    config.notifyEnabled = $notifyEnabled.checked;
-    config.weatherEnabled = $weatherEnabled.checked;
-
-    saveConfig();
-    takeoutNotified = false;
-
-    // 天气开关变更时重新加载
-    updateWeather();
-    if (config.weatherEnabled) {
-      const lat = localStorage.getItem(LAT_KEY);
-      const lon = localStorage.getItem(LON_KEY);
-      if (!lat || !lon) requestGeolocation();
-    }
-
-    tick();
-    $panel.classList.remove('open');
-  });
-
-  $cancelBtn.addEventListener('click', function() {
+  // ═══════════ 设置面板 ═══════════
+  function populateSettings() {
     $endTime.value = config.endTime;
     $takeoutStart.value = config.takeoutStart;
     $takeoutEnd.value = config.takeoutEnd;
     $notifyEnabled.checked = config.notifyEnabled;
     $weatherEnabled.checked = config.weatherEnabled;
+    $tickerInterval.value = config.tickerInterval || 8;
+    $tickerText.value = (config.tickers || DEFAULT_TICKERS).join('\n');
+  }
+
+  $settingsBtn.addEventListener('click', function() {
+    populateSettings();
+    $panel.classList.add('open');
+  });
+
+  $panel.addEventListener('click', function(e) {
+    if (e.target === $panel) $panel.classList.remove('open');
+  });
+
+  $notifyEnabled.addEventListener('change', function() {
+    if (this.checked && 'Notification' in window) Notification.requestPermission();
+  });
+
+  $saveBtn.addEventListener('click', function() {
+    if ($endTime.value && /^\d{2}:\d{2}$/.test($endTime.value)) config.endTime = $endTime.value;
+    if ($takeoutStart.value && /^\d{2}:\d{2}$/.test($takeoutStart.value)) config.takeoutStart = $takeoutStart.value;
+    if ($takeoutEnd.value && /^\d{2}:\d{2}$/.test($takeoutEnd.value)) config.takeoutEnd = $takeoutEnd.value;
+    config.notifyEnabled = $notifyEnabled.checked;
+    config.weatherEnabled = $weatherEnabled.checked;
+
+    const interval = parseInt($tickerInterval.value) || 8;
+    config.tickerInterval = Math.max(3, Math.min(30, interval));
+
+    const tickerStr = $tickerText.value.trim();
+    config.tickers = tickerStr ? tickerStr.split('\n').filter(l => l.trim()) : DEFAULT_TICKERS.slice();
+
+    saveConfig();
+    takeoutNotified = false;
+    refreshTicker();
+    updateWeather();
+    tick();
     $panel.classList.remove('open');
   });
 
-  // ── 锁屏常亮 ──
+  $cancelBtn.addEventListener('click', function() { $panel.classList.remove('open'); });
+
+  // ═══════════ 锁屏常亮 ═══════════
   let wakeLock = null;
   async function tryAcquireWakeLock() {
     if (!('wakeLock' in navigator)) return;
@@ -707,19 +1004,25 @@
       wakeLock.addEventListener('release', function() { wakeLock = null; });
     } catch {}
   }
-  ['click', 'touchstart', 'visibilitychange'].forEach(function(evt) {
+  ['click', 'touchstart', 'visibilitychange'].forEach(evt => {
     document.addEventListener(evt, function() {
       if (document.visibilityState === 'visible') tryAcquireWakeLock();
     });
   });
 
-  // ── PWA 注册 ──
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(function() {});
-  }
+  // ═══════════ PWA ═══════════
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 
-  // ── 初始化天气 ──
+  // ═══════════ 初始化 ═══════════
+  tick();
+  setInterval(tick, 1000);
+  refreshTicker();
   initWeather();
+
+  // 天气首次定位
+  if (config.weatherEnabled && !localStorage.getItem(LAT_KEY)) {
+    requestGeolocation();
+  }
 })();
 </script>
 
