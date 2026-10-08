@@ -96,9 +96,48 @@
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.02em;
     background: rgba(255,255,255,0.015);
-    transition: opacity 0.25s ease;
+    transition: opacity 0.25s ease, border-color 0.3s ease, background 0.3s ease;
   }
   .countdown.over { opacity: 0.4; }
+
+  /* 外卖提醒横幅 */
+  .takeout-reminder {
+    position: fixed;
+    bottom: clamp(2vh, 4vh, 6vh);
+    left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    padding: 0.7em 2em;
+    font-size: clamp(3.5vw, 4.5vh, 5.5vw);
+    font-weight: 400;
+    border: 1px solid #e8b84b;
+    border-radius: 999px;
+    background: rgba(232, 184, 75, 0.08);
+    color: #e8b84b;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
+    opacity: 0;
+    z-index: 100;
+    font-variant-numeric: tabular-nums;
+    pointer-events: none;
+  }
+  .takeout-reminder.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+    animation: reminderPulse 2.4s ease-in-out infinite;
+  }
+  @keyframes reminderPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(232, 184, 75, 0.15); }
+    50%      { box-shadow: 0 0 20px 4px rgba(232, 184, 75, 0.12); }
+  }
+  /* 防烧屏：提醒位置缓慢漂移 */
+  .takeout-reminder.show {
+    animation: reminderPulse 2.4s ease-in-out, reminderDrift 24s ease-in-out infinite;
+  }
+  @keyframes reminderDrift {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%      : translateX(-50%) translateY(-6px);
+  }
 
   /* 设置按钮（隐藏交互入口） */
   .settings-trigger {
@@ -131,14 +170,30 @@
     align-items: center;
     justify-content: center;
     font-size: 4.5vw;
+    z-index: 200;
   }
   .settings-panel.open { display: flex; }
-  .settings-inner { text-align: center; }
+  .settings-inner { text-align: center; width: 80%; max-width: 400px; }
+  .settings-inner h3 {
+    font-weight: 400;
+    margin-bottom: 0.5em;
+    opacity: 0.7;
+    font-size: 5vw;
+  }
+  .settings-inner .field {
+    margin: 0.8em 0;
+    text-align: left;
+  }
   .settings-inner label {
     display: block;
-    margin: 0.6em 0;
-    opacity: 0.8;
-    font-size: 4vw;
+    margin-bottom: 0.25em;
+    opacity: 0.6;
+    font-size: 3.5vw;
+  }
+  .settings-inner .field-row {
+    display: flex;
+    gap: 0.6em;
+    align-items: center;
   }
   .settings-inner input {
     background: transparent;
@@ -146,12 +201,29 @@
     color: inherit;
     font-size: 5vw;
     text-align: center;
-    padding: 0.25em 0.6em;
+    padding: 0.25em 0.5em;
     border-radius: 4px;
-    width: 6em;
+    width: 5em;
+  }
+  .settings-inner input[type="checkbox"] {
+    width: auto;
+    transform: scale(1.4);
+    margin-right: 0.4em;
+  }
+  .settings-inner .field-row label {
+    display: inline-flex;
+    align-items: center;
+    opacity: 0.8;
+    font-size: 3.8vw;
+    margin-bottom: 0;
+  }
+  .settings-inner .btn-row {
+    margin-top: 1.2em;
+    display: flex;
+    gap: 0.6em;
+    justify-content: center;
   }
   .settings-inner button {
-    margin-top: 1.2em;
     background: transparent;
     color: inherit;
     border: 1px solid #444;
@@ -178,12 +250,17 @@
     .time-face { font-size: clamp(20vw, 35vh, 34vw); }
     .date-line { font-size: clamp(2.5vw, 3.5vh, 4vw); }
     .countdown  { font-size: clamp(2.5vw, 3.5vh, 4vw); }
+    .takeout-reminder { font-size: clamp(2.5vw, 3.5vh, 4vw); }
+    .settings-inner h3 { font-size: 3.5vw; }
+    .settings-inner label { font-size: 2.5vw; }
+    .settings-inner input { font-size: 3.5vw; }
+    .settings-inner button { font-size: 3vw; }
   }
 </style>
 </head>
 <body>
 
-  <button class="settings-trigger" id="settingsBtn" aria-label="设置下班时间"></button>
+  <button class="settings-trigger" id="settingsBtn" aria-label="设置"></button>
 
   <main>
     <div class="time-face">
@@ -197,15 +274,31 @@
     <div class="countdown" id="countdown">--</div>
   </main>
 
+  <!-- 外卖提醒 -->
+  <div class="takeout-reminder" id="takeoutReminder">🍜 该点外卖了！</div>
+
   <div class="settings-panel" id="panel">
     <div class="settings-inner">
-      <h3 style="font-weight:400; margin-bottom:0.4em; opacity:0.7">下班时间</h3>
-      <label>
+      <h3>设置</h3>
+      <div class="field">
+        <label>下班时间</label>
         <input type="time" id="endTime" value="17:00">
-      </label>
-      <div>
+      </div>
+      <div class="field">
+        <div class="field-row">
+          <input type="time" id="takeoutStart" value="10:30">
+          <span style="opacity:0.4">—</span>
+          <input type="time" id="takeoutEnd" value="11:00">
+        </div>
+        <label style="margin-top:0.2em">外卖提醒时间段</label>
+      </div>
+      <div class="field">
+        <input type="checkbox" id="notifyEnabled" checked>
+        <label for="notifyEnabled">启用系统通知提醒</label>
+      </div>
+      <div class="btn-row">
         <button id="saveBtn">保存</button>
-        <button id="cancelBtn" style="margin-left:0.4em">取消</button>
+        <button id="cancelBtn">取消</button>
       </div>
     </div>
   </div>
@@ -219,19 +312,28 @@
   const $countdown = document.getElementById('countdown');
   const $panel = document.getElementById('panel');
   const $endTime = document.getElementById('endTime');
+  const $takeoutStart = document.getElementById('takeoutStart');
+  const $takeoutEnd = document.getElementById('takeoutEnd');
+  const $notifyEnabled = document.getElementById('notifyEnabled');
   const $settingsBtn = document.getElementById('settingsBtn');
   const $saveBtn = document.getElementById('saveBtn');
   const $cancelBtn = document.getElementById('cancelBtn');
+  const $takeoutReminder = document.getElementById('takeoutReminder');
 
   // ── 状态 ──
   const STORAGE_KEY = 'deskclock_config';
   let config = loadConfig();
+  let takeoutNotified = false;
 
   function loadConfig() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : { endTime: '17:00' };
-    } catch { return { endTime: '17:00' }; }
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        return Object.assign({ endTime: '17:00', takeoutStart: '10:30', takeoutEnd: '11:00', notifyEnabled: true }, parsed);
+      }
+    } catch {}
+    return { endTime: '17:00', takeoutStart: '10:30', takeoutEnd: '11:00', notifyEnabled: true };
   }
 
   function saveConfig() {
@@ -240,6 +342,11 @@
 
   // ── 工具 ──
   const pad2 = n => String(n).padStart(2, '0');
+
+  function timeToMinutes(hhmm) {
+    const [h, m] = hhmm.split(':').map(Number);
+    return h * 60 + m;
+  }
 
   function setNum(el, next) {
     const current = el.textContent;
@@ -287,6 +394,50 @@
       (hh > 0 ? '离下班还有 ' + hh + ' 小时 ' + mm + ' 分钟' : '离下班还有 ' + mm + ' 分钟');
   }
 
+  // ── 外卖提醒 ──
+  function updateTakeoutReminder(now) {
+    const startMin = timeToMinutes(config.takeoutStart);
+    const endMin = timeToMinutes(config.takeoutEnd);
+    const nowMin = now.getHours() * 60 + now.getMinutes();
+
+    // 判断当前是否在提醒时间段内（工作日才提醒）
+    const isWeekend = (now.getDay() === 0 || now.getDay() === 6);
+    const inWindow = !isWeekend && nowMin >= startMin && nowMin < endMin;
+
+    if (inWindow) {
+      $takeoutReminder.classList.add('show');
+      // 仅在窗口第一次进入时发送系统通知
+      if (!takeoutNotified && config.notifyEnabled) {
+        sendTakeoutNotification();
+        takeoutNotified = true;
+      }
+    } else {
+      $takeoutReminder.classList.remove('show');
+      // 离开窗口后重置通知标志，明天可再触发
+      if (!inWindow) takeoutNotified = false;
+    }
+  }
+
+  function sendTakeoutNotification() {
+    if (!('Notification' in window)) return;
+    if (Notification.permission === 'granted') {
+      new Notification('🍜 该点外卖了！', {
+        body: '别忘了点午饭，趁现在还有好选择。',
+        icon: 'icon.svg',
+        silent: false
+      });
+    } else if (Notification.permission !== 'denied') {
+      Notification.requestPermission().then(function(perm) {
+        if (perm === 'granted') {
+          new Notification('🍜 该点外卖了！', {
+            body: '别忘了点午饭，趁现在还有好选择。',
+            icon: 'icon.svg'
+          });
+        }
+      });
+    }
+  }
+
   // ── 主循环 ──
   function tick() {
     const now = new Date();
@@ -294,27 +445,47 @@
     setNum($minute, pad2(now.getMinutes()));
     updateDate(now);
     updateCountdown(now);
+    updateTakeoutReminder(now);
   }
   tick();
   setInterval(tick, 1000);
 
   // ── 设置面板 ──
   $endTime.value = config.endTime;
+  $takeoutStart.value = config.takeoutStart;
+  $takeoutEnd.value = config.takeoutEnd;
+  $notifyEnabled.checked = config.notifyEnabled;
+
   $settingsBtn.addEventListener('click', function() { $panel.classList.add('open'); });
   $panel.addEventListener('click', function(e) {
     if (e.target === $panel) $panel.classList.remove('open');
   });
   $saveBtn.addEventListener('click', function() {
-    const v = $endTime.value;
-    if (v && /^\d{2}:\d{2}$/.test(v)) {
-      config.endTime = v;
-      saveConfig();
-      tick();
+    const endTimeVal = $endTime.value;
+    const startVal = $takeoutStart.value;
+    const endVal = $takeoutEnd.value;
+
+    if (endTimeVal && /^\d{2}:\d{2}$/.test(endTimeVal)) {
+      config.endTime = endTimeVal;
     }
+    if (startVal && /^\d{2}:\d{2}$/.test(startVal)) {
+      config.takeoutStart = startVal;
+    }
+    if (endVal && /^\d{2}:\d{2}$/.test(endVal)) {
+      config.takeoutEnd = endVal;
+    }
+    config.notifyEnabled = $notifyEnabled.checked;
+
+    saveConfig();
+    takeoutNotified = false;
+    tick();
     $panel.classList.remove('open');
   });
   $cancelBtn.addEventListener('click', function() {
     $endTime.value = config.endTime;
+    $takeoutStart.value = config.takeoutStart;
+    $takeoutEnd.value = config.takeoutEnd;
+    $notifyEnabled.checked = config.notifyEnabled;
     $panel.classList.remove('open');
   });
 
