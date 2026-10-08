@@ -468,7 +468,6 @@
 <script>
 (() => {
   'use strict';
-  try {
 
   // ── DOM ──
   const $hour = document.getElementById('hour');
@@ -909,7 +908,6 @@
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 
   init();
-  } catch(e) { document.getElementById('tickerMain').textContent = 'ERR:' + e.message; }
 })();
 </script>
 
