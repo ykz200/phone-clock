@@ -518,10 +518,7 @@
   </div>
 
 <script>
-window.__diag = [];
-window.__diag.push('script-start');
 (() => {
-  try {
   // ═══════════ DOM ═══════════
   const $hour = document.getElementById('hour');
   const $minute = document.getElementById('minute');
@@ -552,11 +549,6 @@ window.__diag.push('script-start');
 
   // ═══════════ 配置 ═══════════
   const STORAGE_KEY = 'deskclock_config';
-  let config = loadConfig();
-  let takeoutNotified = false;
-  let currentTickerIndex = -1;
-  let tickerTimer = null;
-  let weatherData = null;
 
   const DEFAULT_TICKERS = [
     '{countdown}',
@@ -567,6 +559,12 @@ window.__diag.push('script-start');
     '距离周五还有 {toFriday} 天\n加油',
     '今天也要开心 ☀️\n你已经做得很好了'
   ];
+
+  let config = loadConfig();
+  let takeoutNotified = false;
+  let currentTickerIndex = -1;
+  let tickerTimer = null;
+  let weatherData = null;
 
   function loadConfig() {
     try {
@@ -1026,8 +1024,6 @@ window.__diag.push('script-start');
   if (config.weatherEnabled && !localStorage.getItem(LAT_KEY)) {
     requestGeolocation();
   }
-  window.__diag.push('script-end-ok');
-  } catch(e) { window.__diag.push('ERROR:' + e.message + '|' + (e.stack||'').split('\n')[1]); }
 })();
 </script>
 
