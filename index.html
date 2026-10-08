@@ -518,7 +518,10 @@
   </div>
 
 <script>
+window.__diag = [];
+window.__diag.push('script-start');
 (() => {
+  try {
   // ═══════════ DOM ═══════════
   const $hour = document.getElementById('hour');
   const $minute = document.getElementById('minute');
@@ -1023,6 +1026,8 @@
   if (config.weatherEnabled && !localStorage.getItem(LAT_KEY)) {
     requestGeolocation();
   }
+  window.__diag.push('script-end-ok');
+  } catch(e) { window.__diag.push('ERROR:' + e.message + '|' + (e.stack||'').split('\n')[1]); }
 })();
 </script>
 
