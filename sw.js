@@ -1,40 +1,44 @@
-const CACHE_NAME = 'v2';
+// Service Worker v3 — 活 · Clock
+const CACHE_NAME = 'clock-v3';
+const PRECACHE_URLS = [
+  './',
+  './index.html',
+  './manifest.webmanifest',
+  './icon.svg'
+];
 
-self.addEventListener('install', function(e) {
+// 安装：预缓存核心资源
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache =>
+      cache.addAll(PRECACHE_URLS).catch(() => {})
+    )
+  );
   self.skipWaiting();
 });
 
-self.addEventListener('activate', function(e) {
-  self.clients.claim();
-  // 清理旧版本缓存
-  e.waitUntil(
-    caches.keys().then(function(keys) {
-      return Promise.all(
-        keys.filter(function(key) { return key !== CACHE_NAME; })
-            .map(function(key) { return caches.delete(key); })
-      );
-    })
+// 激活：清理旧缓存
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+    )
   );
+  self.clients.claim();
 });
 
-self.addEventListener('fetch', function(e) {
-  // HTML 请求始终走网络优先，确保更新及时生效
-  if (e.request.destination === 'document' || e.request.url.endsWith('.html')) {
-    e.respondWith(
-      fetch(e.request).then(function(resp) {
-        var clone = resp.clone();
-        caches.open(CACHE_NAME).then(function(cache) { cache.put(e.request, clone); });
-        return resp;
-      }).catch(function() { return caches.match(e.request); })
-    );
+// 拉取策略：网络优先，离线回退缓存
+self.addEventListener('fetch', event => {
+  if (event.request.url.includes('open-meteo.com') || event.request.url.includes('air-quality-api')) {
     return;
   }
-  // 其他资源：缓存优先
-  e.respondWith(
-    caches.match(e.request).then(function(r) { return r || fetch(e.request).then(function(resp) {
-      var clone = resp.clone();
-      caches.open(CACHE_NAME).then(function(cache) { cache.put(e.request, clone); });
-      return resp;
-    }).catch(function() { return caches.match('./index.html'); }); })
+  event.respondWith(
+    fetch(event.request)
+      .then(response => {
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+        return response;
+      })
+      .catch(() => caches.match(event.request))
   );
 });

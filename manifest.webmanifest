@@ -1,13 +1,12 @@
 {
-  "name": "Desk Clock",
-  "short_name": "Clock",
-  "description": "极简桌面时钟 · 下班倒计时",
+  "name": "活 · Clock",
+  "short_name": "活",
+  "description": "Pixel 3a 桌面摆件时钟 — 四模式 × Circadian节律 × 星云雾 × 智能感知",
   "start_url": "./index.html",
-  "scope": "./",
-  "display": "standalone",
+  "display": "fullscreen",
   "orientation": "any",
-  "background_color": "#080808",
-  "theme_color": "#080808",
+  "background_color": "#05050a",
+  "theme_color": "#05050a",
   "icons": [
     {
       "src": "icon.svg",
@@ -15,5 +14,8 @@
       "type": "image/svg+xml",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "categories": ["lifestyle", "utilities"],
+  "lang": "zh-CN",
+  "dir": "ltr"
 }

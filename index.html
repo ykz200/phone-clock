@@ -2,914 +2,2309 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-<meta name-color="#080808">
-<title>Desk Clock · 活</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#06060c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="活 · Clock">
+<meta name="description" content="Pixel 3a 桌面摆件时钟 — 四模式 × Circadian节律 × 星云雾 × 智能感知">
+<title>活 · Clock</title>
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body {
-    height: 100%;
-    overscroll-behavior: none;
-    touch-action: manipulation;
-    -webkit-user-select: none;
-    user-select: none;
-  }
-  body {
-    background: var(--bg, #080808);
-    color: var(--fg, #f0f0f0);
-    font-family: -apple-system, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    min-height: 100dvh;
-    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-    transition: background 4s ease, color 3s ease;
-  }
+/* ════════════════════════════════════════════
+   活 · Clock — 设计系统 v3
+   Glassmorphism 2.0 · Ambient · Spring Physics
+   ════════════════════════════════════════════ */
 
-  /* 流动背景层 */
-  .bg-layer {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.5;
-    background: var(--bg-grad, none);
-    transition: background 8s ease;
-  }
+:root {
+  /* ── 背景层 ── */
+  --bg-0: #05050a;
+  --bg-1: #0a0a14;
+  --bg-2: #101020;
+  --nebula-opacity: 0.4;
 
-  .clock-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex-shrink: 0;
-    margin-bottom: 1.5vh;
-    position: relative;
-    z-index: 1;
-  }
+  /* ── 玻璃拟态 v3 ── */
+  --glass-bg: rgba(255, 255, 255, 0.035);
+  --glass-bg-hover: rgba(255, 255, 255, 0.06);
+  --glass-bg-strong: rgba(255, 255, 255, 0.065);
+  --glass-border: rgba(255, 255, 255, 0.07);
+  --glass-border-strong: rgba(255, 255, 255, 0.12);
+  --glass-border-highlight: rgba(255, 255, 255, 0.18);
+  --glass-blur: 28px;
+  --glass-blur-strong: 40px;
+  --glass-sat: 1.8;
 
-  /* 整点环绕光晕 */
-  .time-wrapper {
-    position: relative;
-    display: inline-flex;
-    align-items: baseline;
-  }
-  .time-glow {
-    position: absolute;
-    inset: -8% -4%;
-    border-radius: 50%;
-    background: var(--glow, transparent);
-    opacity: 0;
-    transition: opacity 1.5s ease;
-    pointer-events: none;
-    filter: blur(40px);
-    z-index: -1;
-  }
-  .time-glow.pulse {
-    opacity: 0.25;
-    animation: glowPulse 3s ease-out;
-  }
-  @keyframes glowPulse {
-    0% { opacity: 0.5; transform: scale(1.05); }
-    100% { opacity: 0; transform: scale(0.95); }
-  }
+  /* ── 文字 ── */
+  --txt: rgba(255, 255, 255, 0.95);
+  --txt-soft: rgba(255, 255, 255, 0.68);
+  --txt-mute: rgba(255, 255, 255, 0.40);
+  --txt-faint: rgba(255, 255, 255, 0.16);
 
-  .time-face {
-    display: flex;
-    align-items: baseline;
-    gap: 0.02em;
-    line-height: 1;
-    font-size: clamp(14vw, 20vh, 26vw);
-    font-weight: 200;
-    letter-spacing: -0.03em;
-    font-variant-numeric: tabular-nums;
-    transition: font-weight 1s ease, letter-spacing 1s ease;
-  }
+  /* ── 交互 ── */
+  --accent: #7eb8ff;
+  --accent-warm: #ffb87e;
+  --accent-glow: rgba(126, 184, 255, 0.22);
+  --accent-soft: rgba(126, 184, 255, 0.08);
 
-  .time-face .num {
-    display: inline-block;
-    min-width: 1.45em;
-    text-align: center;
-    transition: opacity 0.18s ease, transform 0.18s ease;
-  }
-  .time-face .num.changing {
-    opacity: 0.6;
-    transform: scale(0.985);
-  }
+  /* ── 弹簧动效 ── */
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --spring-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-snap: cubic-bezier(0.4, 0.0, 0.2, 1);
+  --ease-soft: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --dur-fast: 0.15s;
+  --dur-med: 0.35s;
+  --dur-slow: 0.7s;
 
-  .colon {
-    display: inline-block;
-    width: 0.3em;
-    text-align: center;
-    opacity: 0.85;
-    animation: blink 1.6s infinite ease-in-out;
-  }
-  @keyframes blink {
-    0%, 100% { opacity: 0.9; }
-    50%      { opacity: 0.25; }
-  }
+  /* ── 字号 ── */
+  --fs-clock: clamp(3.4rem, 20vw, 11rem);
+  --fs-flip: clamp(2.4rem, 15vw, 8rem);
+  --fs-date: clamp(0.78rem, 3vw, 1.1rem);
+  --fs-card: clamp(0.70rem, 2.6vw, 0.95rem);
+  --fs-sm: clamp(0.60rem, 2.2vw, 0.82rem);
+  --fs-xs: clamp(0.52rem, 1.8vw, 0.68rem);
+  --fs-stripe: clamp(0.48rem, 1.6vw, 0.62rem);
 
-  /* 秒数 — 数字模式 */
-  .seconds-num {
-    display: inline-block;
-    font-size: 0.3em;
-    font-weight: 200;
-    opacity: 0.35;
-    min-width: 2em;
-    text-align: left;
-    margin-left: 0.05em;
-    letter-spacing: 0.02em;
-    font-variant-numeric: tabular-nums;
-    align-self: baseline;
-    padding-bottom: 0.06em;
-    transition: opacity 0.8s ease;
-  }
+  /* ── 阴影 ── */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.5);
+  --shadow-glow: 0 0 30px var(--accent-glow);
+}
 
-  /* 秒数 — 进度条模式 */
-  .seconds-bar {
-    display: none;
-    width: clamp(80px, 18vw, 200px);
-    height: 2px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 1px;
-    margin-top: 0.3em;
-    overflow: hidden;
-    opacity: 0;
-    transition: opacity 0.8s ease;
-  }
-  .seconds-bar.active { display: block; opacity: 1; }
-  .seconds-bar-fill {
-    height: 100%;
-    background: rgba(255,255,255,0.5);
-    border-radius: 1px;
-    transition: width 0.9s linear;
-  }
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--bg-0);
+  color: var(--txt);
+  font-family: ui-rounded, "SF Pro Rounded", "Nunito", "PingFang SC", "Noto Sans SC", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+}
 
-  /* 秒数 — 呼吸圆模式 */
-  .seconds-breathe {
-    display: none;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    opacity: 0;
-    transition: opacity 0.8s ease;
-    animation: secBreathe 1.6s ease-in-out infinite;
-  }
-  .seconds-breathe.active { display: inline-block; opacity: 0.5; }
-  @keyframes secBreathe {
-    0%, 100% { transform: scale(0.5); opacity: 0.3; }
-    50%      { transform: scale(1.2); opacity: 0.7; }
-  }
+/* ════════════════════════════════════════════
+   背景系统（多层渲染）
+   ════════════════════════════════════════════ */
 
-  .date-line {
-    margin-top: 0.5em;
-    font-size: clamp(3vw, 3.5vh, 4.5vw);
-    font-weight: 300;
-    letter-spacing: 0.04em;
-    opacity: 0.75;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4em;
-    flex-wrap: wrap;
-    position: relative;
-    z-index: 1;
-  }
-  .date-line .dot { margin: 0 0.35em; opacity: 0.35; }
+/* 底层渐变 */
+.bg-base {
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 110%, var(--bg-2) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 70% 0%, rgba(25,15,50,0.5) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 20% 30%, rgba(15,20,50,0.3) 0%, transparent 50%),
+    linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 100%);
+  z-index: 0;
+  transition: background 5s var(--ease-soft);
+}
 
-  .weather-info {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3em;
-    opacity: 0.6;
-    font-size: 0.85em;
-    transition: opacity 0.4s ease;
-  }
-  .weather-info .weather-icon { font-size: 1.1em; line-height: 1; }
-  .weather-info.loading .weather-temp { opacity: 0.4; }
+/* 星云层 */
+.bg-nebula {
+  position: fixed; inset: 0;
+  z-index: 1;
+  opacity: var(--nebula-opacity);
+  pointer-events: none;
+  transition: opacity 4s var(--ease-soft);
+}
 
-  .countdown {
-    margin-top: 0.5em;
-    padding: 0.3em 1.2em;
-    font-size: clamp(2.8vw, 3.2vh, 4vw);
-    font-weight: 300;
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 999px;
-    opacity: 0.85;
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.02em;
-    background: rgba(255,255,255,0.02);
-    transition: opacity 0.25s ease;
-    position: relative;
-    z-index: 1;
-  }
-  .countdown.over { opacity: 0.35; }
+/* 氛围粒子 */
+.bg-aurora {
+  position: fixed; inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
 
-  /* 分隔线 */
-  .divider {
-    width: clamp(60px, 20vw, 120px);
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    margin: 0.8vh 0;
-    position: relative;
-    z-index: 1;
-  }
+/* 暗角 */
+.bg-vignette {
+  position: fixed; inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: radial-gradient(ellipse 65% 65% at 50% 50%, transparent 50%, rgba(0,0,0,0.6) 100%);
+}
 
-  /* 纸条区 */
-  .ticker-section {
+/* 呼吸光晕（整点触发） */
+.bg-pulse {
+  position: fixed; inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(ellipse 50% 35% at 50% 45%, rgba(126,184,255,0.07) 0%, transparent 70%);
+  transition: opacity 2s var(--ease-soft);
+}
+.bg-pulse.active { opacity: 1; }
+
+/* ── 顶部光晕装饰 ── */
+.bg-light-cone {
+  position: fixed; inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(ellipse 80% 30% at 50% -10%, rgba(126,184,255,0.04) 0%, transparent 70%);
+  opacity: 0.8;
+}
+
+/* ════════════════════════════════════════════
+   主体布局
+   ════════════════════════════════════════════ */
+
+.app {
+  position: relative;
+  z-index: 10;
+  width: 100%; height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
+}
+
+/* ── 顶部状态栏 ── */
+.status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 1.2rem;
+  min-height: 2.6rem;
+  opacity: 0.6;
+  transition: opacity var(--ease-smooth) var(--dur-med);
+}
+.status-bar:hover { opacity: 1; }
+.status-left {
+  display: flex; align-items: center; gap: 0.45rem;
+  font-size: var(--fs-stripe);
+  color: var(--txt-mute);
+  letter-spacing: 0.06em;
+}
+.status-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 6px rgba(74,222,128,0.5);
+  animation: dotPulse 3s ease-in-out infinite;
+}
+@keyframes dotPulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+.status-right {
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.btn-settings {
+  background: none; border: none;
+  color: var(--txt-mute);
+  font-size: 1.15rem;
+  cursor: pointer;
+  padding: 0.35rem;
+  transition: color var(--dur-fast), transform var(--dur-med) var(--spring);
+  line-height: 1;
+  border-radius: 50%;
+}
+.btn-settings:hover {
+  color: var(--txt);
+  transform: rotate(45deg);
+  background: var(--glass-bg);
+}
+.btn-settings:active { transform: rotate(90deg) scale(0.85); }
+
+/* ── 时钟主区域 ── */
+.clock-stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* 时钟面通用 */
+.clock-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  opacity: 0;
+  transform: scale(0.94) translateY(8px);
+  pointer-events: none;
+  transition:
+    opacity var(--dur-slow) var(--ease-smooth),
+    transform var(--dur-slow) var(--ease-smooth),
+    filter var(--dur-slow) var(--ease-smooth);
+  filter: blur(2px);
+}
+.clock-face.active {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  pointer-events: auto;
+  filter: blur(0);
+}
+
+/* ── 数字时钟面 ── */
+.numeric-digits {
+  font-size: var(--fs-clock);
+  font-weight: 200;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.02em;
+  font-variant-numeric: tabular-nums;
+  position: relative;
+}
+.num-digit {
+  display: inline-block;
+  transition: opacity var(--dur-med) var(--ease-smooth), transform var(--dur-med) var(--spring);
+}
+.num-sep {
+  display: inline-block;
+  margin: 0 0.02em;
+  opacity: 0.8;
+  animation: sepBreath 2.5s ease-in-out infinite;
+}
+.num-sep.hidden { display: none; }
+@keyframes sepBreath {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.9; }
+}
+.num-sec {
+  font-size: 0.32em;
+  font-weight: 300;
+  opacity: 0.40;
+  align-self: flex-end;
+  margin-bottom: 0.12em;
+  margin-left: 0.05em;
+  transition: opacity var(--dur-med);
+}
+.num-sec.hidden { opacity: 0; }
+/* 秒数环形进度 */
+.ring-sec {
+  position: relative;
+  display: inline-flex;
+  align-items: flex-end;
+  margin-left: 0.06em;
+}
+.ring-sec svg {
+  width: 0.28em; height: 0.28em;
+  transform: rotate(-90deg);
+}
+.ring-sec .ring-bg { stroke: rgba(255,255,255,0.05); fill: none; stroke-width: 1.5; }
+.ring-sec .ring-fg {
+  stroke: var(--accent);
+  fill: none; stroke-width: 1.5;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.3s linear, stroke var(--dur-slow);
+}
+
+/* ── 指针时钟面 ── */
+.analog-dial {
+  width: clamp(150px, 46vmin, 360px);
+  height: clamp(150px, 46vmin, 360px);
+  position: relative;
+}
+.analog-dial svg { width: 100%; height: 100%; overflow: visible; }
+.analog-hand {
+  transform-origin: center;
+  transition: transform 0.3s linear, opacity var(--dur-med);
+}
+.analog-hand.hour { stroke-width: 3.5; stroke-linecap: round; filter: drop-shadow(0 0 2px rgba(255,255,255,0.3)); }
+.analog-hand.minute { stroke-width: 2.2; stroke-linecap: round; filter: drop-shadow(0 0 1px rgba(255,255,255,0.2)); }
+.analog-hand.second {
+  stroke-width: 1; stroke-linecap: round;
+  transition: transform 0.15s linear, opacity 0.4s;
+}
+.analog-center {
+  fill: var(--accent);
+  filter: drop-shadow(0 0 5px var(--accent-glow));
+}
+.analog-hide-sec .analog-hand.second { opacity: 0 !important; }
+
+/* ── 文字时钟面 ── */
+.word-display {
+  text-align: center;
+  line-height: 1.6;
+}
+.word-main {
+  font-size: clamp(1.3rem, 5.5vw, 2.6rem);
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  color: var(--txt);
+}
+.word-sub {
+  font-size: var(--fs-date);
+  color: var(--txt-mute);
+  letter-spacing: 0.12em;
+  margin-top: 0.4rem;
+}
+.word-sec-bar {
+  width: 54px; height: 2px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 1px;
+  margin: 0.9rem auto 0;
+  overflow: hidden;
+}
+.word-sec-bar .fill {
+  height: 100%;
+  background: var(--txt-mute);
+  border-radius: 1px;
+  transition: width 1s linear, background var(--dur-slow);
+}
+
+/* ── Flip 翻页时钟面 v3 ── */
+.flip-container {
+  display: flex;
+  align-items: center;
+  gap: clamp(3px, 1vw, 14px);
+  font-variant-numeric: tabular-nums;
+  perspective: 700px;
+}
+.flip-group {
+  display: flex;
+  gap: clamp(2px, 0.4vw, 5px);
+}
+.flip-unit {
+  position: relative;
+  width: clamp(44px, 13vw, 110px);
+  height: clamp(66px, 19vw, 160px);
+  border-radius: clamp(4px, 1vw, 10px);
+  transform-style: preserve-3d;
+}
+.flip-card {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.03) 48%, rgba(255,255,255,0.02) 52%, rgba(255,255,255,0.01) 100%);
+  border: 1px solid var(--glass-border);
+  border-radius: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-flip);
+  font-weight: 200;
+  color: var(--txt);
+  overflow: hidden;
+  backface-visibility: hidden;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.05),
+    inset 0 -1px 0 rgba(0,0,0,0.1),
+    0 3px 15px rgba(0,0,0,0.4);
+}
+.flip-card::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 50%;
+  height: 1px;
+  background: rgba(0,0,0,0.4);
+  z-index: 5;
+  pointer-events: none;
+}
+.flip-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 50%);
+  pointer-events: none;
+  border-radius: inherit;
+}
+.flip-card.static {}
+.flip-card.top-half,
+.flip-card.bottom-half {
+  height: 50%;
+  left: 0; right: 0;
+}
+.flip-card.top-half {
+  top: 0;
+  border-radius: inherit inherit 0 0;
+  transform-origin: bottom;
+}
+.flip-card.bottom-half {
+  bottom: 0;
+  border-radius: 0 0 inherit inherit;
+  overflow: hidden;
+}
+.flip-card.bottom-half .flip-num {
+  transform: translateY(-50%);
+}
+.flip-num {
+  line-height: 1;
+  position: relative;
+  z-index: 2;
+}
+.flip-card.flipping-top {
+  animation: flipTop 0.4s cubic-bezier(0.4, 0, 1, 1) forwards;
+  transform-origin: bottom;
+  border-radius: inherit inherit 0 0;
+}
+.flip-card.flipping-bottom {
+  animation: flipBottom 0.4s cubic-bezier(0, 0, 0.2, 1) forwards;
+  transform-origin: top;
+  border-radius: 0 0 inherit inherit;
+}
+.flip-card.flipping-bottom .flip-num {
+  transform: translateY(-50%);
+}
+@keyframes flipTop {
+  0% { transform: rotateX(0deg); }
+  100% { transform: rotateX(-90deg); }
+}
+@keyframes flipBottom {
+  0% { transform: rotateX(90deg); }
+  100% { transform: rotateX(0deg); }
+}
+.flip-sep {
+  font-size: var(--fs-flip);
+  font-weight: 200;
+  color: var(--txt-soft);
+  animation: sepBreath 2.5s ease-in-out infinite;
+  line-height: 1;
+  margin: 0 clamp(1px, 0.3vw, 4px);
+}
+.flip-sep.hidden { opacity: 0; }
+
+/* ── 日期行 ── */
+.date-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: var(--fs-date);
+  color: var(--txt-soft);
+  letter-spacing: 0.05em;
+}
+.date-row .sep-dot {
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: var(--txt-faint);
+}
+
+/* ════════════════════════════════════════════
+   信息卡片 v3
+   ════════════════════════════════════════════ */
+
+.info-strip {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 0.45rem;
+  padding: 0 1.2rem 0.5rem;
+  flex-wrap: nowrap;
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  border: 1px solid var(--glass-border);
+  border-radius: 15px;
+  padding: 0.45rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.12rem;
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+  transition: all var(--dur-med) var(--ease-smooth);
+}
+.glass-card:hover {
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-strong);
+  transform: translateY(-1px);
+}
+.glass-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+  pointer-events: none;
+  border-radius: inherit;
+}
+.glass-card::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+  pointer-events: none;
+}
+.glass-card .label {
+  font-size: var(--fs-xs);
+  color: var(--txt-mute);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.glass-card .value {
+  font-size: var(--fs-card);
+  color: var(--txt);
+  font-weight: 500;
+  white-space: nowrap;
+  position: relative;
+  z-index: 1;
+}
+.glass-card .value-small {
+  font-size: var(--fs-sm);
+  color: var(--txt-soft);
+}
+.glass-card.highlight {
+  background: var(--glass-bg-strong);
+  border-color: var(--glass-border-strong);
+}
+.glass-card .icon-emoji {
+  font-size: 0.9em;
+  line-height: 1;
+}
+
+/* ── 纸条区 ── */
+.strip-zone {
+  padding: 0.25rem 1.2rem 0.5rem;
+  min-height: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.strip-text {
+  font-size: var(--fs-sm);
+  color: var(--txt-mute);
+  text-align: center;
+  letter-spacing: 0.04em;
+  transition: opacity var(--ease-smooth) var(--dur-slow);
+  max-width: 88vw;
+  line-height: 1.5;
+}
+
+/* ── 底部信息条 ── */
+.bottom-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.4rem 1.2rem 0.9rem;
+  font-size: var(--fs-stripe);
+  color: var(--txt-mute);
+  letter-spacing: 0.03em;
+  flex-wrap: wrap;
+}
+.bottom-bar .item {
+  display: flex; align-items: center; gap: 0.3rem;
+  opacity: 0.7;
+  transition: opacity var(--dur-med);
+}
+.bottom-bar .item:hover { opacity: 1; }
+.bottom-bar .ic { font-size: 0.85em; opacity: 0.6; }
+
+/* ── 指示器（模式切换点） v3 ── */
+.face-dots {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  padding: 0.25rem 0 0.4rem;
+}
+.face-dot {
+  width: 5px; height: 5px;
+  border-radius: 3px;
+  background: var(--txt-faint);
+  transition: all var(--dur-med) var(--spring-smooth);
+  cursor: pointer;
+}
+.face-dot:hover { background: var(--txt-mute); }
+.face-dot.active {
+  width: 20px;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+/* ════════════════════════════════════════════
+   设置面板 v3
+   ════════════════════════════════════════════ */
+
+.settings-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-med);
+}
+.settings-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.settings-panel {
+  background: rgba(16,16,26,0.96);
+  backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-sat));
+  border: 1px solid var(--glass-border);
+  border-radius: 22px;
+  padding: 1.4rem;
+  width: min(90vw, 370px);
+  max-height: 85vh;
+  overflow-y: auto;
+  transform: scale(0.92) translateY(10px);
+  transition: transform var(--dur-med) var(--spring-smooth);
+  box-shadow: 0 25px 70px rgba(0,0,0,0.6), var(--shadow-glow);
+}
+.settings-overlay.open .settings-panel { transform: scale(1) translateY(0); }
+.settings-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 0.9rem;
+  color: var(--txt);
+}
+.setting-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+}
+.setting-label {
+  font-size: var(--fs-sm);
+  color: var(--txt-soft);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.setting-label .val {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+.setting-input {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  padding: 0.5rem 0.7rem;
+  color: var(--txt);
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  width: 100%;
+  outline: none;
+  transition: border-color var(--dur-fast), background var(--dur-fast);
+}
+.setting-input:focus {
+  border-color: var(--accent);
+  background: rgba(255,255,255,0.06);
+}
+.setting-textarea {
+  min-height: 4.5rem;
+  resize: vertical;
+  line-height: 1.5;
+}
+.setting-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.35rem 0;
+}
+.setting-toggle span {
+  font-size: var(--fs-sm);
+  color: var(--txt-soft);
+}
+.toggle-switch {
+  width: 34px; height: 19px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+  position: relative;
+  cursor: pointer;
+  transition: background var(--dur-med) var(--ease-smooth);
+  flex-shrink: 0;
+}
+.toggle-switch.on {
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 15px; height: 15px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform var(--dur-med) var(--spring);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+.toggle-switch.on::after { transform: translateX(15px); }
+
+.btn-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+.btn-primary, .btn-secondary {
+  flex: 1;
+  padding: 0.55rem;
+  border-radius: 11px;
+  border: none;
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-smooth);
+}
+.btn-primary {
+  background: var(--accent);
+  color: #000;
+  font-weight: 600;
+  box-shadow: 0 2px 10px var(--accent-glow);
+}
+.btn-primary:hover { filter: brightness(1.1); }
+.btn-primary:active, .btn-secondary:active { transform: scale(0.95); }
+.btn-secondary {
+  background: rgba(255,255,255,0.06);
+  color: var(--txt);
+}
+.btn-secondary:hover { background: rgba(255,255,255,0.1); }
+
+/* ── 关闭按钮 ── */
+.btn-close {
+  position: absolute;
+  top: 0.7rem; right: 0.7rem;
+  background: none; border: none;
+  color: var(--txt-mute);
+  font-size: 1.3rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0.3rem;
+  border-radius: 50%;
+  transition: all var(--dur-fast);
+}
+.btn-close:hover {
+  color: var(--txt);
+  background: var(--glass-bg);
+}
+
+/* ── 专注面板 v3 ── */
+.focus-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.focus-stats {
+  display: flex;
+  gap: 0.4rem;
+}
+.focus-stat {
+  flex: 1;
+  text-align: center;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 11px;
+  padding: 0.5rem 0.3rem;
+}
+.focus-stat .num {
+  font-size: 1.3rem;
+  font-weight: 300;
+  color: var(--accent);
+}
+.focus-stat .lbl {
+  font-size: var(--fs-xs);
+  color: var(--txt-mute);
+  margin-top: 0.15rem;
+}
+.week-heatmap {
+  display: flex;
+  gap: 3px;
+  align-items: flex-end;
+  height: 28px;
+}
+.heat-bar {
+  flex: 1;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.05);
+  transition: height 0.3s var(--spring), background 0.3s;
+  min-height: 3px;
+}
+
+/* ── 通知/Toast v3 ── */
+.toast-container {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  pointer-events: none;
+}
+.toast {
+  background: rgba(18,18,30,0.94);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--glass-border);
+  border-radius: 13px;
+  padding: 0.55rem 1rem;
+  font-size: var(--fs-sm);
+  color: var(--txt);
+  text-align: center;
+  opacity: 0;
+  transform: translateY(-12px) scale(0.95);
+  transition: all 0.35s var(--spring);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.toast.show { opacity: 1; transform: translateY(0) scale(1); }
+
+/* ── 无障碍/动效偏好 ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.05s !important;
+  }
+}
+
+/* ── 横屏适配 ── */
+@media (orientation: landscape) and (min-width: 600px) {
+  .app {
+    flex-direction: row;
+    padding: 0;
+  }
+  .landscape-left, .landscape-right {
     flex: 1;
     display: flex;
     flex-direction: column;
+    height: 100%;
+    padding: env(safe-area-inset-top, 0.5rem) 0 env(safe-area-inset-bottom, 0.5rem);
+  }
+  .landscape-left {
     align-items: center;
     justify-content: center;
-    padding: 0 clamp(6vw, 10vw, 16vw);
-    min-height: 0;
-    width: 100%;
-    overflow: hidden;
-    position: relative;
-    z-index: 1;
+    gap: 0.4rem;
   }
-
-  .ticker-card { text-align: center; max-width: 100%; }
-
-  .ticker-icon {
-    font-size: clamp(5vw, 6vh, 8vw);
-    margin-bottom: 0.3em;
-    opacity: 0.7;
-    transition: opacity 0.6s ease;
+  .landscape-right {
+    justify-content: center;
+    gap: 0.45rem;
+    padding-left: 0.4rem;
+    padding-right: 1rem;
+    overflow-y: auto;
   }
-
-  .ticker-main {
-    font-size: clamp(6vw, 8vh, 10vw);
-    font-weight: 300;
-    line-height: 1.4;
-    letter-spacing: 0.05em;
-    opacity: 0.92;
-    white-space: pre-line;
-    transition: opacity 0.7s ease, transform 0.7s ease;
+  .landscape-right .info-strip { padding: 0 0 0.2rem; }
+  .landscape-right .strip-zone { padding: 0.15rem 0; }
+  .landscape-right .bottom-bar { padding: 0.2rem 0 0; }
+  .status-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 20;
+    padding: 0.4rem 1rem;
   }
+  .face-dots { display: none; }
+}
 
-  .ticker-sub {
-    font-size: clamp(4vw, 5vh, 7vw);
-    font-weight: 200;
-    opacity: 0.45;
-    margin-top: 0.15em;
-    letter-spacing: 0.06em;
-    font-variant-numeric: tabular-nums;
-    transition: opacity 0.7s ease;
-  }
+/* ── AOD 微亮模式 ── */
+body.aod-mode .clock-face.active .numeric-digits,
+body.aod-mode .flip-container,
+body.aod-mode .word-main {
+  opacity: 0.28;
+  filter: brightness(0.5);
+}
+body.aod-mode .info-strip,
+body.aod-mode .strip-zone,
+body.aod-mode .bottom-bar,
+body.aod-mode .face-dots {
+  opacity: 0.1;
+}
+body.aod-mode .bg-nebula,
+body.aod-mode .bg-aurora {
+  opacity: 0 !important;
+}
+body.aod-mode .glass-card {
+  background: rgba(255,255,255,0.015);
+  border-color: rgba(255,255,255,0.025);
+}
+body.aod-mode .glass-card .value { opacity: 0.3; }
 
-  .ticker-progress {
-    position: fixed;
-    bottom: clamp(1.5vh, 3vh, 4vh);
-    left: 50%;
-    transform: translateX(-50%);
+/* ── 专注模式 ── */
+body.focus-mode .strip-zone,
+body.focus-mode .bottom-bar { opacity: 0.15; }
+body.focus-mode .glass-card { opacity: 0.2; }
+body.focus-mode .numeric-digits { text-shadow: 0 0 25px rgba(126,184,255,0.15); }
+
+/* ════════════════════════════════════════════
+   桌面预览 v3 — 精美设备框架 + 环境光效
+   ════════════════════════════════════════════ */
+@media (min-width: 900px) {
+  body {
     display: flex;
-    gap: 6px;
-    opacity: 0.2;
-    transition: opacity 0.3s ease;
-    z-index: 10;
+    align-items: center;
+    justify-content: center;
+    background: #030306;
+    perspective: 1200px;
   }
-  .ticker-progress:hover { opacity: 0.6; }
-  .ticker-progress .dot {
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: currentColor;
-    opacity: 0.4;
-    transition: opacity 0.4s ease, width 0.4s ease;
-  }
-  .ticker-progress .dot.active { opacity: 1; width: 18px; border-radius: 3px; }
-
-  /* 外卖提醒 */
-  .takeout-reminder {
+  /* 环境光 */
+  body::before {
+    content: '';
     position: fixed;
-    bottom: clamp(2vh, 4vh, 6vh);
-    left: 50%;
-    transform: translateX(-50%) translateY(120%);
-    padding: 0.7em 2em;
-    font-size: clamp(3.5vw, 4.5vh, 5.5vw);
-    font-weight: 400;
-    border: 1px solid #e8b84b;
-    border-radius: 999px;
-    background: rgba(232, 184, 75, 0.08);
-    color: #e8b84b;
-    letter-spacing: 0.06em;
-    white-space: nowrap;
-    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
-    opacity: 0;
-    z-index: 100;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 50% 60% at 30% 70%, rgba(20,15,40,0.7) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 50% at 75% 30%, rgba(40,15,30,0.4) 0%, transparent 55%),
+      radial-gradient(ellipse 60% 40% at 50% 100%, rgba(10,15,30,0.5) 0%, transparent 50%);
+    z-index: -1;
     pointer-events: none;
   }
-  .takeout-reminder.show {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
+  /* 桌面反射 */
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 30vh;
+    background: linear-gradient(0deg, rgba(8,8,15,0.4) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: -1;
   }
-  @keyframes reminderPulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(232, 184, 75, 0.15); }
-    50%      { box-shadow: 0 0 20px 4px rgba(232, 184, 75, 0.12); }
+  .app {
+    max-width: 460px;
+    height: 90vh;
+    max-height: 820px;
+    border-radius: 30px;
+    background: rgba(6,6,12,0.75);
+    border: 1px solid rgba(255,255,255,0.05);
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.4),
+      0 25px 90px rgba(0,0,0,0.7),
+      0 0 140px rgba(126,184,255,0.03),
+      inset 0 0 0 1px rgba(255,255,255,0.02);
+    overflow: hidden;
+    transform: rotateX(1deg);
+    transform-style: preserve-3d;
+    transition: transform 0.5s var(--ease-smooth);
   }
-  .takeout-reminder.show { animation: reminderPulse 2.4s ease-in-out; }
+  .app:hover {
+    transform: rotateX(0deg) scale(1.01);
+  }
+  .face-dots { display: flex; }
+}
 
-  /* 设置按钮 */
-  .settings-trigger {
-    position: fixed; top: 14px; right: 16px;
-    width: 32px; height: 32px;
-    border-radius: 50%; background: transparent; border: none;
-    cursor: pointer; opacity: 0; transition: opacity 0.3s ease;
-    z-index: 150;
-  }
-  .settings-trigger:hover { opacity: 1; }
-  .settings-trigger::before { content: '⚙'; font-size: 18px; color: #666; }
-
-  /* 设置面板 */
-  .settings-panel {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.92);
-    display: none; align-items: center; justify-content: center;
-    z-index: 200; overflow-y: auto;
-  }
-  .settings-panel.open { display: flex; }
-  .settings-inner { text-align: center; width: 85%; max-width: 420px; padding: 2em 0; }
-  .settings-inner h3 { font-weight: 400; margin-bottom: 0.6em; opacity: 0.7; }
-  .settings-inner .field { margin: 1em 0; text-align: left; }
-  .settings-inner label { display: block; margin-bottom: 0.3em; opacity: 0.6; font-size: 3.5vw; }
-  .settings-inner .field-row { display: flex; gap: 0.6em; align-items: center; flex-wrap: wrap; }
-  .settings-inner input[type="time"], .settings-inner input[type="number"] {
-    background: transparent; border: 1px solid #333; color: inherit;
-    font-size: 4.5vw; text-align: center; padding: 0.3em 0.6em; border-radius: 4px; width: 5em;
-  }
-  .settings-inner input[type="number"] { width: 4em; }
-  .settings-inner .checkbox-label { display: flex; align-items: center; opacity: 0.8; cursor: pointer; gap: 0.4em; }
-  .settings-inner input[type="checkbox"] { transform: scale(1.4); }
-  .settings-inner textarea {
-    width: 100%; background: transparent; border: 1px solid #333; color: inherit;
-    font-size: 3.5vw; font-family: inherit; padding: 0.6em 0.8em; border-radius: 6px;
-    resize: vertical; min-height: 5em; line-height: 1.6;
-  }
-  .settings-inner textarea:focus { border-color: #555; outline: none; }
-  .settings-inner .hint { text-align: left; font-size: 2.8vw; opacity: 0.35; margin-top: 0.3em; line-height: 1.5; }
-  .settings-inner .btn-row { margin-top: 1.5em; display: flex; gap: 0.6em; justify-content: center; }
-  .settings-inner button {
-    background: transparent; color: inherit; border: 1px solid #444;
-    padding: 0.4em 1.4em; border-radius: 999px; font-size: 4vw; cursor: pointer;
-  }
-
-  @media (orientation: landscape) {
-    body { flex-direction: row; padding: 0 clamp(2vw, 4vw, 8vw); }
-    .clock-section { margin-bottom: 0; margin-right: clamp(2vw, 4vw, 6vw); }
-    .time-face { font-size: clamp(10vh, 14vw, 18vh); }
-    .divider {
-      width: 1px; height: clamp(80px, 24vh, 160px); margin: 0 clamp(2vw, 4vw, 5vw);
-      background: linear-gradient(180deg, transparent, rgba(255,255,255,0.2), transparent);
-    }
-    .ticker-section { padding: 0; text-align: left; }
-    .ticker-card { text-align: left; }
-    .ticker-main { font-size: clamp(5vh, 6vw, 8vh); }
-    .ticker-icon { font-size: clamp(4vh, 5vw, 6vh); }
-  }
+/* ── 时段暗色（深夜自动降低对比度） ── */
+body.time-night .bg-vignette {
+  background: radial-gradient(ellipse 60% 60% at 50% 50%, transparent 40%, rgba(0,0,0,0.7) 100%);
+}
+body.time-night .glass-card { opacity: 0.6; }
 </style>
 </head>
 <body>
 
-  <div class="bg-layer" id="bgLayer"></div>
-  <button class="settings-trigger" id="settingsBtn"></button>
+<!-- ┌──────────────────────────────────────────┐
+     │  背景系统                                │
+     └──────────────────────────────────────────┘ -->
+<div class="bg-base"></div>
+<canvas class="bg-nebula" id="nebulaCanvas"></canvas>
+<canvas class="bg-aurora" id="auroraCanvas"></canvas>
+<div class="bg-vignette"></div>
+<div class="bg-pulse" id="bgPulse"></div>
+<div class="bg-light-cone"></div>
 
-  <div class="clock-section">
-    <div class="time-wrapper">
-      <div class="time-glow" id="timeGlow"></div>
-      <div class="time-face">
-        <span class="num" id="hour">--</span>
-        <span class="colon">:</span>
-        <span class="num" id="minute">--</span>
-        <span class="seconds-num" id="secNum">--</span>
+<!-- ┌──────────────────────────────────────────┐
+     │  主体应用                                │
+     └──────────────────────────────────────────┘ -->
+<div class="app" id="app">
+
+  <!-- 横屏：左右分栏包装 -->
+  <div class="landscape-left" id="landLeft">
+
+    <!-- 状态栏 -->
+    <div class="status-bar" id="statusBar">
+      <div class="status-left">
+        <div class="status-dot" id="statusDot"></div>
+        <span id="statusText">已连接</span>
+      </div>
+      <div class="status-right">
+        <button class="btn-settings" id="btnSettings" aria-label="设置">⚙</button>
       </div>
     </div>
-    <div class="seconds-bar" id="secBar"><div class="seconds-bar-fill" id="secFill"></div></div>
-    <div class="seconds-breathe" id="secBreath"></div>
 
-    <div class="date-line" id="dateLine">
-      <span class="date-text">--</span>
-      <span class="weather-info loading" id="weatherInfo">
-        <span class="weather-icon">--</span>
-        <span class="weather-temp">--°</span>
-      </span>
-    </div>
-    <div class="countdown" id="countdown">--</div>
-  </div>
+    <!-- 时钟主舞台 -->
+    <div class="clock-stage" id="clockStage">
 
-  <div class="divider"></div>
-
-  <div class="ticker-section">
-    <div class="ticker-card" id="tickerCard">
-      <div class="ticker-icon" id="tickerIcon">📌</div>
-      <div class="ticker-main" id="tickerMain">—</div>
-      <div class="ticker-sub" id="tickerSub"></div>
-    </div>
-  </div>
-
-  <div class="ticker-progress" id="tickerProgress"></div>
-  <div class="takeout-reminder" id="takeoutReminder">🍜 该点外卖了！</div>
-
-  <div class="settings-panel" id="panel">
-    <div class="settings-inner">
-      <h3>设置</h3>
-      <div class="field">
-        <label>下班时间</label>
-        <input type="time" id="endTime" value="17:00">
-      </div>
-      <div class="field">
-        <input type="number" id="tickerInterval" value="8" min="3" max="30" step="1">
-        <label>纸条切换间隔（秒）</label>
-      </div>
-      <div class="field">
-        <div class="field-row">
-          <input type="time" id="takeoutStart" value="10:30">
-          <span style="opacity:0.4">—</span>
-          <input type="time" id="takeoutEnd" value="11:00">
-        </div>
-        <label>外卖提醒时间段</label>
-      </div>
-      <div class="field">
-        <label>纸条内容（每行一条）</label>
-        <textarea id="tickerText" spellcheck="false"></textarea>
-        <div class="hint">
-          变量：{worked} {toFriday} {countdown} {weather} {temp} {weatherTip}<br>
-          定时：[10:30] [14:00-15:00]
+      <!-- 数字面 -->
+      <div class="clock-face active" id="faceNumeric">
+        <div class="numeric-digits" id="numericDigits">
+          <span class="num-digit" id="ndH">00</span>
+          <span class="num-sep" id="ndSep">:</span>
+          <span class="num-digit" id="ndM">00</span>
+          <span class="num-sec" id="ndS">00</span>
         </div>
       </div>
-      <div class="field">
-        <label class="checkbox-label">
-          <input type="checkbox" id="secondsCycle" checked>
-          <span>自动切换秒数样式</span>
-        </label>
+
+      <!-- 指针面 -->
+      <div class="clock-face" id="faceAnalog">
+        <div class="analog-dial">
+          <svg viewBox="-100 -100 200 200" id="analogSvg">
+            <g id="analogTicks"></g>
+            <g id="analogNums"></g>
+            <line class="analog-hand hour" id="handH" x1="0" y1="0" x2="0" y2="-45" stroke="rgba(255,255,255,0.9)"/>
+            <line class="analog-hand minute" id="handM" x1="0" y1="0" x2="0" y2="-70" stroke="rgba(255,255,255,0.75)"/>
+            <line class="analog-hand second" id="handS" x1="0" y1="12" x2="0" y2="-78" stroke="var(--accent)"/>
+            <circle class="analog-center" cx="0" cy="0" r="4"/>
+          </svg>
+        </div>
       </div>
-      <div class="field">
-        <label class="checkbox-label">
-          <input type="checkbox" id="notifyEnabled" checked>
-          <span>系统通知</span>
-        </label>
+
+      <!-- 文字面 -->
+      <div class="clock-face" id="faceWord">
+        <div class="word-display">
+          <div class="word-main" id="wordMain">十二时</div>
+          <div class="word-sub" id="wordSub">凌晨</div>
+          <div class="word-sec-bar"><div class="fill" id="wordSecFill"></div></div>
+        </div>
       </div>
-      <div class="field">
-        <label class="checkbox-label">
-          <input type="checkbox" id="weatherEnabled" checked>
-          <span>显示本地天气</span>
-        </label>
+
+      <!-- Flip 翻页钟面 -->
+      <div class="clock-face" id="faceFlip">
+        <div class="flip-container" id="flipContainer">
+          <div class="flip-group" id="flipH">
+            <div class="flip-unit" id="flipH1"><div class="flip-card static"><span class="flip-num">0</span></div></div>
+            <div class="flip-unit" id="flipH2"><div class="flip-card static"><span class="flip-num">0</span></div></div>
+          </div>
+          <span class="flip-sep" id="flipSep">:</span>
+          <div class="flip-group" id="flipM">
+            <div class="flip-unit" id="flipM1"><div class="flip-card static"><span class="flip-num">0</span></div></div>
+            <div class="flip-unit" id="flipM2"><div class="flip-card static"><span class="flip-num">0</span></div></div>
+          </div>
+        </div>
       </div>
-      <div class="btn-row">
-        <button id="saveBtn">保存</button>
-        <button id="cancelBtn">取消</button>
+
+      <!-- 模式指示点 -->
+      <div class="face-dots" id="faceDots">
+        <div class="face-dot active" data-face="0"></div>
+        <div class="face-dot" data-face="1"></div>
+        <div class="face-dot" data-face="2"></div>
+        <div class="face-dot" data-face="3"></div>
+      </div>
+
+    </div>
+  </div><!-- /landscape-left -->
+
+  <!-- 横屏右侧 / 竖屏下方信息区 -->
+  <div class="landscape-right" id="landRight">
+
+    <!-- 日期行 -->
+    <div class="date-row" id="dateRow" style="justify-content:center;">
+      <span id="dateYear">2026</span>
+      <span class="sep-dot"></span>
+      <span id="dateMD">10-11</span>
+      <span class="sep-dot"></span>
+      <span id="dateWeekday">周六</span>
+    </div>
+
+    <!-- 信息卡片条 -->
+    <div class="info-strip" id="infoStrip">
+      <div class="glass-card highlight" id="cardWeather">
+        <span class="icon-emoji" id="weatherIcon">⛅</span>
+        <span class="value" id="weatherTemp">--°</span>
+        <span class="value-small" id="weatherDesc">加载中</span>
+      </div>
+      <div class="glass-card" id="cardCountdown">
+        <span class="label" id="countdownLabel">下班倒计时</span>
+        <span class="value" id="countdownVal">--:--:--</span>
+      </div>
+      <div class="glass-card" id="cardAqi">
+        <span class="label">空气</span>
+        <span class="value" id="aqiVal">--</span>
       </div>
     </div>
+
+    <!-- 纸条轮播 -->
+    <div class="strip-zone">
+      <div class="strip-text" id="stripText">……</div>
+    </div>
+
+    <!-- 底部信息栏 -->
+    <div class="bottom-bar">
+      <span class="item"><span class="ic">☀</span><span id="sunriseTime">--:--</span></span>
+      <span class="item"><span class="ic">☾</span><span id="sunsetTime">--:--</span></span>
+      <span class="item"><span class="ic" id="moonPhaseIcon">🌑</span><span id="moonPhaseName">新月</span></span>
+      <span class="item" id="worldClockItem" style="display:none;"><span class="ic">🌍</span><span id="worldClockTxt">--:--</span></span>
+    </div>
   </div>
+
+</div><!-- /app -->
+
+<!-- ┌──────────────────────────────────────────┐
+     │  设置面板                                │
+     └──────────────────────────────────────────┘ -->
+<div class="settings-overlay" id="settingsOverlay">
+  <div class="settings-panel" style="position:relative;">
+    <button class="btn-close" id="btnCloseSettings">✕</button>
+    <div class="settings-title">⚙ 设置</div>
+
+    <div class="setting-group">
+      <div class="setting-label">下班时间 <span class="val" id="endTimeVal">18:00</span></div>
+      <input class="setting-input" type="time" id="endTimeInput" value="18:00">
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-label">纸条间隔 (秒) <span class="val" id="stripIntervalVal">15</span></div>
+      <input class="setting-input" type="number" id="stripIntervalInput" value="15" min="3" max="120">
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-label">纸条内容（每行一条，支持变量）</div>
+      <textarea class="setting-input setting-textarea" id="stripContentInput" placeholder="已工作 {worked}&#10;距下班 {countdown}&#10;#quote"></textarea>
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-toggle">
+        <span>显示秒数</span>
+        <div class="toggle-switch on" id="toggleSeconds"></div>
+      </div>
+      <div class="setting-toggle">
+        <span>显示天气</span>
+        <div class="toggle-switch on" id="toggleWeather"></div>
+      </div>
+      <div class="setting-toggle">
+        <span>显示世界时钟</span>
+        <div class="toggle-switch" id="toggleWorldClock"></div>
+      </div>
+      <div class="setting-toggle">
+        <span>AOD 微亮模式</span>
+        <div class="toggle-switch" id="toggleAOD"></div>
+      </div>
+      <div class="setting-toggle">
+        <span>通知提示</span>
+        <div class="toggle-switch on" id="toggleNotif"></div>
+      </div>
+    </div>
+
+    <!-- 专注统计面板 -->
+    <div class="settings-title" style="font-size:0.9rem;margin-top:0.8rem;">📊 专注统计</div>
+    <div class="focus-panel">
+      <div class="focus-stats">
+        <div class="focus-stat">
+          <div class="num" id="focusToday">0m</div>
+          <div class="lbl">今日专注</div>
+        </div>
+        <div class="focus-stat">
+          <div class="num" id="focusWeek">0m</div>
+          <div class="lbl">本周专注</div>
+        </div>
+        <div class="focus-stat">
+          <div class="num" id="focusStreak">0</div>
+          <div class="lbl">连续天数</div>
+        </div>
+      </div>
+      <div class="week-heatmap" id="weekHeatmap"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-secondary" id="btnReset">重置</button>
+      <button class="btn-primary" id="btnSave">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast-container" id="toastContainer"></div>
 
 <script>
+/* ══════════════════════════════════════════════════════
+   活 · Clock  —  核心脚本 v3
+   Smart · Adaptive · Spring Physics
+   ══════════════════════════════════════════════════════ */
 (() => {
   'use strict';
 
-  // ── DOM ──
-  const $hour = document.getElementById('hour');
-  const $minute = document.getElementById('minute');
-  const $secNum = document.getElementById('secNum');
-  const $secBar = document.getElementById('secBar');
-  const $secFill = document.getElementById('secFill');
-  const $secBreath = document.getElementById('secBreath');
-  const $bgLayer = document.getElementById('bgLayer');
-  const $timeGlow = document.getElementById('timeGlow');
-  const $dateLine = document.getElementById('dateLine');
-  const $dateText = $dateLine.querySelector('.date-text');
-  const $weatherInfo = document.getElementById('weatherInfo');
-  const $weatherIcon = $weatherInfo.querySelector('.weather-icon');
-  const $weatherTemp = $weatherInfo.querySelector('.weather-temp');
-  const $countdown = document.getElementById('countdown');
-  const $panel = document.getElementById('panel');
-  const $endTime = document.getElementById('endTime');
-  const $tickerInterval = document.getElementById('tickerInterval');
-  const $takeoutStart = document.getElementById('takeoutStart');
-  const $takeoutEnd = document.getElementById('takeoutEnd');
-  const $notifyEnabled = document.getElementById('notifyEnabled');
-  const $weatherEnabled = document.getElementById('weatherEnabled');
-  const $secondsCycle = document.getElementById('secondsCycle');
-  const $tickerText = document.getElementById('tickerText');
-  const $settingsBtn = document.getElementById('settingsBtn');
-  const $saveBtn = document.getElementById('saveBtn');
-  const $cancelBtn = document.getElementById('cancelBtn');
-  const $takeoutReminder = document.getElementById('takeoutReminder');
-  const $tickerCard = document.getElementById('tickerCard');
-  const $tickerIcon = document.getElementById('tickerIcon');
-  const $tickerMain = document.getElementById('tickerMain');
-  const $tickerSub = document.getElementById('tickerSub');
-  const $tickerProgress = document.getElementById('tickerProgress');
-  const weekDays = ['日','一','二','三','四','五','六'];
-
-  // ── 配置 ──
-  const SK = 'deskclock_cfg_v2';
-  const DEFAULT_TICKERS = [
-    '{countdown}',
-    '连续专注 {worked} 分钟了\n起来活动一下',
-    '{weather} {temp}°\n{weatherTip}',
-    '[10:30-11:00] 🍜 别忘了点外卖\n趁现在还有好选择',
-    '🌿 20-20-20 法则\n远眺 20 秒，放松眼睛',
-    '距周五还有 {toFriday} 天\n再撑一下',
-    '深呼吸三次 🌊\n感受当下的平静',
-    '你已经做得很好了 ✨\n给自己一个肯定',
-    '喝杯水 💧\n保持水分很重要',
-    '肩颈放松一下 🙆\n转转头，耸耸肩',
-    '[14:00-15:00] 午后小憩片刻\n站起来走走',
-    '🧘 正念时刻\n感受一呼一吸',
-    '今天的小确幸\n就是在平凡中看见光 ✨',
+  /* ── 常量 ── */
+  const STORE_KEY = 'clockV3State';
+  const FACES = ['numeric', 'analog', 'word', 'flip'];
+  const WEEKDAYS = ['周日','周一','周二','周三','周四','周五','周六'];
+  const CN_NUMBERS = ['零','一','二','三','四','五','六','七','八','九','十','十一','十二'];
+  const MOON_PHASES = [
+    { name:'新月', icon:'🌑', threshold:0.03 },
+    { name:'峨眉月', icon:'🌒', threshold:0.22 },
+    { name:'上弦', icon:'🌓', threshold:0.28 },
+    { name:'盈凸月', icon:'🌔', threshold:0.47 },
+    { name:'满月', icon:'🌕', threshold:0.53 },
+    { name:'亏凸月', icon:'🌖', threshold:0.72 },
+    { name:'下弦', icon:'🌗', threshold:0.78 },
+    { name:'残月', icon:'🌘', threshold:0.97 },
   ];
 
-  let config = loadConfig();
-  let tickerIdx = -1, tickerTimer = null;
-  let weatherCache = null;
-  let secMode = 0; // 0=num, 1=bar, 2=breathe
-  let secModeTimer = null;
-  let prevMin = -1;
-
-  function loadConfig() {
-    try {
-      const raw = localStorage.getItem(SK);
-      if (raw) {
-        const p = JSON.parse(raw);
-        return Object.assign({
-          endTime: '17:00', takeoutStart: '10:30', takeoutEnd: '11:00',
-          notifyEnabled: true, weatherEnabled: true, secondsCycle: true,
-          tickerInterval: 8, tickers: DEFAULT_TICKERS.slice()
-        }, p);
-      }
-    } catch(e) {}
-    return {
-      endTime: '17:00', takeoutStart: '10:30', takeoutEnd: '11:00',
-      notifyEnabled: true, weatherEnabled: true, secondsCycle: true,
-      tickerInterval: 8, tickers: DEFAULT_TICKERS.slice()
-    };
-  }
-  function saveConfig() { try { localStorage.setItem(SK, JSON.stringify(config)); } catch(e) {} }
-
-  // ── 工具 ──
-  const pad2 = n => String(n).padStart(2, '0');
-  const timeMin = s => { const [h, m] = s.split(':').map(Number); return h*60+m; };
-  function setNum(el, v) {
-    if (el.textContent === v) return;
-    el.textContent = v;
-    el.classList.add('changing');
-    setTimeout(() => el.classList.remove('changing'), 180);
-  }
-
-  // ── 主题引擎 ──
-  const THEMES = [
-    // [startHour, startMin, bg, fg, bgGrad, glow]
-    [0, 0, '#0a0a12', '#c8c8e0', 'radial-gradient(ellipse at 30% 20%, rgba(60,60,100,0.15) 0%, transparent 60%)', 'rgba(100,100,180,0.15)'],
-    [6, 0, '#1a1510', '#e8d8b8', 'radial-gradient(ellipse at 20% 10%, rgba(255,180,80,0.12) 0%, transparent 50%)', 'rgba(255,180,80,0.12)'],
-    [9, 0, '#101012', '#f0f0f0', 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.03) 0%, transparent 40%)', 'rgba(255,255,255,0.05)'],
-    [12, 0, '#0e0e10', '#f5f5f5', 'radial-gradient(circle at 70% 30%, rgba(255,220,180,0.04) 0%, transparent 40%)', 'rgba(255,220,180,0.04)'],
-    [15, 0, '#101010', '#e8e8e8', 'radial-gradient(ellipse at 80% 70%, rgba(200,180,255,0.03) 0%, transparent 40%)', 'rgba(200,180,255,0.03)'],
-    [18, 0, '#14100e', '#e8c8a0', 'radial-gradient(ellipse at 60% 80%, rgba(255,150,60,0.1) 0%, transparent 50%)', 'rgba(255,150,60,0.1)'],
-    [21, 0, '#0a0a14', '#b8b8d0', 'radial-gradient(ellipse at 50% 50%, rgba(80,80,140,0.08) 0%, transparent 40%)', 'rgba(80,80,140,0.08)'],
+  /* ── Circadian 色温 v3（24小时更细粒度） ── */
+  const CIRCADIAN_STOPS = [
+    { h: 0,  neb:'rgba(12,10,35,0.5)',   accent:'#4a5568', shift:'#08081a' },
+    { h: 2,  neb:'rgba(10,8,30,0.45)',   accent:'#3d4660', shift:'#06061a' },
+    { h: 4,  neb:'rgba(20,15,40,0.35)',  accent:'#5a5070', shift:'#0c0a1e' },
+    { h: 5,  neb:'rgba(45,28,55,0.3)',   accent:'#806070', shift:'#141020' },
+    { h: 6,  neb:'rgba(80,45,50,0.25)',  accent:'#c98860', shift:'#1e1518' },
+    { h: 7,  neb:'rgba(110,70,40,0.2)',  accent:'#e0a060', shift:'#221a12' },
+    { h: 8,  neb:'rgba(90,90,110,0.18)', accent:'#90a8d0', shift:'#1a1c25' },
+    { h: 10, neb:'rgba(50,80,130,0.16)', accent:'#7eb8ff', shift:'#121822' },
+    { h: 12, neb:'rgba(35,55,120,0.14)', accent:'#7eb8ff', shift:'#0f1520' },
+    { h: 14, neb:'rgba(40,65,120,0.15)', accent:'#7eb8ff', shift:'#101620' },
+    { h: 16, neb:'rgba(50,55,100,0.18)', accent:'#8890c0', shift:'#131422' },
+    { h: 17, neb:'rgba(80,45,70,0.22)',  accent:'#c08878', shift:'#1c1218' },
+    { h: 18, neb:'rgba(95,42,42,0.28)',  accent:'#c97050', shift:'#1e1012' },
+    { h: 19, neb:'rgba(80,35,55,0.32)',  accent:'#a06860', shift:'#1a0e16' },
+    { h: 20, neb:'rgba(60,30,60,0.36)',  accent:'#8a6090', shift:'#140e1c' },
+    { h: 22, neb:'rgba(30,20,55,0.42)',  accent:'#6070a0', shift:'#0c0e1e' },
   ];
 
-  function applyTheme(now) {
-    const t = now.getHours() * 60 + now.getMinutes();
-    let theme = THEMES[0];
-    for (const th of THEMES) {
-      if (t >= th[0] * 60 + th[1]) theme = th;
-    }
-    document.body.style.setProperty('--bg', theme[2]);
-    document.body.style.setProperty('--fg', theme[3]);
-    $bgLayer.style.setProperty('--bg-grad', theme[4]);
-    document.body.style.setProperty('--glow', theme[5]);
-  }
+  /* ── 默认纸条 ── */
+  const DEFAULT_STRIPS = [
+    '已工作 {worked}',
+    '距下班 {countdown}',
+    '{weather} {temp}',
+    '距周五 {toFriday}',
+    '日出 {sunrise} · 日落 {sunset}',
+    '#quote',
+  ];
 
-  // ── 秒数显示模式切换 ──
-  function setSecMode(mode) {
-    secMode = mode;
-    $secNum.style.display = mode === 0 ? 'inline-block' : 'none';
-    $secNum.style.opacity = mode === 0 ? '' : '0';
-    $secBar.classList.toggle('active', mode === 1);
-    $secBreath.classList.toggle('active', mode === 2);
-  }
+  /* ── 内置纸条标签 v3（更丰富） ── */
+  const QUOTES = [
+    '保持专注，静水流深',
+    '今天也是崭新的一天',
+    '慢慢来，比较快',
+    '少即是多',
+    '此刻即是当下',
+    '呼吸，然后继续',
+    '做你认为正确的事',
+    '时间是最公平的资源',
+    '心流是最美的状态',
+    '一寸光阴一寸金',
+    '专注当下，未来可期',
+    '沉静是最好的力量',
+  ];
+  const AFFIRMATIONS = [
+    '你做得很好',
+    '一切都会好的',
+    '别忘了喝水',
+    '伸个懒腰吧',
+    '你已经走了很远',
+    '休息一下眼睛',
+    '深呼吸，放松肩膀',
+    '起来走动走动吧',
+  ];
+  const TIME_QUOTE_MORNING = [
+    '一日之计在于晨',
+    '朝起早，夜眠迟',
+    '清晨的光是最好的滤镜',
+  ];
+  const TIME_QUOTE_EVENING = [
+    '夜阑卧听风吹雨',
+    '星光不问赶路人',
+    '今晚也要好眠哦',
+  ];
 
-  function cycleSecMode() {
-    if (!config.secondsCycle) { setSecMode(0); return; }
-    setSecMode((secMode + 1) % 3);
-    secModeTimer = setTimeout(cycleSecMode, 12000);
-  }
-
-  function stopSecCycle() { if (secModeTimer) { clearTimeout(secModeTimer); secModeTimer = null; } }
-
-  function updateSeconds(now) {
-    const s = now.getSeconds();
-    setNum($secNum, pad2(s));
-    $secFill.style.width = ((s / 60) * 100) + '%';
-  }
-
-  // ── 纸条 ──
-  function workedMins(now) {
-    const start = new Date(now); start.setHours(8, 20, 0, 0);
-    return Math.max(0, Math.floor((now - start) / 60000));
-  }
-  function toFriday(now) { const d = now.getDay(); return (5 - d + 7) % 7 || 7; }
-  function countdownMin(now) {
-    const [h, m] = config.endTime.split(':').map(Number);
-    const end = new Date(now); end.setHours(h, m, 0, 0);
-    if (end <= now) end.setDate(end.getDate() + 1);
-    return Math.max(0, Math.floor((end - now) / 60000));
-  }
-  function countdownText(now) {
-    const min = countdownMin(now);
-    const hh = Math.floor(min / 60), mm = min % 60;
-    if (hh > 0) return '离下班还有 ' + hh + ' 小时 ' + mm + ' 分钟';
-    if (mm > 0) return '离下班还有 ' + mm + ' 分钟';
-    return '今日已收工 ✦';
-  }
-
-  function weatherText() {
-    if (!weatherCache) return '';
-    const c = weatherCache.code;
-    if (c === 0) return '晴'; if (c <= 2) return '多云'; if (c === 3) return '阴';
-    if (c <= 48) return '有雾'; if (c <= 55) return '毛毛雨'; if (c <= 65) return '雨';
-    if (c <= 77) return '有雪'; if (c <= 82) return '阵雨'; if (c <= 86) return '阵雪';
-    return '雷暴';
-  }
-  function weatherTip() {
-    if (!weatherCache) return '';
-    const c = weatherCache.code, t = weatherCache.temp;
-    if (c <= 2 && t > 18) return '适合开窗';
-    if (c >= 51) return '出门带伞';
-    if (t >= 30) return '注意补水';
-    if (t <= 5) return '注意保暖';
-    return '';
-  }
-
-  function fillVars(t, now) {
-    return t
-      .replace(/\{worked\}/g, workedMins(now))
-      .replace(/\{toFriday\}/g, toFriday(now))
-      .replace(/\{countdown\}/g, countdownText(now))
-      .replace(/\{weather\}/g, weatherText())
-      .replace(/\{temp\}/g, weatherCache ? weatherCache.temp : '--')
-      .replace(/\{weatherTip\}/g, weatherTip());
-  }
-
-  function tickerIcon(text) {
-    if (text.includes('外卖')) return '🍜';
-    if (text.includes('专注') || text.includes('起来') || text.includes('肩颈')) return '💪';
-    if (text.includes('下班') || text.includes('收工')) return '⏰';
-    if (text.includes('周五')) return '🎯';
-    if (text.includes('眼睛') || text.includes('远眺') || text.includes('窗外')) return '🌿';
-    if (text.includes('呼吸') || text.includes('正念') || text.includes('平静')) return '🌊';
-    if (text.includes('水')) return '💧';
-    if (text.includes('好') || text.includes('光') || text.includes('✨')) return '✨';
-    if (text.includes('小憩') || text.includes('走走')) return '🙆';
-    if (text.includes('晴')) return '☀️';
-    if (text.includes('雨')) return '☔';
-    return '📌';
-  }
-
-  function parseTicker(raw) {
-    const m = raw.match(/^\[(\d{2}:\d{2})(?:-(\d{2}:\d{2}))?\]\s*(.*)/);
-    let range = null;
-    let text = raw;
-    if (m) {
-      range = { s: timeMin(m[1]), e: m[2] ? timeMin(m[2]) : timeMin(m[1]) + 30 };
-      text = m[3];
-    }
-    return { range, text };
-  }
-  function tickerVisible(p, now) {
-    if (!p.range) return true;
-    const n = now.getHours() * 60 + now.getMinutes();
-    return n >= p.range.s && n < p.range.e;
-  }
-
-  function getVisibleTickers(now) {
-    return config.tickers.filter(t => tickerVisible(parseTicker(t), now));
-  }
-
-  function showTicker() {
-    const now = new Date();
-    const vis = getVisibleTickers(now);
-    if (vis.length === 0) {
-      $tickerMain.textContent = '✨ 享受当下';
-      $tickerSub.textContent = '';
-      $tickerIcon.textContent = '📌';
-      $tickerProgress.innerHTML = '';
-      return;
-    }
-    tickerIdx = (tickerIdx + 1) % vis.length;
-    const raw = vis[tickerIdx];
-    const p = parseTicker(raw);
-    const text = fillVars(p.text, now);
-    const lines = text.split('\n').filter(l => l.trim());
-    $tickerMain.textContent = lines[0] || '';
-    $tickerSub.textContent = lines.slice(1).join('  ');
-    $tickerIcon.textContent = tickerIcon(text);
-    $tickerProgress.innerHTML = '';
-    if (vis.length > 1) {
-      for (let i = 0; i < vis.length; i++) {
-        const d = document.createElement('div');
-        d.className = 'dot' + (i === tickerIdx ? ' active' : '');
-        $tickerProgress.appendChild(d);
-      }
-    }
-  }
-
-  function scheduleTickers() {
-    if (tickerTimer) clearInterval(tickerTimer);
-    tickerTimer = setInterval(showTicker, Math.max(3, config.tickerInterval || 8) * 1000);
-  }
-  function refreshTicker() { tickerIdx = -1; showTicker(); scheduleTickers(); }
-
-  // ── 天气 ──
-  const LAT = 'dk_lat', LON = 'dk_lon', WX_CACHE = 'dk_wx_cache';
-  const WMO_ICON = c => {
-    if (c === 0) return '☀️'; if (c <= 3) return '🌤'; if (c <= 48) return '🌫';
-    if (c <= 57) return '🌦'; if (c <= 67) return '🌧'; if (c <= 77) return '🌨';
-    if (c <= 82) return '🌧'; if (c <= 86) return '🌨'; if (c <= 99) return '⛈';
-    return '🌡';
+  /* ══════════════════════════════════════
+     状态管理
+     ══════════════════════════════════════ */
+  const defaultState = {
+    faceIndex: 0,
+    endTime: '18:00',
+    stripInterval: 15,
+    strips: DEFAULT_STRIPS.slice(),
+    showSeconds: true,
+    showWeather: true,
+    showWorldClock: false,
+    aodMode: false,
+    notifEnabled: true,
+    focusData: { today:0, week:0, streak:0, lastDay:'', daily:{} },
   };
 
-  function cachedWx() {
-    try { const c = JSON.parse(localStorage.getItem(WX_CACHE)); if (Date.now() - c.t < 1800000) return c.d; } catch(e) {}
-    return null;
-  }
-  function setCachedWx(d) { try { localStorage.setItem(WX_CACHE, JSON.stringify({t: Date.now(), d})); } catch(e) {} }
+  let state = loadState();
 
-  async function fetchWx(lat, lon) {
+  function loadState() {
     try {
-      const r = await fetch('https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+'&current_weather=true&timezone=auto');
-      if (!r.ok) return null;
-      const j = await r.json();
-      if (!j.current_weather) return null;
-      const w = j.current_weather;
-      return { temp: Math.round(w.temperature), code: w.weathercode };
-    } catch(e) { return null; }
+      const raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return { ...defaultState };
+      const parsed = JSON.parse(raw);
+      return { ...defaultState, ...parsed, focusData: {...(defaultState.focusData || {}), ...(parsed.focusData || {})} };
+    } catch(e) {
+      return { ...defaultState };
+    }
   }
 
-  async function updateWeather() {
-    if (!config.weatherEnabled) { $weatherInfo.style.display = 'none'; return; }
-    $weatherInfo.style.display = 'inline-flex';
-    const c = cachedWx();
-    if (c) {
-      weatherCache = c;
-      $weatherInfo.classList.remove('loading');
-      $weatherIcon.textContent = WMO_ICON(c.code);
-      $weatherTemp.textContent = c.temp + '°';
-      refreshTicker();
+  function saveState() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch(e) {}
+  }
+
+  /* ── DOM 引用 ── */
+  const $ = id => document.getElementById(id);
+  const dom = {
+    app: $('app'),
+    statusText: $('statusText'),
+    statusDot: $('statusDot'),
+    btnSettings: $('btnSettings'),
+    clockStage: $('clockStage'),
+    ndH: $('ndH'), ndM: $('ndM'), ndS: $('ndS'), ndSep: $('ndSep'),
+    handH: $('handH'), handM: $('handM'), handS: $('handS'),
+    analogSvg: $('analogSvg'), analogTicks: $('analogTicks'), analogNums: $('analogNums'),
+    wordMain: $('wordMain'), wordSub: $('wordSub'), wordSecFill: $('wordSecFill'),
+    flipH1: $('flipH1'), flipH2: $('flipH2'), flipM1: $('flipM1'), flipM2: $('flipM2'), flipSep: $('flipSep'),
+    dateYear: $('dateYear'), dateMD: $('dateMD'), dateWeekday: $('dateWeekday'),
+    weatherIcon: $('weatherIcon'), weatherTemp: $('weatherTemp'), weatherDesc: $('weatherDesc'),
+    countdownLabel: $('countdownLabel'), countdownVal: $('countdownVal'),
+    aqiVal: $('aqiVal'),
+    cardWeather: $('cardWeather'), cardAqi: $('cardAqi'),
+    stripText: $('stripText'),
+    sunriseTime: $('sunriseTime'), sunsetTime: $('sunsetTime'),
+    moonPhaseIcon: $('moonPhaseIcon'), moonPhaseName: $('moonPhaseName'),
+    worldClockItem: $('worldClockItem'), worldClockTxt: $('worldClockTxt'),
+    settingsOverlay: $('settingsOverlay'),
+    btnCloseSettings: $('btnCloseSettings'),
+    toastContainer: $('toastContainer'),
+    endTimeInput: $('endTimeInput'), endTimeVal: $('endTimeVal'),
+    stripIntervalInput: $('stripIntervalInput'), stripIntervalVal: $('stripIntervalVal'),
+    stripContentInput: $('stripContentInput'),
+    toggleSeconds: $('toggleSeconds'), toggleWeather: $('toggleWeather'),
+    toggleWorldClock: $('toggleWorldClock'), toggleAOD: $('toggleAOD'), toggleNotif: $('toggleNotif'),
+    btnSave: $('btnSave'), btnReset: $('btnReset'),
+    focusToday: $('focusToday'), focusWeek: $('focusWeek'), focusStreak: $('focusStreak'),
+    weekHeatmap: $('weekHeatmap'),
+    faceDots: $('faceDots'),
+    bgNebula: $('nebulaCanvas'),
+    bgAurora: $('auroraCanvas'),
+    bgPulse: $('bgPulse'),
+  };
+
+  /* ══════════════════════════════════════
+     工具函数
+     ══════════════════════════════════════ */
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const pad2 = n => String(n).padStart(2, '0');
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+
+  /* ══════════════════════════════════════
+     Circadian 背景系统 v3
+     ══════════════════════════════════════ */
+  const circadian = {
+    idx: 0,
+
+    init() {
+      this.apply();
+      // 每3分钟更新（更丝滑）
+      setInterval(() => this.apply(), 3 * 60 * 1000);
+    },
+
+    getInterpolatedColors(hour) {
+      const h = hour % 24;
+      let i = 0;
+      for (let j = 0; j < CIRCADIAN_STOPS.length - 1; j++) {
+        if (h >= CIRCADIAN_STOPS[j].h && h < CIRCADIAN_STOPS[j+1].h) { i = j; break; }
+      }
+      if (h >= CIRCADIAN_STOPS[CIRCADIAN_STOPS.length-1].h) {
+        i = CIRCADIAN_STOPS.length - 1;
+      }
+      const a = CIRCADIAN_STOPS[i];
+      const b = i < CIRCADIAN_STOPS.length - 1 ? CIRCADIAN_STOPS[i+1] : CIRCADIAN_STOPS[0];
+      const range = b.h > a.h ? (b.h - a.h) : (24 - a.h + b.h);
+      const cur = h >= a.h ? (h - a.h) : (24 - a.h + h);
+      const t = clamp(cur / range, 0, 1);
+      return { a, b, t };
+    },
+
+    apply() {
+      const now = new Date();
+      const hour = now.getHours() + now.getMinutes() / 60;
+      const { a, b, t } = this.getInterpolatedColors(hour);
+      document.documentElement.style.setProperty('--accent', lerpColor(a.accent, b.accent, t));
+      // 深夜时段 body class
+      const h = now.getHours();
+      document.body.classList.toggle('time-night', h >= 22 || h < 5);
+      this.idx = Math.floor(hour / 2);
+    },
+
+    getBgColor() {
+      const now = new Date();
+      const h = now.getHours() + now.getMinutes() / 60;
+      const { a, b, t } = this.getInterpolatedColors(h);
+      return lerpColor(a.shift, b.shift, t);
+    }
+  };
+
+  function lerpColor(c1, c2, t) {
+    const r1 = parseInt(c1.slice(1,3),16), g1 = parseInt(c1.slice(3,5),16), b1 = parseInt(c1.slice(5,7),16);
+    const r2 = parseInt(c2.slice(1,3),16), g2 = parseInt(c2.slice(3,5),16), b2 = parseInt(c2.slice(5,7),16);
+    const r = Math.round(lerp(r1, r2, t)), g = Math.round(lerp(g1, g2, t)), b = Math.round(lerp(b1, b2, t));
+    return '#' + [r,g,b].map(v => pad2(v.toString(16))).join('');
+  }
+
+  /* ══════════════════════════════════════
+     星云雾背景 v3（Canvas）
+     ══════════════════════════════════════ */
+  const nebula = {
+    canvas: null, ctx: null,
+    w: 0, h: 0,
+    stars: [],
+    initialized: false,
+
+    init() {
+      this.canvas = dom.bgNebula;
+      if (!this.canvas) return;
+      this.ctx = this.canvas.getContext('2d');
+      this.resize();
+      this.createStars();
+      this.loop();
+      window.addEventListener('resize', () => this.resize());
+    },
+
+    resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      this.w = window.innerWidth;
+      this.h = window.innerHeight;
+      this.canvas.width = this.w * dpr;
+      this.canvas.height = this.h * dpr;
+      this.canvas.style.width = this.w + 'px';
+      this.canvas.style.height = this.h + 'px';
+      this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    },
+
+    createStars() {
+      this.stars = [];
+      const count = Math.floor((this.w * this.h) / 9000);
+      for (let i = 0; i < count; i++) {
+        this.stars.push({
+          x: Math.random() * this.w,
+          y: Math.random() * this.h,
+          r: Math.random() * 1.1 + 0.25,
+          alpha: Math.random() * 0.55 + 0.15,
+          speed: Math.random() * 0.06 + 0.015,
+          phase: Math.random() * Math.PI * 2,
+        });
+      }
+    },
+
+    loop() {
+      const ctx = this.ctx;
+      const w = this.w, h = this.h;
+      ctx.clearRect(0, 0, w, h);
+
+      // 星云背景渐变
+      const bgColor = circadian.getBgColor();
+      const grd = ctx.createRadialGradient(w*0.5, h*0.55, 0, w*0.5, h*0.55, Math.max(w,h)*0.7);
+      grd.addColorStop(0, bgColor);
+      grd.addColorStop(0.4, 'rgba(18,12,35,0.25)');
+      grd.addColorStop(1, 'transparent');
+      ctx.fillStyle = grd;
+      ctx.fillRect(0, 0, w, h);
+
+      // 星点
+      const t = performance.now() / 1000;
+      for (const s of this.stars) {
+        const flick = s.alpha * (0.65 + 0.35 * Math.sin(t * s.speed * 1.8 + s.phase));
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(200,210,255,${flick})`;
+        ctx.fill();
+      }
+
+      requestAnimationFrame(() => this.loop());
+    }
+  };
+
+  /* ══════════════════════════════════════
+     氛围粒子 v3（Canvas）
+     ══════════════════════════════════════ */
+  const aurora = {
+    canvas: null, ctx: null,
+    w: 0, h: 0,
+    particles: [],
+
+    init() {
+      this.canvas = dom.bgAurora;
+      if (!this.canvas) return;
+      this.ctx = this.canvas.getContext('2d');
+      this.resize();
+      this.createParticles();
+      this.animate();
+      window.addEventListener('resize', () => this.resize());
+    },
+
+    resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      this.w = window.innerWidth;
+      this.h = window.innerHeight;
+      this.canvas.width = this.w * dpr;
+      this.canvas.height = this.h * dpr;
+      this.canvas.style.width = this.w + 'px';
+      this.canvas.style.height = this.h + 'px';
+      this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    },
+
+    createParticles() {
+      const count = Math.min(Math.floor(this.w * this.h / 28000), 45);
+      this.particles = [];
+      for (let i = 0; i < count; i++) {
+        this.particles.push({
+          x: Math.random() * this.w,
+          y: Math.random() * this.h,
+          vx: (Math.random() - 0.5) * 0.12,
+          vy: (Math.random() - 0.5) * 0.09,
+          r: Math.random() * 45 + 25,
+          alpha: Math.random() * 0.035 + 0.012,
+          color: Math.random() > 0.5 ? '106,120,200' : '200,130,90',
+        });
+      }
+    },
+
+    animate() {
+      const ctx = this.ctx;
+      const w = this.w, h = this.h;
+      ctx.clearRect(0, 0, w, h);
+
+      for (const p of this.particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < -p.r) p.x = w + p.r;
+        if (p.x > w + p.r) p.x = -p.r;
+        if (p.y < -p.r) p.y = h + p.r;
+        if (p.y > h + p.r) p.y = -p.r;
+
+        const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+        grd.addColorStop(0, `rgba(${p.color},${p.alpha})`);
+        grd.addColorStop(1, `rgba(${p.color},0)`);
+        ctx.fillStyle = grd;
+        ctx.fillRect(p.x - p.r, p.y - p.r, p.r * 2, p.r * 2);
+      }
+
+      requestAnimationFrame(() => this.animate());
+    }
+  };
+
+  /* ══════════════════════════════════════
+     时钟面渲染 v3
+     ══════════════════════════════════════ */
+  let prev = { h:-1, m:-1, s:-1 };
+  let flipState = { h1: 0, h2: 0, m1: 0, m2: 0 };
+
+  function renderTime() {
+    const now = new Date();
+    const h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+    const secPct = (s + now.getMilliseconds()/1000) / 60;
+
+    /* ── 数字面 ── */
+    if (state.faceIndex === 0) {
+      const hStr = pad2(h), mStr = pad2(m);
+      if (prev.h !== h) dom.ndH.textContent = hStr;
+      if (prev.m !== m) dom.ndM.textContent = mStr;
+      if (state.showSeconds) {
+        dom.ndS.textContent = pad2(s);
+        dom.ndS.classList.remove('hidden');
+        dom.ndSep.classList.remove('hidden');
+      } else {
+        dom.ndS.classList.add('hidden');
+        dom.ndSep.classList.add('hidden');
+      }
+    }
+
+    /* ── 指针面 ── */
+    if (state.faceIndex === 1) {
+      const hAngle = (h % 12 + m / 60) * 30 - 90;
+      const mAngle = (m + s / 60) * 6 - 90;
+      const sAngle = s * 6 - 90;
+      dom.handH.setAttribute('transform', `rotate(${hAngle})`);
+      dom.handM.setAttribute('transform', `rotate(${mAngle})`);
+      dom.handS.setAttribute('transform', `rotate(${sAngle})`);
+    }
+
+    /* ── 文字面 ── */
+    if (state.faceIndex === 2) {
+      if (prev.h !== h || prev.m !== m) {
+        const { main, sub } = toWordTime(h, m);
+        dom.wordMain.textContent = main;
+        dom.wordSub.textContent = sub;
+      }
+      const pct = Math.round(secPct * 100);
+      dom.wordSecFill.style.width = pct + '%';
+    }
+
+    /* ── Flip 翻页 ── */
+    if (state.faceIndex === 3) {
+      const h1 = Math.floor(h / 10), h2 = h % 10;
+      const m1 = Math.floor(m / 10), m2 = m % 10;
+      updateFlipCard(dom.flipH1, flipState.h1, h1);
+      updateFlipCard(dom.flipH2, flipState.h2, h2);
+      updateFlipCard(dom.flipM1, flipState.m1, m1);
+      updateFlipCard(dom.flipM2, flipState.m2, m2);
+      flipState = { h1: h1 ?? 0, h2: h2 ?? 0, m1: m1 ?? 0, m2: m2 ?? 0 };
+      if (dom.flipSep) {
+        dom.flipSep.style.visibility = state.showSeconds ? '' : 'hidden';
+      }
+    }
+
+    /* ── 日期 ── */
+    if (prev.h !== h || prev.m !== m) {
+      dom.dateYear.textContent = now.getFullYear();
+      dom.dateMD.textContent = `${pad2(now.getMonth()+1)}-${pad2(now.getDate())}`;
+      dom.dateWeekday.textContent = WEEKDAYS[now.getDay()];
+    }
+
+    prev = { h, m, s };
+  }
+
+  /* ── 数字转中文 ── */
+  function toWordTime(h, m) {
+    const period = h < 5 ? '凌晨' : h < 8 ? '清晨' : h < 12 ? '上午' : h < 14 ? '中午' : h < 18 ? '下午' : h < 21 ? '傍晚' : '夜晚';
+    let h12 = h % 12;
+    if (h12 === 0) h12 = 12;
+    const hCN = CN_NUMBERS[h12] + '时';
+    if (m === 0) return { main: hCN, sub: period };
+    if (m === 15) return { main: hCN + '一刻', sub: period };
+    if (m === 30) return { main: hCN + '半', sub: period };
+    if (m === 45) return { main: CN_NUMBERS[(h12 % 12) + 1] + '时差一刻', sub: period };
+    const mCN = CN_NUMBERS[m] + '分';
+    return { main: hCN + mCN, sub: period };
+  }
+
+  /* ── Flip 翻页更新 v3 ── */
+  function updateFlipCard(unitEl, oldVal, newVal) {
+    if (oldVal === newVal) return;
+    const card = unitEl.querySelector('.flip-card.static');
+    if (!card) {
+      const staticCard = unitEl.querySelector('.flip-card');
+      if (staticCard) staticCard.querySelector('.flip-num').textContent = newVal;
       return;
     }
-    const lat = localStorage.getItem(LAT), lon = localStorage.getItem(LON);
-    if (lat && lon) {
-      const d = await fetchWx(parseFloat(lat), parseFloat(lon));
-      if (d) { weatherCache = d; setCachedWx(d); $weatherInfo.classList.remove('loading'); $weatherIcon.textContent = WMO_ICON(d.code); $weatherTemp.textContent = d.temp + '°'; refreshTicker(); }
-      else { $weatherTemp.textContent = '--°'; }
-    }
+
+    const topHalf = document.createElement('div');
+    topHalf.className = 'flip-card flipping-top';
+    topHalf.innerHTML = `<span class="flip-num">${oldVal}</span>`;
+
+    const botHalf = document.createElement('div');
+    botHalf.className = 'flip-card flipping-bottom';
+    botHalf.innerHTML = `<span class="flip-num">${newVal}</span>`;
+
+    unitEl.appendChild(topHalf);
+    unitEl.appendChild(botHalf);
+
+    setTimeout(() => {
+      topHalf.remove();
+      botHalf.remove();
+      unitEl.innerHTML = `<div class="flip-card static"><span class="flip-num">${newVal}</span></div>`;
+    }, 450);
   }
 
-  function requestGeo() {
-    if (!('geolocation' in navigator)) { $weatherTemp.textContent = '无法定位'; return; }
-    navigator.geolocation.getCurrentPosition(
-      p => { localStorage.setItem(LAT, p.coords.latitude.toFixed(2)); localStorage.setItem(LON, p.coords.longitude.toFixed(2)); updateWeather(); },
-      () => { $weatherTemp.textContent = '定位失败'; },
-      { timeout: 10000, maximumAge: 86400000 }
-    );
-  }
+  /* ══════════════════════════════════════
+     指针时钟 SVG 刻度生成
+     ══════════════════════════════════════ */
+  function buildAnalogDial() {
+    const ticksGroup = dom.analogTicks;
+    const numsGroup = dom.analogNums;
+    if (!ticksGroup || !numsGroup) return;
 
-  // ── 外卖 ──
-  let takeoutNotified = false;
-  function updateTakeout(now) {
-    const sm = timeMin(config.takeoutStart), em = timeMin(config.takeoutEnd);
-    const nm = now.getHours() * 60 + now.getMinutes();
-    const weekend = (now.getDay() === 0 || now.getDay() === 6);
-    const inWin = !weekend && nm >= sm && nm < em;
-    if (inWin) {
-      $takeoutReminder.classList.add('show');
-      if (!takeoutNotified && config.notifyEnabled) {
-        if ('Notification' in window && Notification.permission === 'granted')
-          new Notification('🍜 该点外卖了！', { body: '趁现在还有好选择', icon: 'icon.svg' });
-        takeoutNotified = true;
+    let ticksHTML = '';
+    let numsHTML = '';
+    for (let i = 0; i < 60; i++) {
+      const angle = i * 6 * Math.PI / 180;
+      const isHour = i % 5 === 0;
+      const r1 = 88, r2 = isHour ? 79 : 84;
+      const x1 = Math.sin(angle) * r2, y1 = -Math.cos(angle) * r2;
+      const x2 = Math.sin(angle) * r1, y2 = -Math.cos(angle) * r1;
+      const w = isHour ? 1.8 : 0.5;
+      const color = isHour ? 'rgba(255,255,255,0.45)' : 'rgba(255,255,255,0.12)';
+      ticksHTML += '<line x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) + '" stroke="' + color + '" stroke-width="' + w + '" stroke-linecap="round"/>';
+      if (isHour) {
+        const num = i === 0 ? 12 : (i / 5);
+        const nr = 67;
+        const nx = Math.sin(angle) * nr, ny = -Math.cos(angle) * nr;
+        numsHTML += '<text x="' + nx.toFixed(1) + '" y="' + ny.toFixed(1) + '" fill="rgba(255,255,255,0.4)" font-size="10" font-weight="400" text-anchor="middle" dominant-baseline="central" style="font-family:ui-rounded,system-ui,sans-serif;">' + num + '</text>';
       }
-    } else {
-      $takeoutReminder.classList.remove('show');
-      takeoutNotified = false;
+    }
+    ticksGroup.innerHTML = ticksHTML;
+    numsGroup.innerHTML = numsHTML;
+  }
+
+  /* ══════════════════════════════════════
+     世界时钟
+     ══════════════════════════════════════ */
+  function updateWorldClock() {
+    if (!state.showWorldClock) {
+      dom.worldClockItem.style.display = 'none';
+      return;
+    }
+    dom.worldClockItem.style.display = '';
+    const tokyoStr = new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Tokyo', hour: '2-digit', minute: '2-digit', hour12: false });
+    dom.worldClockTxt.textContent = '东京 ' + tokyoStr;
+  }
+
+  /* ══════════════════════════════════════
+     天气 / 日出日落 / AQI
+     ══════════════════════════════════════ */
+  let weatherCache = null, weatherCacheTime = 0;
+  let aqiCache = null, aqiCacheTime = 0;
+  const WEATHER_TTL = 30 * 60 * 1000;
+
+  async function fetchWeather() {
+    if (!state.showWeather) {
+      dom.cardWeather.style.display = 'none';
+      return;
+    }
+    dom.cardWeather.style.display = '';
+
+    if (weatherCache && Date.now() - weatherCacheTime < WEATHER_TTL) {
+      renderWeather(weatherCache);
+      return;
+    }
+
+    try {
+      const pos = await getPosition();
+      const { lat, lon } = pos;
+      const url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&current=temperature_2m,weather_code&daily=sunrise,sunset&timezone=auto';
+      const res = await fetch(url);
+      const data = await res.json();
+      weatherCache = data;
+      weatherCacheTime = Date.now();
+      renderWeather(data);
+      dom.statusText.textContent = '已连接';
+      dom.statusDot.style.background = '#4ade80';
+    } catch(e) {
+      dom.weatherDesc.textContent = '获取失败';
+      dom.statusDot.style.background = '#f87171';
     }
   }
 
-  // ── 整点脉冲 ──
-  function hourlyPulse(now) {
-    if (prevMin !== -1 && now.getMinutes() === 0 && prevMin === 59) {
-      $timeGlow.classList.add('pulse');
-      setTimeout(() => $timeGlow.classList.remove('pulse'), 3000);
-    }
-    prevMin = now.getMinutes();
+  function getPosition() {
+    return new Promise((resolve) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          pos => resolve({ lat: pos.coords.latitude.toFixed(1), lon: pos.coords.longitude.toFixed(1) }),
+          () => resolve({ lat: '39.9', lon: '116.4' }),
+          { timeout: 5000 }
+        );
+      } else {
+        resolve({ lat: '39.9', lon: '116.4' });
+      }
+    });
   }
 
-  // ── 主循环 ──
-  function tick() {
+  function renderWeather(data) {
+    if (!data || !data.current) return;
+    const cur = data.current;
+    const code = cur.weather_code;
+    const temp = Math.round(cur.temperature_2m);
+    const { icon, desc } = weatherCodeToIcon(code);
+    dom.weatherIcon.textContent = icon;
+    dom.weatherTemp.textContent = temp + '°';
+    dom.weatherDesc.textContent = desc;
+
+    if (data.daily) {
+      const sr = data.daily.sunrise ? data.daily.sunrise[0] : null;
+      const ss = data.daily.sunset ? data.daily.sunset[0] : null;
+      if (sr) dom.sunriseTime.textContent = sr.split('T')[1];
+      if (ss) dom.sunsetTime.textContent = ss.split('T')[1];
+    }
+  }
+
+  function weatherCodeToIcon(code) {
+    if (code === 0) return { icon:'☀', desc:'晴' };
+    if (code <= 3) return { icon:'⛅', desc:'多云' };
+    if (code <= 48) return { icon:'🌫', desc:'雾' };
+    if (code <= 57) return { icon:'🌧', desc:'毛毛雨' };
+    if (code <= 67) return { icon:'🌧', desc:'雨' };
+    if (code <= 77) return { icon:'❄', desc:'雪' };
+    if (code <= 82) return { icon:'🌦', desc:'阵雨' };
+    if (code <= 86) return { icon:'🌨', desc:'阵雪' };
+    if (code <= 99) return { icon:'⛈', desc:'雷暴' };
+    return { icon:'?', desc:'未知' };
+  }
+
+  async function fetchAQI() {
+    try {
+      if (aqiCache && Date.now() - aqiCacheTime < WEATHER_TTL) {
+        renderAQI(aqiCache);
+        return;
+      }
+      const pos = await getPosition();
+      const url = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=' + pos.lat + '&longitude=' + pos.lon + '&current=us_aqi,pm2_5&timezone=auto';
+      const res = await fetch(url);
+      const data = await res.json();
+      aqiCache = data;
+      aqiCacheTime = Date.now();
+      renderAQI(data);
+    } catch(e) { /* 静默失败 */ }
+  }
+
+  function renderAQI(data) {
+    if (!data || !data.current) return;
+    const aqi = data.current.us_aqi || 0;
+    let color = '#4ade80', label = '优';
+    if (aqi > 50) { color = '#fbbf24'; label = '良'; }
+    if (aqi > 100) { color = '#f97316'; label = '轻'; }
+    if (aqi > 150) { color = '#ef4444'; label = '中'; }
+    if (aqi > 200) { color = '#a855f7'; label = '重'; }
+    dom.aqiVal.innerHTML = '<span style="color:' + color + '">' + aqi + '</span> ' + label;
+  }
+
+  /* ══════════════════════════════════════
+     月相计算
+     ══════════════════════════════════════ */
+  function calcMoonPhase(date) {
+    const year = date.getFullYear(), month = date.getMonth() + 1, day = date.getDate();
+    let c = 0, e = 0, jd = 0, b = 0;
+    if (month < 3) { c = year - 1; e = month + 12; }
+    else { c = year; e = month; }
+    jd = Math.floor(365.25 * (c + 4716)) + Math.floor(30.6001 * (e + 1)) + day - 1524.5;
+    b = jd - 2451550.1;
+    const phase = ((b / 29.530588853) % 1 + 1) % 1;
+
+    for (let i = MOON_PHASES.length - 1; i >= 0; i--) {
+      if (phase >= MOON_PHASES[i].threshold) {
+        return MOON_PHASES[i];
+      }
+    }
+    return MOON_PHASES[0];
+  }
+
+  function updateMoonPhase() {
+    const phase = calcMoonPhase(new Date());
+    dom.moonPhaseIcon.textContent = phase.icon;
+    dom.moonPhaseName.textContent = phase.name;
+  }
+
+  /* ══════════════════════════════════════
+     倒计时
+     ══════════════════════════════════════ */
+  function updateCountdown() {
     const now = new Date();
-    const h = now.getHours(), m = now.getMinutes();
-    if (h === 0 && m === 0) applyTheme(now);
+    const [endH, endM] = state.endTime.split(':').map(Number);
+    const end = new Date(now);
+    end.setHours(endH, endM, 0, 0);
+    if (end <= now) end.setDate(end.getDate() + 1);
+    const diff = end - now;
+    if (diff <= 0) {
+      dom.countdownVal.textContent = '已下班';
+      return;
+    }
+    const hours = Math.floor(diff / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    const secs = Math.floor((diff % 60000) / 1000);
+    dom.countdownVal.textContent = pad2(hours) + ':' + pad2(mins) + ':' + pad2(secs);
 
-    setNum($hour, pad2(h));
-    setNum($minute, pad2(m));
-    updateSeconds(now);
+    if (state.notifEnabled && diff <= 30 * 60 * 1000 && diff > 29 * 60 * 1000) {
+      toast('还有 30 分钟下班！');
+    }
+    if (diff <= 60 * 1000 && diff > 59 * 1000) {
+      toast('就要下班了！🎉');
+    }
+  }
 
-    // 日期
-    const year = now.getFullYear(), mo = now.getMonth()+1, day = now.getDate();
-    $dateText.innerHTML = '<span>' + year + '</span><span class="dot">·</span><span>' + pad2(mo) + '-' + pad2(day) + '</span><span class="dot">·</span><span>' + weekDays[now.getDay()] + '日</span>';
+  /* ══════════════════════════════════════
+     纸条轮播 v3（智能上下文）
+     ══════════════════════════════════════ */
+  let stripIdx = 0;
 
-    // 倒计时
-    const cmin = countdownMin(now);
-    if (cmin <= 0) { $countdown.textContent = '今日已收工 ✦'; $countdown.classList.add('over'); }
-    else {
-      $countdown.classList.remove('over');
-      $countdown.textContent = (Math.floor(cmin/60) || '') + (cmin < 60 ? cmin+' 分钟' : Math.floor(cmin/60)+'h '+(cmin%60)+'min');
+  function updateStrip() {
+    if (!state.strips || state.strips.length === 0) {
+      dom.stripText.textContent = '';
+      return;
+    }
+    const tpl = state.strips[stripIdx % state.strips.length];
+    stripIdx++;
+    dom.stripText.textContent = resolveStripVars(tpl);
+  }
+
+  function resolveStripVars(text) {
+    let result = text;
+    const now = new Date();
+
+    // 已工作时长
+    const startOfDay = new Date(now); startOfDay.setHours(8, 30, 0, 0);
+    const workedMs = Math.max(0, now - startOfDay);
+    const workedMin = Math.floor(workedMs / 60000);
+    const workedH = Math.floor(workedMin / 60);
+    const workedM = workedMin % 60;
+    const workedStr = workedH + '时' + pad2(workedM) + '分';
+
+    // 下班倒计时
+    const cdEl = dom.countdownVal.textContent;
+    const countdown = cdEl || '--:--:--';
+
+    // 天气
+    const weather = dom.weatherIcon.textContent || '';
+    const temp = dom.weatherTemp.textContent || '';
+
+    // 距周五
+    const day = now.getDay();
+    const toFri = day <= 5 ? (5 - day) + '天' : '今天';
+
+    // 日出日落
+    const sunrise = dom.sunriseTime.textContent || '--:--';
+    const sunset = dom.sunsetTime.textContent || '--:--';
+
+    // #quote / #affirmation 标签
+    if (result.includes('#quote')) {
+      const h = now.getHours();
+      let quotePool = QUOTES;
+      if (h >= 5 && h < 10) quotePool = TIME_QUOTE_MORNING.concat(QUOTES);
+      else if (h >= 20) quotePool = TIME_QUOTE_EVENING.concat(QUOTES);
+      result = result.replace('#quote', quotePool[Math.floor(Math.random() * quotePool.length)]);
+    }
+    if (result.includes('#affirmation')) {
+      result = result.replace('#affirmation', AFFIRMATIONS[Math.floor(Math.random() * AFFIRMATIONS.length)]);
     }
 
-    updateTakeout(now);
-    hourlyPulse(now);
+    result = result
+      .replace(/\{worked\}/g, workedStr)
+      .replace(/\{countdown\}/g, countdown)
+      .replace(/\{weather\}/g, weather)
+      .replace(/\{temp\}/g, temp)
+      .replace(/\{toFriday\}/g, toFri)
+      .replace(/\{sunrise\}/g, sunrise)
+      .replace(/\{sunset\}/g, sunset);
+
+    return result;
   }
 
-  // ── 初始化 ──
-  function init() {
-    applyTheme(new Date());
-    tick();
-    setInterval(tick, 1000);
-    refreshTicker();
+  /* ══════════════════════════════════════
+     专注统计 v3
+     ══════════════════════════════════════ */
+  function initFocusData() {
+    const fd = state.focusData || {};
+    if (!fd.daily) fd.daily = {};
+    if (!fd.today) fd.today = 0;
+    if (!fd.week) fd.week = 0;
+    if (!fd.streak) fd.streak = 0;
+    if (!fd.lastDay) fd.lastDay = '';
+    state.focusData = fd;
+  }
 
-    if (config.secondsCycle) {
-      secModeTimer = setTimeout(cycleSecMode, 12000);
+  function updateFocusStats() {
+    const fd = state.focusData;
+    if (!fd || !fd.daily) { initFocusData(); return; }
+
+    // 仅专注模式计时
+    if (!focusTimerActive) return;
+
+    const today = new Date().toISOString().split('T')[0];
+
+    if (fd.lastDay !== today) {
+      const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+      if (fd.lastDay === yesterday) {
+        fd.streak = (fd.streak || 0) + 1;
+      } else if (fd.lastDay !== today) {
+        fd.streak = 1;
+      }
+      fd.lastDay = today;
     }
 
-    updateWeather();
-    setInterval(updateWeather, 30 * 60 * 1000);
+    fd.daily[today] = (fd.daily[today] || 0) + 1;
+    fd.today = Math.floor((fd.daily[today] || 0) / 60);
 
-    if (config.weatherEnabled && !localStorage.getItem(LAT)) requestGeo();
+    const now = new Date();
+    const weekStart = new Date(now);
+    weekStart.setDate(now.getDate() - now.getDay());
+    let weekTotal = 0;
+    for (let d = new Date(weekStart); d <= now; d.setDate(d.getDate()+1)) {
+      const key = d.toISOString().split('T')[0];
+      weekTotal += (fd.daily[key] || 0);
+    }
+    fd.week = Math.floor(weekTotal / 60);
 
-    // 6点/12点/18点切换背景主题
-    setInterval(() => applyTheme(new Date()), 5 * 60 * 1000);
+    saveState();
   }
 
-  // ── 设置面板 ──
-  function fillSettings() {
-    $endTime.value = config.endTime;
-    $tickerInterval.value = config.tickerInterval || 8;
-    $takeoutStart.value = config.takeoutStart;
-    $takeoutEnd.value = config.takeoutEnd;
-    $notifyEnabled.checked = config.notifyEnabled;
-    $weatherEnabled.checked = config.weatherEnabled;
-    $secondsCycle.checked = config.secondsCycle;
-    $tickerText.value = (config.tickers || DEFAULT_TICKERS).join('\n');
+  function renderFocusPanel() {
+    const fd = state.focusData || {};
+    dom.focusToday.textContent = (fd.today || 0) + 'm';
+    dom.focusWeek.textContent = (fd.week || 0) + 'm';
+    dom.focusStreak.textContent = (fd.streak || 0);
+
+    if (dom.weekHeatmap) {
+      let html = '';
+      const now = new Date();
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(now);
+        d.setDate(now.getDate() - i);
+        const key = d.toISOString().split('T')[0];
+        const mins = Math.floor((fd.daily?.[key] || 0) / 60);
+        const h = Math.min(26, mins * 0.45);
+        const intensity = mins > 60 ? 'var(--accent)' : mins > 20 ? 'rgba(126,184,255,0.35)' : 'rgba(255,255,255,0.06)';
+        html += '<div class="heat-bar" style="height:' + Math.max(3, h) + 'px;background:' + intensity + '" title="' + key + ': ' + mins + 'm"></div>';
+      }
+      dom.weekHeatmap.innerHTML = html;
+    }
   }
 
-  $settingsBtn.addEventListener('click', () => { fillSettings(); $panel.classList.add('open'); });
-  $panel.addEventListener('click', e => { if (e.target === $panel) $panel.classList.remove('open'); });
+  /* ══════════════════════════════════════
+     模式切换 v3
+     ══════════════════════════════════════ */
+  function switchFace(index) {
+    index = ((index % FACES.length) + FACES.length) % FACES.length;
+    state.faceIndex = index;
+    const faces = document.querySelectorAll('.clock-face');
+    faces.forEach((f, i) => f.classList.toggle('active', i === index));
+    const dots = document.querySelectorAll('.face-dot');
+    dots.forEach((d, i) => d.classList.toggle('active', i === index));
 
-  $notifyEnabled.addEventListener('change', function() {
-    if (this.checked && 'Notification' in window) Notification.requestPermission();
-  });
+    if (index === 1) {
+      const dial = dom.analogSvg?.closest('.analog-dial');
+      if (dial) {
+        if (!state.showSeconds) dial.classList.add('analog-hide-sec');
+        else dial.classList.remove('analog-hide-sec');
+      }
+    }
 
-  $saveBtn.addEventListener('click', () => {
-    if ($endTime.value) config.endTime = $endTime.value;
-    if ($takeoutStart.value) config.takeoutStart = $takeoutStart.value;
-    if ($takeoutEnd.value) config.takeoutEnd = $takeoutEnd.value;
-    config.notifyEnabled = $notifyEnabled.checked;
-    config.weatherEnabled = $weatherEnabled.checked;
-    config.secondsCycle = $secondsCycle.checked;
-    config.tickerInterval = Math.max(3, Math.min(30, parseInt($tickerInterval.value) || 8));
-    config.tickers = $tickerText.value.trim().split('\n').filter(l => l.trim());
-    saveConfig();
-    takeoutNotified = false;
-    updateWeather();
-    refreshTicker();
+    saveState();
+  }
 
-    if (config.secondsCycle) { stopSecCycle(); cycleSecMode(); }
-    else { stopSecCycle(); setSecMode(0); }
+  /* ══════════════════════════════════════
+     手势识别
+     ══════════════════════════════════════ */
+  let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
+  let lastTapTime = 0;
 
-    $panel.classList.remove('open');
-  });
+  function initGestures() {
+    const stage = dom.clockStage;
+    if (!stage) return;
 
-  $cancelBtn.addEventListener('click', () => $panel.classList.remove('open'));
+    stage.addEventListener('touchstart', e => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      touchStartTime = Date.now();
+    }, { passive: true });
 
-  // ── 锁屏常亮 ──
+    stage.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      const dt = Date.now() - touchStartTime;
+      const absDx = Math.abs(dx), absDy = Math.abs(dy);
+
+      if (absDx < 20 && absDy < 20 && dt < 300) {
+        const now = Date.now();
+        if (now - lastTapTime < 350) {
+          lastTapTime = 0;
+          toggleFocusTimer();
+          return;
+        }
+        lastTapTime = now;
+        return;
+      }
+
+      if (absDx > 50 && absDx > absDy * 1.5) {
+        if (dx > 0) switchFace(state.faceIndex - 1);
+        else switchFace(state.faceIndex + 1);
+      }
+    }, { passive: true });
+
+    stage.addEventListener('wheel', e => {
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        if (e.deltaX > 30) switchFace(state.faceIndex + 1);
+        else if (e.deltaX < -30) switchFace(state.faceIndex - 1);
+      } else {
+        if (e.deltaY > 30) switchFace(state.faceIndex + 1);
+        else if (e.deltaY < -30) switchFace(state.faceIndex - 1);
+      }
+    }, { passive: true });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft') switchFace(state.faceIndex - 1);
+      else if (e.key === 'ArrowRight') switchFace(state.faceIndex + 1);
+      else if (e.key >= '1' && e.key <= '4') switchFace(parseInt(e.key) - 1);
+    });
+  }
+
+  let focusTimerActive = false;
+  let stripIntervalId = null;
+  let lastStripSec = 0;
+  function toggleFocusTimer() {
+    focusTimerActive = !focusTimerActive;
+    if (focusTimerActive) {
+      toast('🍅 专注开始');
+      dom.app.classList.add('focus-mode');
+    } else {
+      toast('⏸ 专注暂停');
+      dom.app.classList.remove('focus-mode');
+    }
+  }
+
+  /* ══════════════════════════════════════
+     设置面板
+     ══════════════════════════════════════ */
+  function openSettings() {
+    syncSettingsUI();
+    dom.settingsOverlay.classList.add('open');
+  }
+  function closeSettings() { dom.settingsOverlay.classList.remove('open'); }
+
+  function syncSettingsUI() {
+    dom.endTimeInput.value = state.endTime;
+    dom.endTimeVal.textContent = state.endTime;
+    dom.stripIntervalInput.value = state.stripInterval;
+    dom.stripIntervalVal.textContent = state.stripInterval;
+    dom.stripContentInput.value = (state.strips || []).join('\n');
+    updateToggle(dom.toggleSeconds, state.showSeconds);
+    updateToggle(dom.toggleWeather, state.showWeather);
+    updateToggle(dom.toggleWorldClock, state.showWorldClock);
+    updateToggle(dom.toggleAOD, state.aodMode);
+    updateToggle(dom.toggleNotif, state.notifEnabled);
+    renderFocusPanel();
+  }
+
+  function updateToggle(el, on) {
+    if (!el) return;
+    el.classList.toggle('on', !!on);
+  }
+
+  function initSettingsUI() {
+    dom.btnSettings.addEventListener('click', openSettings);
+    dom.btnCloseSettings.addEventListener('click', closeSettings);
+    dom.settingsOverlay.addEventListener('click', e => { if (e.target === dom.settingsOverlay) closeSettings(); });
+
+    dom.toggleSeconds?.addEventListener('click', () => { state.showSeconds = !state.showSeconds; updateToggle(dom.toggleSeconds, state.showSeconds); });
+    dom.toggleWeather?.addEventListener('click', () => { state.showWeather = !state.showWeather; updateToggle(dom.toggleWeather, state.showWeather); fetchWeather(); });
+    dom.toggleWorldClock?.addEventListener('click', () => { state.showWorldClock = !state.showWorldClock; updateToggle(dom.toggleWorldClock, state.showWorldClock); updateWorldClock(); });
+    dom.toggleAOD?.addEventListener('click', () => { state.aodMode = !state.aodMode; updateToggle(dom.toggleAOD, state.aodMode); document.body.classList.toggle('aod-mode', state.aodMode); });
+    dom.toggleNotif?.addEventListener('click', () => { state.notifEnabled = !state.notifEnabled; updateToggle(dom.toggleNotif, state.notifEnabled); });
+
+    dom.endTimeInput?.addEventListener('input', () => { dom.endTimeVal.textContent = dom.endTimeInput.value; });
+    dom.stripIntervalInput?.addEventListener('input', () => { dom.stripIntervalVal.textContent = dom.stripIntervalInput.value; });
+
+    dom.btnSave.addEventListener('click', () => {
+      state.endTime = dom.endTimeInput.value;
+      state.stripInterval = parseInt(dom.stripIntervalInput.value) || 15;
+      state.strips = dom.stripContentInput.value.split('\n').filter(l => l.trim());
+      if (!state.strips.length) state.strips = DEFAULT_STRIPS.slice();
+      saveState();
+      stripIdx = 0;
+      // 重建纸条定时器
+      const newSec = Math.max(3, state.stripInterval);
+      if (stripIntervalId && newSec !== lastStripSec) {
+        clearInterval(stripIntervalId);
+        lastStripSec = newSec;
+        stripIntervalId = setInterval(updateStrip, lastStripSec * 1000);
+      }
+      closeSettings();
+      toast('已保存 ✓');
+    });
+    dom.btnReset.addEventListener('click', () => {
+      if (confirm('重置所有设置？')) {
+        state = { ...defaultState };
+        saveState();
+        location.reload();
+      }
+    });
+  }
+
+  /* ══════════════════════════════════════
+     Toast 通知
+     ══════════════════════════════════════ */
+  let toastTimer = null;
+  function toast(msg) {
+    const container = dom.toastContainer;
+    if (!container) return;
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.textContent = msg;
+    container.appendChild(el);
+    requestAnimationFrame(() => el.classList.add('show'));
+    setTimeout(() => {
+      el.classList.remove('show');
+      setTimeout(() => el.remove(), 400);
+    }, 2800);
+  }
+
+  /* ══════════════════════════════════════
+     整点脉动
+     ══════════════════════════════════════ */
+  let lastHour = -1;
+  function checkHourPulse() {
+    const h = new Date().getHours();
+    if (h !== lastHour) {
+      lastHour = h;
+      dom.bgPulse.classList.add('active');
+      setTimeout(() => dom.bgPulse.classList.remove('active'), 2500);
+    }
+  }
+
+  /* ══════════════════════════════════════
+     Wake Lock
+     ══════════════════════════════════════ */
   let wakeLock = null;
   async function acquireWakeLock() {
-    if (!('wakeLock' in navigator)) return;
-    try { wakeLock = await navigator.wakeLock.request('screen'); } catch(e) {}
+    try {
+      if ('wakeLock' in navigator) {
+        wakeLock = await navigator.wakeLock.request('screen');
+        dom.statusText.textContent = '屏幕常亮';
+      }
+    } catch(e) { /* 非关键功能，忽略 */ }
   }
-  ['click', 'touchstart', 'visibilitychange'].forEach(ev => {
-    document.addEventListener(ev, () => { if (document.visibilityState === 'visible') acquireWakeLock(); });
-  });
 
-  // ── PWA ──
-  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+  /* ══════════════════════════════════════
+     Service Worker
+     ══════════════════════════════════════ */
+  function registerSW() {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+  }
 
-  init();
+  /* ══════════════════════════════════════
+     主循环调度 v3
+     ══════════════════════════════════════ */
+  let frameCount = 0;
+
+  function mainLoop() {
+    renderTime();
+    frameCount++;
+
+    if (frameCount % 60 === 0) {
+      updateCountdown();
+      updateWorldClock();
+      updateMoonPhase();
+      checkHourPulse();
+      updateFocusStats();
+      renderFocusPanel();
+    }
+
+    // 纸条切换由 setInterval 驱动（避免双路径竞争）
+
+    requestAnimationFrame(mainLoop);
+  }
+
+  /* ══════════════════════════════════════
+     初始化
+     ══════════════════════════════════════ */
+  function init() {
+    buildAnalogDial();
+    initFocusData();
+
+    circadian.init();
+    nebula.init();
+    aurora.init();
+
+    document.querySelectorAll('.face-dot').forEach(dot => {
+      dot.addEventListener('click', () => switchFace(parseInt(dot.dataset.face)));
+    });
+
+    initGestures();
+    initSettingsUI();
+
+    switchFace(state.faceIndex);
+
+    fetchWeather();
+    fetchAQI();
+
+    setInterval(fetchWeather, 30 * 60 * 1000);
+    setInterval(fetchAQI, 30 * 60 * 1000);
+
+    updateStrip();
+    lastStripSec = Math.max(3, state.stripInterval);
+    stripIntervalId = setInterval(updateStrip, lastStripSec * 1000);
+
+    updateMoonPhase();
+
+    acquireWakeLock();
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) acquireWakeLock(); });
+
+    registerSW();
+
+    requestAnimationFrame(mainLoop);
+
+    setTimeout(() => toast('双击时钟面 | 滚轮/方向键切换'), 1500);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
 })();
 </script>
-
 </body>
 </html>
