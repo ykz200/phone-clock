@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="128" fill="#000000"/>
+  <circle cx="256" cy="248" r="140" fill="none" stroke="#222233" stroke-width="1"/>
+  <text x="256" y="242" text-anchor="middle" dominant-baseline="central"
+        font-family="ui-rounded, SF Pro Rounded, Roboto, system-ui, sans-serif" 
+        font-weight="200" font-size="180" fill="#7eb8ff"
+        letter-spacing="-6">12:00</text>
+  <circle cx="256" cy="300" r="8" fill="#7eb8ff" opacity="0.6">
+    <animate attributeName="cy" values="300;270;300" dur="2.5s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0.6;0.9;0.6" dur="2.5s" repeatCount="indefinite" />
+  </circle>
+</svg>

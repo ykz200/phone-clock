@@ -1,0 +1,80 @@
+-- 文件路径: src/commonMain/sqldelight/com/ykz200/smiletracker/db/SmileDatabase.sq
+-- SQLDelight schema — 双端共享的数据库结构
+-- v2: 新增索引 + 清理查询
+
+-- 每分钟采样一次的面部特征数据
+CREATE TABLE smile_record (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    -- 采样时间戳 (毫秒)
+    ts_millis INTEGER NOT NULL,
+    -- MediaPipe 输出: 微笑概率 [0.0..1.0], -1.0 表示未检测到脸
+    smile_probability REAL NOT NULL DEFAULT -1.0,
+    -- 左眼睁开概率 [0.0..1.0]
+    left_eye_open_probability REAL NOT NULL DEFAULT -1.0,
+    -- 右眼睁开概率 [0.0..1.0]
+    right_eye_open_probability REAL NOT NULL DEFAULT -1.0,
+    -- 头部 pitch (俯仰角, 度)
+    head_pitch REAL NOT NULL DEFAULT 0.0,
+    -- 头部 yaw (偏航角, 度)
+    head_yaw REAL NOT NULL DEFAULT 0.0,
+    -- 头部 roll (翻滚角, 度)
+    head_roll REAL NOT NULL DEFAULT 0.0,
+    -- JSON 格式存储所有 468 个 face mesh 坐标摘要 (可选, 用于后期分析)
+    raw_data TEXT
+);
+
+-- 性能索引: 按时间戳查询最大频
+CREATE INDEX idx_smile_record_ts ON smile_record(ts_millis);
+
+-- 按微笑概率筛选的索引 (高微笑查询)
+CREATE INDEX idx_smile_record_prob ON smile_record(smile_probability) WHERE smile_probability >= 0.7;
+
+-- 每分钟数据分析
+analyzeSmile:
+SELECT strftime('%Y-%m-%dT%H:%M:00', ts_millis / 1000, 'unixepoch') AS minute_key,
+       COUNT(*) AS sample_count,
+       ROUND(AVG(CASE WHEN smile_probability >= 0 THEN smile_probability END), 4) AS avg_smile,
+       ROUND(MAX(smile_probability), 4) AS max_smile,
+       SUM(CASE WHEN smile_probability >= 0.7 THEN 1 ELSE 0 END) AS smile_count,
+       ROUND(AVG(CASE WHEN smile_probability >= 0.7 THEN 1.0 ELSE 0.0 END) * 100, 1) AS smile_percent,
+       ROUND(AVG(CASE WHEN left_eye_open_probability >= 0 THEN left_eye_open_probability END), 4) AS avg_eye_left,
+       ROUND(AVG(CASE WHEN right_eye_open_probability >= 0 THEN right_eye_open_probability END), 4) AS avg_eye_right
+FROM smile_record
+WHERE ts_millis >= :start_millis AND ts_millis < :end_millis
+GROUP BY minute_key
+ORDER BY minute_key ASC;
+
+-- 每周聚合数据 (周视图)
+analyzeWeekly:
+SELECT strftime('%Y-%m-%d', ts_millis / 1000, 'unixepoch') AS day_key,
+       COUNT(*) AS total_samples,
+       SUM(CASE WHEN smile_probability >= 0.7 THEN 1 ELSE 0 END) AS smile_count,
+       ROUND(AVG(CASE WHEN smile_probability >= 0 THEN smile_probability END), 4) AS avg_smile,
+       ROUND(MAX(smile_probability), 4) AS max_smile
+FROM smile_record
+WHERE ts_millis >= :start_millis AND ts_millis < :end_millis
+GROUP BY day_key
+ORDER BY day_key ASC;
+
+-- 最新一条采样
+selectLatestSample:
+SELECT * FROM smile_record
+ORDER BY ts_millis DESC
+LIMIT 1;
+
+-- 显式插入记录
+insertRecord:
+INSERT INTO smile_record (
+    ts_millis, smile_probability,
+    left_eye_open_probability, right_eye_open_probability,
+    head_pitch, head_yaw, head_roll, raw_data
+) VALUES (
+    :ts_millis, :smile_probability,
+    :left_eye_open_probability, :right_eye_open_probability,
+    :head_pitch, :head_yaw, :head_roll, :raw_data
+);
+
+-- 清理过期数据 (数据保留策略)
+deleteOlderThan:
+DELETE FROM smile_record
+WHERE ts_millis < :cutoff;

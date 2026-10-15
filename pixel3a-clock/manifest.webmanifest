@@ -1,0 +1,20 @@
+{
+  "name": "活 · Clock",
+  "short_name": "活·Clock",
+  "description": "活 — 感知当下的桌面时钟 for Pixel 3a · OLED-Optimized · OKLCH Adaptive · AI Ambient",
+  "start_url": "./index.html",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "categories": ["utilities", "lifestyle", "productivity"],
+  "screenshots": [],
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

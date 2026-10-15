@@ -1,0 +1,32 @@
+# Gradle
+.gradle/
+build/
+!gradle-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Android
+*.apk
+*.ap_
+*.dex
+*.class
+local.properties
+/captures
+.externalNativeBuild
+.cxx/
+
+# Kotlin
+*.kotlin_module
+
+# Logs
+*.log
+
+# SQLDelight schema output (generated)
+work-smile-tracker/shared/src/commonMain/sqldelight/schema/
