@@ -1,7 +1,7 @@
 {
   "name": "活 · Clock",
   "short_name": "活·Clock",
-  "description": "活 — 感知当下的桌面时钟 for Pixel 3a · OLED-Optimized · OKLCH Adaptive · AI Ambient",
+  "description": "活 — 与光同频的 Pixel 3a 横屏时钟天气消息摆件 · OLED-Optimized · OKLCH Circadian · Message Hub",
   "start_url": "./index.html",
   "display": "fullscreen",
   "orientation": "any",

@@ -1,5 +1,5 @@
-/* 活 · Clock — Service Worker v6 */
-const CACHE_NAME = 'clock-v6';
+/* 活 · Clock — Service Worker v8 */
+const CACHE_NAME = 'clock-v8';
 const ASSETS = ['./', './index.html', './icon.svg', './manifest.webmanifest'];
 
 self.addEventListener('install', e => {
@@ -28,6 +28,20 @@ self.addEventListener('fetch', e => {
         return res;
       }).catch(() => cached || new Response('Offline', { status: 503 }));
       return cached || fetched;
+    })
+  );
+});
+
+/* 消息中心走 SW 发通知（Android Chrome 无 new Notification 构造器），
+   点击后回到页面即可，不重复入箱 */
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  e.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
+      for (const client of list) {
+        if ('focus' in client) return client.focus();
+      }
+      return self.clients.openWindow ? self.clients.openWindow('./index.html') : undefined;
     })
   );
 });

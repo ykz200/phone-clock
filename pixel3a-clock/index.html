@@ -8,17 +8,17 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="活·Clock">
 <meta name="application-name" content="活·Clock">
-<meta name="description" content="活 — 感知当下的桌面时钟 for Pixel 3a">
+<meta name="description" content="活 — 与光同频的 Pixel 3a 横屏时钟天气消息摆件">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#111117" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a0a0f" media="(prefers-color-scheme: light)">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg">
 <title>活 · Clock</title>
 <style>
 /* ════════════════════════════════════════════════════════════
-   活 · v6.0  for Pixel 3a
-   OKLCH · AI Adaptive · Material You · Micro-Interactions
-   Serenity Focused · Pixel Perfect
+   活 · v8.0 "Horizon · 横岭"  for Pixel 3a
+   Landscape Ornament · Message Hub · Lumina Glass · Daypart Aware
+   Comfort-First · Pixel-Perfect OLED
    ════════════════════════════════════════════════════════════ */
 
 :root {
@@ -26,35 +26,35 @@
   --accent: #7eb8ff;
   --accent-rgb: 126,184,255;
   --accent-l: 0.72;
-  --accent-c: 0.12;
+  --accent-c: 0.10;
   --accent-h: 250;
 
-  /* ── 玻璃拟态 v6 ── */
-  --glass-bg: oklch(100% 0 0 / 0.035);
-  --glass-bg-strong: oklch(100% 0 0 / 0.06);
-  --glass-border: oklch(100% 0 0 / 0.06);
-  --glass-border-strong: oklch(100% 0 0 / 0.10);
-  --glass-highlight: oklch(100% 0 0 / 0.12);
-  --glass-reflect: oklch(100% 0 0 / 0.02);
-  --glass-noise-opacity: 0.008;
+  /* ── Lumina Glass v7（更低饱和高光 · 柔和玻璃） ── */
+  --glass-bg: oklch(100% 0 0 / 0.028);
+  --glass-bg-strong: oklch(100% 0 0 / 0.05);
+  --glass-border: oklch(100% 0 0 / 0.045);
+  --glass-border-strong: oklch(100% 0 0 / 0.08);
+  --glass-highlight: oklch(100% 0 0 / 0.10);
+  --glass-reflect: oklch(100% 0 0 / 0.015);
+  --glass-noise-opacity: 0.006;
 
-  /* ── 文字 v6 ── */
-  --text-1: oklch(92% 0.006 var(--accent-h));
-  --text-2: oklch(72% 0.01 var(--accent-h));
-  --text-3: oklch(52% 0.008 var(--accent-h));
-  --text-4: oklch(32% 0.005 var(--accent-h));
+  /* ── 文字 v7（更柔和 · 减少刺眼） ── */
+  --text-1: oklch(94% 0.004 var(--accent-h));
+  --text-2: oklch(72% 0.008 var(--accent-h));
+  --text-3: oklch(52% 0.006 var(--accent-h));
+  --text-4: oklch(34% 0.004 var(--accent-h));
 
   /* ── 背景（OLED 纯黑优化） ── */
   --bg-deep: #000000;
-  --bg-base: oklch(3% 0.006 var(--accent-h));
-  --bg-shift: oklch(5% 0.008 var(--accent-h));
+  --bg-base: oklch(3% 0.005 var(--accent-h));
+  --bg-shift: oklch(5% 0.007 var(--accent-h));
 
   /* ── 动态间距 ── */
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
-  --punchhole-safe: 32px;
+  --punchhole-safe: 34px;
 
   /* ── 缓动系统 ── */
   --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -62,7 +62,7 @@
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
 
-  /* ── 像素漂移偏移 ── */
+  /* ── 像素漂移偏移 v7 ── */
   --wander-x: 0px;
   --wander-y: 0px;
   --wander-t: 0s;
@@ -70,6 +70,7 @@
   /* ── 文字呼吸动态 ── */
   --text-breath: 0;
   --digit-glow: 0;
+  --daypart-opacity: 1;
 }
 
 /* ── Reset ── */
@@ -88,103 +89,109 @@ body {
   overflow: hidden;
   width: 100%;
   height: 100%;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.005em;
 }
 
 /* ════════════════════════════════════════════
-   背景系统 v6（分层漂移 · 柔光）
+   背景系统 v7（五层氛围）
    ════════════════════════════════════════════ */
 .bg-base {
   position: fixed; inset: 0;
   background: var(--bg-base);
   z-index: 0;
-  transition: background 3s var(--ease-smooth);
+  transition: background 4s var(--ease-smooth);
 }
 .bg-nebula {
   position: fixed; inset: 0;
   z-index: 1; pointer-events: none;
-  opacity: 0.85;
+  opacity: 0.88;
 }
 .bg-aurora {
   position: fixed; inset: 0;
   z-index: 2; pointer-events: none;
   mix-blend-mode: screen;
-  opacity: 0.65;
+  opacity: 0.6;
+}
+.bg-fog {
+  position: fixed; inset: 0;
+  z-index: 3; pointer-events: none;
+  opacity: 0.35;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 80%, oklch(from var(--accent) 30% 0.02 h / 0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 70% 50% at 85% 20%, oklch(from var(--accent) 25% 0.015 h / 0.03) 0%, transparent 65%);
+  transition: opacity 6s var(--ease-smooth);
 }
 .bg-noise {
   position: fixed; inset: 0;
-  z-index: 3; pointer-events: none;
+  z-index: 4; pointer-events: none;
   opacity: var(--glass-noise-opacity);
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 160px 160px;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.62' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
 }
 .bg-vignette {
   position: fixed; inset: 0;
-  z-index: 4; pointer-events: none;
-  background: radial-gradient(ellipse 70% 70% at 50% 48%, transparent 40%, rgba(0,0,0,0.45) 100%);
+  z-index: 5; pointer-events: none;
+  background: radial-gradient(ellipse 75% 75% at 50% 45%, transparent 35%, rgba(0,0,0,0.5) 100%);
   transition: background 4s var(--ease-smooth);
 }
 .bg-pulse {
   position: fixed; inset: 0;
-  z-index: 5; pointer-events: none;
+  z-index: 6; pointer-events: none;
   opacity: 0;
-  background: radial-gradient(circle at 50% 45%, oklch(from var(--accent) l c h / 0.06) 0%, transparent 60%);
-  transition: opacity 2.5s var(--ease-smooth);
+  background: radial-gradient(circle at 50% 45%, oklch(from var(--accent) l c h / 0.05) 0%, transparent 55%);
+  transition: opacity 3s var(--ease-smooth);
 }
 .bg-pulse.active { opacity: 1; }
 .bg-light-cone {
   position: fixed; inset: 0;
-  z-index: 6; pointer-events: none;
-  background: radial-gradient(ellipse 50% 35% at 50% -5%, oklch(from var(--accent) 95% 0.01 h / 0.03) 0%, transparent 70%);
+  z-index: 7; pointer-events: none;
+  background: radial-gradient(ellipse 55% 30% at 50% -8%, oklch(from var(--accent) 95% 0.008 h / 0.025) 0%, transparent 70%);
 }
 
 /* ════════════════════════════════════════════
-   Liquid Glass v6（内发光 · 多层叠加 · 柔和边）
+   Lumina Glass v7（深度柔和）
    ════════════════════════════════════════════ */
 .glass-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(28px) saturate(1.25);
-  -webkit-backdrop-filter: blur(28px) saturate(1.25);
+  backdrop-filter: blur(32px) saturate(1.2);
+  -webkit-backdrop-filter: blur(32px) saturate(1.2);
   border: 1px solid var(--glass-border);
-  border-radius: 16px;
+  border-radius: 18px;
   position: relative;
   overflow: hidden;
   transition: transform 0.4s var(--spring), background 0.4s var(--ease-smooth), border-color 0.4s;
 }
-/* 噪点纹理层 */
 .glass-card .glass-noise {
   position: absolute;
   inset: 0;
-  opacity: 0.008;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 80px 80px;
+  opacity: 0.006;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 100px 100px;
   pointer-events: none;
   border-radius: inherit;
 }
-/* 玻璃高光边 */
 .glass-card::before {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(170deg, var(--glass-highlight) 0%, transparent 35%, transparent 65%, oklch(100% 0 0 / 0.03) 100%);
+  background: linear-gradient(168deg, var(--glass-highlight) 0%, transparent 30%, transparent 70%, oklch(100% 0 0 / 0.02) 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
 }
-/* 内发光层 v6 */
 .glass-card::after {
   content: '';
   position: absolute;
-  left: 10%; right: 10%; bottom: 0;
-  height: 45%;
+  left: 8%; right: 8%; bottom: 0;
+  height: 40%;
   background: linear-gradient(to top, var(--glass-reflect), transparent);
   border-radius: 50% 50% 0 0 / 100% 100% 0 0;
   pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.4;
 }
 
 /* ── 主体应用容器 ── */
@@ -200,25 +207,20 @@ body {
   padding-left: var(--safe-left);
   padding-right: var(--safe-right);
   transform: translate(var(--wander-x), var(--wander-y));
-  transition: transform var(--wander-t) linear;
+  transition: transform var(--wander-t) linear, opacity 0.6s var(--ease-smooth);
+  opacity: var(--daypart-opacity);
 }
 
-/* ── 横屏包装 ── */
+/* ── 双栏容器 ──
+   竖屏：.col 用 display:contents 拍平，所有区块进入同一条纵向流；
+   横屏：.col 恢复为真实弹性列，左右分区。一套 DOM，两种排版。 */
 .landscape-wrap {
   display: flex;
   flex-direction: column;
   flex: 1;
   min-height: 0;
 }
-.landscape-left {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
-.landscape-right {
-  flex-shrink: 0;
-}
+.col { display: contents; }
 
 /* ════════════════════════════════════════════
    状态栏
@@ -227,65 +229,64 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1.4rem;
-  height: 32px;
+  padding: 0 1.5rem;
+  height: 34px;
   flex-shrink: 0;
 }
 .status-left {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 0.78rem;
+  gap: 7px;
+  font-size: 0.76rem;
   color: var(--text-3);
-  transition: color 1s;
+  transition: color 1.2s;
 }
 .status-dot {
-  width: 6px; height: 6px;
+  width: 5px; height: 5px;
   border-radius: 50%;
   background: var(--accent);
-  box-shadow: 0 0 8px oklch(from var(--accent) l c h / 0.5);
+  box-shadow: 0 0 7px oklch(from var(--accent) l c h / 0.45);
 }
-.status-right { display: flex; align-items: center; gap: 10px; }
+.status-right { display: flex; align-items: center; gap: 12px; }
 .status-time {
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 500;
   color: var(--text-3);
-  left: 50%;
   font-variant-numeric: tabular-nums;
-  margin: 0 auto;
   position: absolute;
+  left: 50%;
   transform: translateX(-50%);
 }
 .status-ambient {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   color: var(--text-4);
   display: flex;
   align-items: center;
   gap: 3px;
 }
 .btn-settings {
-  width: 28px; height: 28px;
+  width: 26px; height: 26px;
   border: none;
   background: var(--glass-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   border-radius: 50%;
   color: var(--text-3);
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   border: 1px solid var(--glass-border);
-  transition: all 0.3s var(--spring);
+  transition: all 0.35s var(--spring);
 }
 .btn-settings:active {
-  transform: scale(0.92);
+  transform: scale(0.9);
   background: var(--glass-bg-strong);
 }
 
 /* ════════════════════════════════════════════
-   时钟主舞台 — 纵向优化充分利用 19:9
+   时钟主舞台 v7 — 纵向优化充分利用 19:9
    ════════════════════════════════════════════ */
 .clock-stage {
   flex: 1;
@@ -293,7 +294,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 0;
+  min-height: 128px;
 }
 
 .clock-face {
@@ -304,54 +305,54 @@ body {
   justify-content: center;
   opacity: 0;
   pointer-events: none;
-  transform: translateY(12px);
-  transition: opacity 0.5s var(--ease-out-expo), transform 0.5s var(--ease-out-expo);
+  transform: translateY(10px) scale(0.98);
+  transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo);
 }
 .clock-face.active {
   opacity: 1;
   pointer-events: auto;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
 
-/* ── 数字面 v6 ── */
+/* ── 数字面 v7 ── */
 .numeric-digits {
   display: flex;
   align-items: center;
-  gap: 0.15rem;
-  font-size: clamp(2.8rem, 16vw, 4.2rem);
+  gap: 0.12rem;
+  font-size: clamp(2.6rem, 17vw, 4rem);
   font-weight: 200;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
   color: var(--text-1);
   font-variant-numeric: tabular-nums;
-  filter: brightness(0.96 + var(--digit-glow) * 0.04);
-  transition: filter 2s var(--ease-smooth);
+  filter: brightness(0.97 + var(--digit-glow) * 0.03);
+  transition: filter 2.5s var(--ease-smooth);
 }
 .num-sep {
-  animation: sep-blink 1s step-end infinite;
-  margin: -0.1em;
-  opacity: 0.65;
+  animation: sep-blink 1.05s step-end infinite;
+  margin: -0.08em;
+  opacity: 0.6;
 }
 @keyframes sep-blink {
-  0%, 100% { opacity: 0.65; }
-  50% { opacity: 0.3; }
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.25; }
 }
 .num-digit {
   display: inline-block;
-  min-width: 0.55em;
+  min-width: 0.54em;
   text-align: center;
-  transition: transform 0.3s var(--spring);
+  transition: transform 0.35s var(--spring);
 }
 .num-sec {
-  font-size: 0.42em;
+  font-size: 0.4em;
   font-weight: 300;
   color: var(--text-3);
   margin-top: 0.42em;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
 }
 
 /* ── 指针面 ── */
 .analog-dial {
-  width: clamp(220px, 65vw, 280px);
+  width: clamp(210px, 62vw, 270px);
   aspect-ratio: 1;
   display: flex;
   align-items: center;
@@ -360,36 +361,33 @@ body {
 .analog-dial svg {
   width: 100%; height: 100%;
   overflow: visible;
-  filter: drop-shadow(0 1px 10px oklch(from var(--accent) l c h / 0.08));
+  filter: drop-shadow(0 1px 12px oklch(from var(--accent) l c h / 0.06));
 }
-.analog-origin {
-  transition: transform 0.4s var(--ease-out-expo);
-  transform-origin: 0 0;
-}
-.analog-hand { transition: transform 0.4s var(--ease-out-expo); transform-origin: 0 0; }
-.analog-center { fill: var(--accent); filter: drop-shadow(0 0 4px oklch(from var(--accent) l c h / 0.6)); }
+.analog-origin { transition: transform 0.45s var(--ease-out-expo); transform-origin: 0 0; }
+.analog-hand { transition: transform 0.45s var(--ease-out-expo); transform-origin: 0 0; }
+.analog-center { fill: var(--accent); filter: drop-shadow(0 0 4px oklch(from var(--accent) l c h / 0.55)); }
 
-/* ── 文字面 ── */
+/* ── 文字面 v7 ── */
 .word-display { text-align: center; }
 .word-main {
-  font-size: clamp(2.2rem, 9vw, 3.2rem);
+  font-size: clamp(2rem, 8vw, 3rem);
   font-weight: 300;
   color: var(--text-1);
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   line-height: 1.2;
 }
 .word-sub {
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 400;
   color: var(--text-3);
-  margin-top: 0.5rem;
-  letter-spacing: 0.1em;
+  margin-top: 0.45rem;
+  letter-spacing: 0.12em;
 }
 .word-sec-bar {
-  width: 75%;
+  width: 70%;
   height: 2px;
   background: var(--glass-border);
-  margin: 1.2rem auto 0;
+  margin: 1.1rem auto 0;
   border-radius: 2px;
   overflow: hidden;
 }
@@ -397,8 +395,8 @@ body {
   height: 100%;
   background: var(--accent);
   border-radius: 2px;
-  transition: width 0.5s var(--ease-smooth);
-  box-shadow: 0 0 8px oklch(from var(--accent) l c h / 0.4);
+  transition: width 0.55s var(--ease-smooth);
+  box-shadow: 0 0 8px oklch(from var(--accent) l c h / 0.35);
 }
 
 /* ── Flip 翻页钟 ── */
@@ -410,9 +408,9 @@ body {
 .flip-group { display: flex; gap: 4px; }
 .flip-unit {
   position: relative;
-  width: clamp(48px, 14vw, 62px);
-  height: clamp(70px, 20vw, 88px);
-  perspective: 450px;
+  width: clamp(46px, 13vw, 60px);
+  height: clamp(68px, 19vw, 86px);
+  perspective: 480px;
 }
 .flip-card {
   position: absolute;
@@ -421,12 +419,12 @@ body {
   align-items: center;
   justify-content: center;
   background: var(--glass-bg-strong);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
   border: 1px solid var(--glass-border-strong);
   border-radius: 10px;
   overflow: hidden;
-  font-size: clamp(1.9rem, 7vw, 2.6rem);
+  font-size: clamp(1.8rem, 6.5vw, 2.4rem);
   font-weight: 300;
   color: var(--text-1);
 }
@@ -435,25 +433,25 @@ body {
   position: absolute;
   left: 0; right: 0; top: 50%;
   height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.25) 30%, rgba(0,0,0,0.25) 70%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.2) 30%, rgba(0,0,0,0.2) 70%, transparent 100%);
   transform: translateY(-0.5px);
 }
 .flip-sep {
-  font-size: clamp(1.6rem, 6vw, 2rem);
+  font-size: clamp(1.5rem, 5.5vw, 1.8rem);
   font-weight: 200;
   color: var(--text-3);
-  animation: sep-blink 1s step-end infinite;
+  animation: sep-blink 1.05s step-end infinite;
 }
 .flipping-top {
   clip-path: inset(0 0 50% 0);
   transform-origin: bottom;
-  animation: flipTop 0.45s var(--ease-smooth) forwards;
+  animation: flipTop 0.48s var(--ease-smooth) forwards;
 }
 .flipping-bottom {
   clip-path: inset(50% 0 0 0);
   transform-origin: top;
-  animation: flipBot 0.45s var(--ease-smooth) forwards;
-  animation-delay: 0.2s;
+  animation: flipBot 0.48s var(--ease-smooth) forwards;
+  animation-delay: 0.22s;
   opacity: 0;
 }
 @keyframes flipTop {
@@ -466,51 +464,56 @@ body {
   100% { transform: rotateX(0deg); opacity: 1; }
 }
 
-/* ── 模式指示点 ── */
+/* ── 模式指示点 v7 ── */
 .face-dots {
   position: absolute;
-  bottom: 0.8rem;
+  bottom: 0.7rem;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   z-index: 15;
 }
 .face-dot {
-  width: 6px; height: 6px;
+  width: 5px; height: 5px;
   border-radius: 4px;
   background: var(--text-4);
   border: none;
   cursor: pointer;
-  transition: all 0.4s var(--spring);
+  transition: all 0.45s var(--spring);
   padding: 0;
 }
 .face-dot.active {
-  width: 22px;
+  width: 20px;
   background: var(--accent);
-  box-shadow: 0 0 10px oklch(from var(--accent) l c h / 0.4);
+  box-shadow: 0 0 8px oklch(from var(--accent) l c h / 0.35);
 }
 
 /* ════════════════════════════════════════════
-   信息区
+   信息区 v7
    ════════════════════════════════════════════ */
 .info-zone {
-  flex-shrink: 0;
-  padding: 0 1.3rem 1.2rem;
+  flex: 0 1 auto;
+  min-height: 0;
+  padding: 0 1.3rem 1.1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 0.6rem;
 }
+/* 矮视口 + 强制竖屏时的兜底：信息区自己滚动，不把时钟压成 0 高 */
+body:not(.land-mode) .info-zone { overflow-y: auto; overscroll-behavior: contain; }
 
 .date-row {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  font-size: 0.78rem;
+  padding: 0 1.3rem;
+  font-size: 0.76rem;
   color: var(--text-3);
   font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
 }
 .date-row .sep-dot {
   width: 3px; height: 3px;
@@ -518,78 +521,254 @@ body {
   background: var(--text-4);
 }
 
+/* ── 天气主卡 ── */
+.wx-card {
+  padding: 0.7rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+.wx-card.is-off { display: none; }
+.wx-top { display: flex; align-items: center; gap: 0.6rem; }
+.wx-icon {
+  font-size: 2.05rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 10px oklch(from var(--accent) l c h / 0.22));
+}
+.wx-temp {
+  font-size: 1.85rem;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-1);
+}
+.wx-meta {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  min-width: 0;
+}
+.wx-desc { font-size: 0.8rem; color: var(--text-2); }
+.wx-range {
+  font-size: 0.7rem;
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+}
+.wx-chips { display: flex; gap: 6px; }
+.wx-chip {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0.3rem 0.2rem;
+  border-radius: 10px;
+  background: oklch(100% 0 0 / 0.02);
+  border: 1px solid oklch(100% 0 0 / 0.03);
+  font-size: 0.67rem;
+  color: var(--text-3);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.wx-chip b {
+  color: var(--text-1);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 消息中心 ── */
+.msg-panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.55rem 0.62rem 0.5rem 0.72rem;
+}
+body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
+.msg-panel.is-off { display: none; }
+.msg-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.68rem;
+  color: var(--text-3);
+  flex-shrink: 0;
+}
+.msg-title { letter-spacing: 0.16em; }
+.msg-count {
+  margin-left: auto;
+  min-width: 17px;
+  padding: 1px 5px;
+  border-radius: 9px;
+  text-align: center;
+  font-size: 0.64rem;
+  color: var(--text-2);
+  background: oklch(100% 0 0 / 0.05);
+  font-variant-numeric: tabular-nums;
+}
+.msg-clear {
+  width: 19px; height: 19px;
+  flex-shrink: 0;
+  border: none;
+  padding: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-4);
+  font-size: 0.66rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s, background 0.3s;
+}
+.msg-clear:active { color: var(--text-1); background: oklch(100% 0 0 / 0.06); }
+.msg-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: oklch(100% 0 0 / 0.08) transparent;
+}
+.msg-empty {
+  font-size: 0.7rem;
+  line-height: 1.6;
+  color: var(--text-4);
+  padding: 0.25rem 0;
+}
+.msg-empty code {
+  font-family: ui-monospace, "Roboto Mono", monospace;
+  font-size: 0.64rem;
+  color: var(--text-3);
+}
+.msg-item {
+  --mc: var(--accent);
+  display: grid;
+  grid-template-columns: 3px minmax(0, 1fr);
+  gap: 8px;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid oklch(100% 0 0 / 0.028);
+  animation: msgIn 0.42s var(--ease-out-expo) both;
+}
+.msg-item:last-child { border-bottom: none; }
+.msg-item[data-level="warn"] { --mc: #f0c26a; }
+.msg-item[data-level="alert"] { --mc: #ef8b72; }
+.msg-bar {
+  border-radius: 3px;
+  background: var(--mc);
+  opacity: 0.62;
+  box-shadow: 0 0 7px oklch(from var(--mc) l c h / 0.28);
+}
+.msg-body { min-width: 0; }
+.msg-line {
+  font-size: 0.75rem;
+  color: var(--text-1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.msg-sub {
+  display: flex;
+  gap: 7px;
+  margin-top: 2px;
+  font-size: 0.63rem;
+  color: var(--text-3);
+  min-width: 0;
+}
+.msg-src { opacity: 0.7; flex-shrink: 0; }
+.msg-time {
+  margin-left: auto;
+  color: var(--text-4);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: none; }
+}
+
 .info-strip {
   display: flex;
   gap: 8px;
   justify-content: center;
+  flex-shrink: 0;
 }
 .info-strip .glass-card {
   flex: 1;
   min-width: 0;
-  padding: 0.65rem 0.7rem;
+  padding: 0.6rem 0.65rem;
   display: flex;
   align-items: center;
-  gap: 0.45rem;
-  border-radius: 14px;
+  gap: 0.4rem;
+  border-radius: 16px;
 }
 .info-strip .glass-card.highlight {
   background: var(--glass-bg-strong);
 }
-.info-strip .icon-emoji { font-size: 1.3rem; line-height: 1; }
+.info-strip .icon-emoji { font-size: 1.25rem; line-height: 1; }
 .info-strip .value {
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   font-weight: 500;
   color: var(--text-1);
-}
-.info-strip .value-small {
-  font-size: 0.72rem;
-  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
   margin-left: auto;
+  white-space: nowrap;
+}
+.info-strip .label {
+  font-size: 0.7rem;
+  color: var(--text-3);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 3.6rem;
-}
-.info-strip .label {
-  font-size: 0.72rem;
-  color: var(--text-3);
 }
 
 .strip-zone {
-  padding: 0.55rem 0;
-  min-height: 2.4rem;
+  padding: 0.45rem 1.3rem;
+  min-height: 2.2rem;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  flex-shrink: 0;
 }
 .strip-text {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: var(--text-2);
   text-align: center;
-  max-width: 90%;
+  max-width: 100%;
   line-height: 1.5;
-  transition: opacity 0.4s var(--ease-smooth), transform 0.4s var(--ease-smooth);
+  transition: opacity 0.45s var(--ease-smooth), transform 0.45s var(--ease-smooth);
 }
 
 .bottom-bar {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1.4rem;
-  padding-top: 0.2rem;
+  gap: 1.3rem;
+  padding-top: 0.15rem;
+  flex-shrink: 0;
 }
 .bottom-bar .item {
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--text-3);
+  font-variant-numeric: tabular-nums;
 }
-.bottom-bar .item .ic { font-size: 0.8rem; }
+.bottom-bar .item .ic { font-size: 0.76rem; }
 
 /* ════════════════════════════════════════════
-   设置面板 v6
+   设置面板 v7
    ════════════════════════════════════════════ */
 .settings-overlay {
   position: fixed;
@@ -598,12 +777,12 @@ body {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  background: rgba(0,0,0,0.55);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.35s var(--ease-smooth);
+  transition: opacity 0.4s var(--ease-smooth);
 }
 .settings-overlay.open {
   opacity: 1;
@@ -612,23 +791,23 @@ body {
 .settings-panel {
   width: 100%;
   max-width: 480px;
-  background: oklch(8% 0.006 var(--accent-h) / 0.92);
-  backdrop-filter: blur(40px) saturate(1.4);
-  -webkit-backdrop-filter: blur(40px) saturate(1.4);
+  background: oklch(7% 0.005 var(--accent-h) / 0.94);
+  backdrop-filter: blur(44px) saturate(1.4);
+  -webkit-backdrop-filter: blur(44px) saturate(1.4);
   border: 1px solid var(--glass-border);
   border-radius: 24px 24px 0 0;
   padding: 0.8rem 1.4rem 1.8rem;
   max-height: 82vh;
   overflow-y: auto;
   transform: translateY(100%);
-  transition: transform 0.5s var(--spring);
+  transition: transform 0.55s var(--spring);
   scrollbar-width: thin;
-  scrollbar-color: oklch(100% 0 0 / 0.1) transparent;
+  scrollbar-color: oklch(100% 0 0 / 0.08) transparent;
 }
 .settings-overlay.open .settings-panel { transform: translateY(0); }
 
 .settings-title {
-  font-size: 1rem;
+  font-size: 0.98rem;
   font-weight: 600;
   color: var(--text-1);
   text-align: center;
@@ -636,34 +815,34 @@ body {
   letter-spacing: 0.02em;
   position: sticky;
   top: 0;
-  background: linear-gradient(to bottom, oklch(8% 0.006 var(--accent-h) / 0.95) 60%, transparent);
+  background: linear-gradient(to bottom, oklch(7% 0.005 var(--accent-h) / 0.96) 60%, transparent);
   z-index: 2;
 }
 .btn-close {
   position: absolute;
   top: 0.7rem; right: 1rem;
-  width: 28px; height: 28px;
+  width: 26px; height: 26px;
   border: none;
   background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: 50%;
   border: 1px solid var(--glass-border);
   color: var(--text-3);
-  font-size: 0.8rem;
+  font-size: 0.76rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s;
 }
-.btn-close:active { transform: scale(0.9); }
+.btn-close:active { transform: scale(0.88); }
 
-.setting-group { margin-bottom: 1rem; }
+.setting-group { margin-bottom: 0.9rem; }
 .setting-label {
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   color: var(--text-3);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.35rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -675,37 +854,90 @@ body {
 }
 .setting-input {
   width: 100%;
-  padding: 0.55rem 0.75rem;
+  padding: 0.52rem 0.72rem;
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  border-radius: 12px;
+  border-radius: 14px;
   color: var(--text-1);
-  font-size: 0.88rem;
+  font-size: 0.86rem;
   font-family: inherit;
   transition: border-color 0.3s;
   outline: none;
   -webkit-appearance: none;
 }
-.setting-input:focus { border-color: oklch(from var(--accent) l c h / 0.5); }
-.setting-textarea { min-height: 88px; resize: line; line-height: 1.5; }
+.setting-input:focus { border-color: oklch(from var(--accent) l c h / 0.45); }
+.setting-textarea { min-height: 82px; resize: line; line-height: 1.5; }
+
+.setting-note {
+  font-size: 0.66rem;
+  color: var(--text-4);
+  line-height: 1.5;
+  margin-top: 0.3rem;
+}
+.setting-note code {
+  font-family: ui-monospace, "Roboto Mono", monospace;
+  font-size: 0.62rem;
+  color: var(--text-3);
+}
+.seg-row {
+  display: flex;
+  gap: 4px;
+  padding: 3px;
+  background: oklch(100% 0 0 / 0.025);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+}
+.seg-btn {
+  flex: 1;
+  padding: 0.42rem 0.2rem;
+  border: none;
+  border-radius: 11px;
+  background: transparent;
+  color: var(--text-3);
+  font-size: 0.76rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.3s var(--ease-smooth), color 0.3s;
+}
+.seg-btn.on {
+  background: var(--glass-bg-strong);
+  color: var(--text-1);
+  box-shadow: 0 1px 8px oklch(0% 0 0 / 0.25);
+}
+.notify-row { display: flex; align-items: center; gap: 8px; }
+.notify-row .setting-note { margin-top: 0; }
+.btn-mini {
+  margin-left: auto;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--glass-border-strong);
+  border-radius: 12px;
+  background: var(--glass-bg);
+  color: var(--text-2);
+  font-size: 0.72rem;
+  font-family: inherit;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.3s var(--spring), color 0.3s;
+}
+.btn-mini:active { transform: scale(0.94); color: var(--text-1); }
 
 .setting-toggle {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.6rem 0;
-  border-bottom: 1px solid oklch(100% 0 0 / 0.03);
-  font-size: 0.85rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid oklch(100% 0 0 / 0.025);
+  font-size: 0.84rem;
   color: var(--text-2);
 }
 .setting-toggle:last-child { border-bottom: none; }
 .toggle-switch {
-  width: 42px; height: 24px;
-  border-radius: 14px;
-  background: oklch(100% 0 0 / 0.08);
+  width: 40px; height: 22px;
+  border-radius: 13px;
+  background: oklch(100% 0 0 / 0.07);
   position: relative;
   cursor: pointer;
-  transition: background 0.35s var(--spring);
+  transition: background 0.38s var(--spring);
   border: none;
   flex-shrink: 0;
 }
@@ -713,11 +945,11 @@ body {
   content: '';
   position: absolute;
   top: 2px; left: 2px;
-  width: 20px; height: 20px;
+  width: 18px; height: 18px;
   border-radius: 50%;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
-  transition: transform 0.35s var(--spring);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  transition: transform 0.38s var(--spring);
 }
 .toggle-switch.on { background: var(--accent); }
 .toggle-switch.on::after { transform: translateX(18px); }
@@ -725,26 +957,26 @@ body {
 /* 专注统计面板 */
 .focus-panel {
   background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
   border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  padding: 0.9rem 1rem;
+  border-radius: 18px;
+  padding: 0.85rem 0.95rem;
 }
 .focus-stats {
   display: flex;
   justify-content: space-around;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.7rem;
 }
 .focus-stat { text-align: center; }
 .focus-stat .num {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: 500;
   color: var(--text-1);
   font-variant-numeric: tabular-nums;
 }
 .focus-stat .lbl {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   color: var(--text-4);
   margin-top: 2px;
 }
@@ -753,35 +985,35 @@ body {
   align-items: flex-end;
   justify-content: center;
   gap: 5px;
-  height: 32px;
+  height: 30px;
 }
 .heat-bar {
-  width: 8px;
+  width: 7px;
   border-radius: 3px;
   min-height: 3px;
-  transition: height 0.4s var(--spring);
+  transition: height 0.45s var(--spring);
 }
 
 .btn-row {
   display: flex;
   gap: 10px;
-  margin-top: 1.2rem;
+  margin-top: 1.1rem;
 }
 .btn-primary, .btn-secondary {
   flex: 1;
-  padding: 0.7rem;
+  padding: 0.65rem;
   border: none;
-  border-radius: 14px;
-  font-size: 0.88rem;
+  border-radius: 16px;
+  font-size: 0.86rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s var(--spring);
+  transition: all 0.32s var(--spring);
   font-family: inherit;
 }
 .btn-primary {
   background: var(--accent);
   color: #fff;
-  box-shadow: 0 4px 16px oklch(from var(--accent) l c h / 0.3);
+  box-shadow: 0 4px 18px oklch(from var(--accent) l c h / 0.25);
 }
 .btn-secondary {
   background: var(--glass-bg);
@@ -790,10 +1022,10 @@ body {
 }
 .btn-primary:active, .btn-secondary:active { transform: scale(0.96); }
 
-/* ── Toast 通知 ── */
+/* ── Toast v7 ── */
 .toast-container {
   position: fixed;
-  top: calc(var(--safe-top) + var(--punchhole-safe) + 44px);
+  top: calc(var(--safe-top) + var(--punchhole-safe) + 42px);
   left: 50%;
   transform: translateX(-50%);
   z-index: 200;
@@ -804,19 +1036,19 @@ body {
   pointer-events: none;
 }
 .toast {
-  background: oklch(12% 0.005 var(--accent-h) / 0.9);
-  backdrop-filter: blur(24px) saturate(1.3);
-  -webkit-backdrop-filter: blur(24px) saturate(1.3);
+  background: oklch(11% 0.004 var(--accent-h) / 0.92);
+  backdrop-filter: blur(28px) saturate(1.3);
+  -webkit-backdrop-filter: blur(28px) saturate(1.3);
   border: 1px solid var(--glass-border-strong);
   color: var(--text-1);
-  font-size: 0.82rem;
-  padding: 0.55rem 1.2rem;
+  font-size: 0.8rem;
+  padding: 0.52rem 1.15rem;
   border-radius: 24px;
   opacity: 0;
-  transform: translateY(-8px) scale(0.95);
-  transition: all 0.35s var(--spring);
+  transform: translateY(-8px) scale(0.94);
+  transition: all 0.38s var(--spring);
   white-space: nowrap;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.38);
 }
 .toast.show {
   opacity: 1;
@@ -824,195 +1056,297 @@ body {
 }
 
 /* ════════════════════════════════════════════
-   横屏适配
+   横屏摆件 v8 — Pixel 3a 807×393 CSS px
+   由 JS 依据朝向/预览开关切换 body.land-mode，
+   避免 media query 与桌面设备预览互相打架。
    ════════════════════════════════════════════ */
-@media (orientation: landscape) and (max-height: 500px) {
-  .landscape-wrap {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    height: 100%;
-    padding-top: var(--safe-top);
+body.land-mode { --punchhole-safe: 0px; }
+body.land-mode .app {
+  padding-top: max(var(--safe-top), 4px);
+  padding-bottom: max(var(--safe-bottom), 6px);
+  padding-left: calc(var(--safe-left) + 20px);
+  padding-right: calc(var(--safe-right) + 20px);
+}
+body.land-mode .landscape-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1.72fr) minmax(230px, 1fr);
+  gap: 12px;
+  align-items: stretch;
+}
+body.land-mode .col {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+body.land-mode .col-left { justify-content: center; gap: 1px; }
+/* 状态栏绝对定位横跨整屏顶部，右栏让出它的高度避免压住天气卡 */
+body.land-mode .col-right { gap: 0; padding-top: 23px; }
+
+body.land-mode .status-bar {
+  position: absolute;
+  top: max(var(--safe-top), 2px);
+  left: 20px; right: 20px;
+  height: 19px;
+  padding: 0;
+  z-index: 30;
+  font-size: 0.62rem;
+  opacity: 0.72;
+}
+body.land-mode .status-time { display: none; }
+body.land-mode .btn-settings { width: 21px; height: 21px; font-size: 0.68rem; }
+
+body.land-mode .clock-stage { flex: 1 1 auto; min-height: 0; }
+body.land-mode .numeric-digits { font-size: clamp(3.2rem, 30vh, 7rem); }
+body.land-mode .analog-dial { width: min(60vh, 34vw); }
+body.land-mode .word-main { font-size: clamp(2rem, 14vh, 3.4rem); }
+body.land-mode .word-sec-bar { width: 55%; margin-top: 0.7rem; }
+body.land-mode .flip-unit {
+  width: min(26vh, 62px);
+  height: min(38vh, 92px);
+}
+body.land-mode .flip-card { font-size: min(19vh, 2.5rem); }
+body.land-mode .flip-sep { font-size: min(14vh, 1.8rem); }
+body.land-mode .face-dots { bottom: 0.2rem; gap: 9px; }
+
+body.land-mode .date-row { padding: 0; font-size: 0.7rem; }
+body.land-mode .strip-zone { padding: 0.1rem 0; min-height: 1.55rem; }
+body.land-mode .strip-text { font-size: 0.74rem; max-width: 100%; }
+
+body.land-mode .info-zone {
+  flex: 1 1 auto;
+  padding: 0;
+  gap: 7px;
+}
+body.land-mode .wx-card { padding: 0.5rem 0.62rem; gap: 0.36rem; }
+body.land-mode .wx-icon { font-size: 1.55rem; }
+body.land-mode .wx-temp { font-size: 1.5rem; }
+body.land-mode .wx-desc { font-size: 0.72rem; }
+body.land-mode .wx-chip { font-size: 0.6rem; padding: 0.22rem 0.15rem; }
+body.land-mode .info-strip .glass-card { padding: 0.4rem 0.5rem; border-radius: 13px; }
+body.land-mode .info-strip .value { font-size: 0.76rem; }
+body.land-mode .info-strip .label { font-size: 0.62rem; }
+body.land-mode .msg-panel { padding: 0.42rem 0.5rem 0.36rem 0.58rem; }
+body.land-mode .msg-line { font-size: 0.7rem; }
+body.land-mode .msg-sub { font-size: 0.58rem; }
+body.land-mode .bottom-bar { gap: 0.7rem; padding-top: 0; }
+body.land-mode .bottom-bar .item { font-size: 0.62rem; }
+
+body.land-mode .toast-container {
+  top: auto;
+  bottom: calc(var(--safe-bottom) + 10px);
+}
+
+/* 横屏矮视口下把设置面板摊成两列，减少滚动 */
+body.land-mode .settings-panel {
+  max-width: 720px;
+  max-height: calc(100vh - 18px);
+  padding: 0.8rem 1.2rem 1.2rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 18px;
+  align-content: start;
+  border-radius: 22px;
+}
+body.land-mode .settings-panel > .settings-title,
+body.land-mode .settings-panel > .focus-panel,
+body.land-mode .settings-panel > .btn-row { grid-column: 1 / -1; }
+body.land-mode .settings-title { position: static; background: none; }
+body.land-mode .toggles-group {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 26px;
+}
+
+/* 横屏 × 极窄（分屏 / 折叠外屏）：收窄右栏，保证时钟不塌 */
+@media (max-width: 660px) {
+  body.land-mode .landscape-wrap {
+    grid-template-columns: minmax(0, 1fr) minmax(170px, 0.72fr);
+    gap: 8px;
   }
-  .landscape-left {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .landscape-right {
-    flex: 0.7;
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    padding: 0.4rem 0.8rem 0.4rem 0.4rem;
-    overflow-y: auto;
-    justify-content: center;
-  }
-  .clock-stage { flex: none; }
-  .info-zone { flex-shrink: 0; }
-  .strip-zone { padding: 0.3rem 0; min-height: 1.8rem; }
-  .bottom-bar { padding-top: 0; }
-  .face-dots { display: none; }
-  .status-bar { position: absolute; top: 0; left: 0; right: 0; z-index: 20; }
+  body.land-mode .numeric-digits { font-size: clamp(2.4rem, 26vh, 4.2rem); }
+  body.land-mode .wx-chips { display: none; }
 }
 
 /* ════════════════════════════════════════════
-   AOD 微亮模式 v6（更柔和）
+   AOD 微亮模式 v7
    ════════════════════════════════════════════ */
 body.aod-mode .clock-face.active .numeric-digits,
 body.aod-mode .flip-container,
 body.aod-mode .word-main {
-  opacity: 0.25;
-  filter: brightness(0.4);
+  opacity: 0.28;
+  filter: brightness(0.45);
 }
 body.aod-mode .info-strip,
 body.aod-mode .strip-zone,
 body.aod-mode .bottom-bar,
-body.aod-mode .face-dots {
-  opacity: 0.05;
+body.aod-mode .face-dots,
+body.aod-mode .wx-card,
+body.aod-mode .msg-panel {
+  opacity: 0.04;
 }
 body.aod-mode .bg-nebula,
 body.aod-mode .bg-aurora,
-body.aod-mode .bg-noise {
+body.aod-mode .bg-noise,
+body.aod-mode .bg-fog {
   opacity: 0 !important;
 }
 body.aod-mode .glass-card {
-  background: oklch(100% 0 0 / 0.01);
-  border-color: oklch(100% 0 0 / 0.01);
+  background: oklch(100% 0 0 / 0.008);
+  border-color: oklch(100% 0 0 / 0.008);
 }
 
-/* ── 专注模式 ── */
+/* ── 专注模式 v7 ── */
 body.focus-mode .strip-zone,
 body.focus-mode .bottom-bar,
-body.focus-mode .info-strip { opacity: 0.08; }
-body.focus-mode .glass-card { opacity: 0.1; }
+body.focus-mode .info-strip { opacity: 0.06; }
+body.focus-mode .glass-card { opacity: 0.08; }
 
 /* ════════════════════════════════════════════
-   禅模式 v6（Zen Mode 显示极简内容）
+   禅模式 v7
    ════════════════════════════════════════════ */
 body.zen-mode .strip-zone,
 body.zen-mode .bottom-bar,
 body.zen-mode .info-strip,
 body.zen-mode .face-dots,
 body.zen-mode .info-zone { opacity: 0; pointer-events: none; }
-body.zen-mode .clock-stage { transform: scale(1.1); }
-body.zen-mode .status-bar { opacity: 0.15; }
+body.zen-mode .clock-stage { transform: scale(1.08); }
+body.zen-mode .status-bar { opacity: 0.12; }
 body.zen-mode .bg-nebula,
 body.zen-mode .bg-aurora,
-body.zen-mode .bg-noise { opacity: 0.1; }
+body.zen-mode .bg-noise,
+body.zen-mode .bg-fog { opacity: 0.08; }
 body.zen-mode .settings-panel { opacity: 0; }
-body.zen-mode.numeric-mode .numeric-digits { font-size: clamp(3.6rem, 18vw, 5rem); }
+body.zen-mode.numeric-mode .numeric-digits { font-size: clamp(3.4rem, 18vw, 4.8rem); }
 
 /* ════════════════════════════════════════════
-   桌面预览 v6 — 场景化 Pixel 3a 设备框架
+   桌面预览 v7 — 沉浸式 Pixel 3a 场景
    ════════════════════════════════════════════ */
 @media (min-width: 900px) {
   body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #030308;
-    perspective: 1800px;
+    background: #020206;
+    perspective: 2000px;
     overflow: hidden;
   }
-  /* 场景环境光 - v6 更柔和 */
+  /* 环境光 v7（更柔和） */
   body::before {
-    content: '';
+    content:'';
     position: fixed; inset: 0;
     background:
-      radial-gradient(ellipse 45% 55% at 20% 75%, oklch(12% 0.02 280) 0%, transparent 55%),
-      radial-gradient(ellipse 40% 45% at 85% 15%, oklch(10% 0.03 15) 0%, transparent 50%),
-      radial-gradient(ellipse 55% 35% at 50% 100%, oklch(6% 0.015 250) 0%, transparent 50%);
+      radial-gradient(ellipse 40% 50% at 18% 80%, oklch(10% 0.02 280) 0%, transparent 55%),
+      radial-gradient(ellipse 35% 40% at 88% 12%, oklch(8% 0.025 15) 0%, transparent 50%),
+      radial-gradient(ellipse 50% 30% at 50% 100%, oklch(5% 0.012 250) 0%, transparent 50%);
     z-index: -1;
     pointer-events: none;
   }
-  /* 桌面反射 v6 */
+  /* 桌面反光的v7 */
   body::after {
-    content: '';
+    content:'';
     position: fixed;
     bottom: 0; left: 0; right: 0;
-    height: 25vh;
-    background: linear-gradient(0deg, oklch(3% 0.01 250 / 0.35) 0%, transparent 100%);
+    height: 22vh;
+    background: linear-gradient(0deg, oklch(2.5% 0.008 250 / 0.25) 0%, transparent 100%);
     pointer-events: none;
     z-index: -1;
   }
-  /* 设备主体 v6 */
+  /* 设备主体 v7 */
   .app {
     width: 412px;
     height: 82vh;
-    max-height: 780px;
-    border-radius: 34px;
-    background: oklch(2% 0.005 250 / 0.6);
-    border: 1px solid oklch(100% 0 0 / 0.025);
+    max-height: 760px;
+    border-radius: 36px;
+    background: oklch(1.8% 0.004 250 / 0.55);
+    border: 1px solid oklch(100% 0 0 / 0.022);
     box-shadow:
-      0 0 0 1px oklch(0% 0 0 / 0.5),
-      0 25px 90px oklch(0% 0 0 / 0.7),
-      0 0 120px oklch(from var(--accent) l c h / 0.015),
-      inset 0 0 0 1px oklch(100% 0 0 / 0.01);
-    padding-top: calc(var(--punchhole-safe) + 16px);
-    transform: rotateX(1.5deg) scale(0.95);
+      0 0 0 1px oklch(0% 0 0 / 0.45),
+      0 22px 85px oklch(0% 0 0 / 0.65),
+      0 0 100px oklch(from var(--accent) l c h / 0.012),
+      inset 0 0 0 1px oklch(100% 0 0 / 0.008);
+    padding-top: calc(var(--punchhole-safe) + 14px);
+    transform: rotateX(1.2deg) scale(0.94);
     transform-style: preserve-3d;
-    transition: transform 0.6s var(--ease-out-expo);
+    transition: transform 0.65s var(--ease-out-expo);
     position: relative;
     overflow: hidden;
   }
-  /* 设备边框高光 v6 */
   .app::before {
-    content: '';
+    content:'';
     position: absolute;
     inset: -1px;
-    border-radius: 34px;
-    border: 1px solid oklch(100% 0 0 / 0.05);
+    border-radius: 36px;
+    border: 1px solid oklch(100% 0 0 / 0.04);
     pointer-events: none;
     z-index: 24;
   }
-  /* Pixel 3a 打孔屏（居中，12px） */
   .app::after {
-    content: '';
+    content:'';
     position: absolute;
-    top: 12px;
+    top: 14px;
     left: 50%;
-    margin-left: -6px;
-    width: 12px; height: 12px;
+    margin-left: -5px;
+    width: 10px; height: 10px;
     border-radius: 50%;
-    background: oklch(1.5% 0 0);
-    border: 1px solid oklch(100% 0 0 / 0.035);
+    background: oklch(1.2% 0 0);
+    border: 1px solid oklch(100% 0 0 / 0.028);
     z-index: 25;
     pointer-events: none;
-    box-shadow: inset 0 0 3px oklch(0% 0 0 / 0.8);
+    box-shadow: inset 0 0 2px oklch(0% 0 0 / 0.85);
   }
   .app:hover {
-    transform: rotateX(0deg) scale(0.97);
+    transform: rotateX(0deg) scale(0.96);
   }
   .face-dots { display: flex; }
+
+  /* 横屏摆件预览：把设备框转成 Pixel 3a 横放比例 807:393 */
+  body.land-mode .app {
+    width: min(860px, 92vw, (100vh - 96px) * 807 / 393);
+    height: auto;
+    max-height: none;
+    aspect-ratio: 807 / 393;
+    border-radius: 30px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    transform: rotateX(1.2deg) scale(0.97);
+  }
+  body.land-mode .app::before { border-radius: 30px; }
+  body.land-mode .app::after {
+    top: 50%;
+    left: 13px;
+    margin-left: 0;
+    margin-top: -5px;
+  }
+  body.land-mode .app:hover { transform: rotateX(0deg) scale(0.99); }
 }
 
-/* ── 深夜时段 ── */
+/* ── 深夜时段 v7 ── */
 body.time-night .bg-vignette {
-  background: radial-gradient(ellipse 70% 70% at 50% 48%, transparent 30%, rgba(0,0,0,0.8) 100%);
+  background: radial-gradient(ellipse 70% 70% at 50% 48%, transparent 25%, rgba(0,0,0,0.88) 100%);
 }
-body.time-night .glass-card { opacity: 0.4; }
+body.time-night .glass-card { opacity: 0.35; }
+body.time-night { --text-breath: 0.3; }
 
-/* ── 入场动画 ── */
+/* ── 入场动画 v7 ── */
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(14px); }
+  from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.app > * { animation: fadeInUp 0.6s var(--ease-out-expo) both; }
-.app > *:nth-child(1) { animation-delay: 0.05s; }
-.app > *:nth-child(2) { animation-delay: 0.12s; }
-.app > *:nth-child(3) { animation-delay: 0.18s; }
-.app > *:nth-child(4) { animation-delay: 0.25s; }
-.app > *:nth-child(5) { animation-delay: 0.30s; }
+.app > * { animation: fadeInUp 0.55s var(--ease-out-expo) both; }
+.app > *:nth-child(1) { animation-delay: 0.04s; }
+.app > *:nth-child(2) { animation-delay: 0.10s; }
+.app > *:nth-child(3) { animation-delay: 0.16s; }
+.app > *:nth-child(4) { animation-delay: 0.22s; }
+.app > *:nth-child(5) { animation-delay: 0.28s; }
 
-/* ── 呼吸微动效（OLED像素保护） ── */
+/* ── 呼吸微动效（OLED像素保护） v7 ── */
 @keyframes subtleBreathe {
-  0%, 100% { opacity: 0.95; }
+  0%, 100% { opacity: 0.96; }
   50% { opacity: 1; }
 }
 .breathing {
-  animation: subtleBreathe 4s var(--ease-in-out-quart) infinite;
+  animation: subtleBreathe 4.2s var(--ease-in-out-quart) infinite;
 }
 
 /* ── Reduced Motion ── */
@@ -1022,13 +1356,14 @@ body.time-night .glass-card { opacity: 0.4; }
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  .num-sep { animation: none !important; opacity: 0.55; }
+  .num-sep { animation: none !important; opacity: 0.5; }
 }
 
-/* ── 电池省电解模式 ── */
+/* ── 电池省电解模式 v7 ── */
 body.battery-saver .bg-nebula,
 body.battery-saver .bg-aurora,
 body.battery-saver .bg-noise,
+body.battery-saver .bg-fog,
 body.battery-saver .bg-light-cone,
 body.battery-saver .bg-pulse {
   display: none;
@@ -1043,6 +1378,10 @@ body.battery-saver .glass-card {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
+
+/* ── 隐藏工具 ── */
+.hidden { display: none !important; }
+
 </style>
 </head>
 <body>
@@ -1051,6 +1390,7 @@ body.battery-saver .glass-card {
 <div class="bg-base"></div>
 <canvas class="bg-nebula" id="nebulaCanvas"></canvas>
 <canvas class="bg-aurora" id="auroraCanvas"></canvas>
+<div class="bg-fog" id="bgFog"></div>
 <div class="bg-noise"></div>
 <div class="bg-vignette"></div>
 <div class="bg-pulse" id="bgPulse"></div>
@@ -1061,7 +1401,7 @@ body.battery-saver .glass-card {
 
   <div class="landscape-wrap" id="landWrap">
 
-    <div class="landscape-left" id="landLeft">
+    <div class="col col-left" id="landLeft">
 
       <!-- 状态栏 -->
       <div class="status-bar" id="statusBar">
@@ -1142,29 +1482,47 @@ body.battery-saver .glass-card {
         </div>
 
       </div>
+
+      <!-- 日期行 -->
+      <div class="date-row" id="dateRow">
+        <span id="dateYear">2026</span>
+        <span class="sep-dot"></span>
+        <span id="dateMD">10-11</span>
+        <span class="sep-dot"></span>
+        <span id="dateWeekday">周六</span>
+      </div>
+
+      <!-- 纸条轮播 -->
+      <div class="strip-zone">
+        <div class="strip-text" id="stripText">……</div>
+      </div>
     </div>
 
-    <div class="landscape-right" id="landRight">
+    <div class="col col-right" id="landRight">
       <div class="info-zone" id="infoZone">
 
-        <!-- 日期行 -->
-        <div class="date-row" id="dateRow">
-          <span id="dateYear">2026</span>
-          <span class="sep-dot"></span>
-          <span id="dateMD">10-11</span>
-          <span class="sep-dot"></span>
-          <span id="dateWeekday">周六</span>
+        <!-- 天气主卡 -->
+        <div class="wx-card glass-card highlight" id="cardWeather">
+          <div class="glass-noise"></div>
+          <div class="wx-top">
+            <span class="wx-icon" id="weatherIcon">⛅</span>
+            <span class="wx-temp" id="weatherTemp">--°</span>
+            <div class="wx-meta">
+              <div class="wx-desc" id="weatherDesc">加载中</div>
+              <div class="wx-range" id="weatherRange">--° / --°</div>
+            </div>
+          </div>
+          <div class="wx-chips">
+            <span class="wx-chip">体感<b id="wxFelt">--</b></span>
+            <span class="wx-chip">湿度<b id="wxHum">--</b></span>
+            <span class="wx-chip">风<b id="wxWind">--</b></span>
+          </div>
         </div>
 
-        <!-- 信息卡片条 -->
+        <!-- 指标卡条 -->
         <div class="info-strip" id="infoStrip">
-          <div class="glass-card highlight" id="cardWeather">
-            <span class="icon-emoji" id="weatherIcon">⛅</span>
-            <span class="value" id="weatherTemp">--°</span>
-            <span class="value-small" id="weatherDesc">加载中</span>
-          </div>
           <div class="glass-card" id="cardCountdown">
-            <span class="label" id="countdownLabel">下班倒计时</span>
+            <span class="label" id="countdownLabel">距下班</span>
             <span class="value" id="countdownVal">--:--:--</span>
           </div>
           <div class="glass-card" id="cardAqi">
@@ -1173,13 +1531,21 @@ body.battery-saver .glass-card {
           </div>
         </div>
 
-        <!-- 纸条轮播 -->
-        <div class="strip-zone">
-          <div class="strip-text" id="stripText">……</div>
+        <!-- 消息中心 -->
+        <div class="msg-panel glass-card" id="msgPanel">
+          <div class="glass-noise"></div>
+          <div class="msg-head">
+            <span class="msg-title">消息</span>
+            <span class="msg-count" id="msgCount">0</span>
+            <button class="msg-clear" id="msgClear" aria-label="清空消息">✕</button>
+          </div>
+          <div class="msg-scroll" id="msgScroll">
+            <div class="msg-empty" id="msgEmpty">暂无消息 · 可用 <code>?msg=你好</code> 或 <code>pushMessage()</code> 推送</div>
+          </div>
         </div>
 
         <!-- 底部信息栏 -->
-        <div class="bottom-bar">
+        <div class="bottom-bar" id="bottomBar">
           <span class="item"><span class="ic">☀</span><span id="sunriseTime">--:--</span></span>
           <span class="item"><span class="ic">☾</span><span id="sunsetTime">--:--</span></span>
           <span class="item"><span class="ic" id="moonPhaseIcon">🌑</span><span id="moonPhaseName">新月</span></span>
@@ -1211,7 +1577,7 @@ body.battery-saver .glass-card {
       <textarea class="setting-input setting-textarea" id="stripContentInput" placeholder="已工作 {worked}&#10;距下班 {countdown}&#10;#quote"></textarea>
     </div>
 
-    <div class="setting-group">
+    <div class="setting-group toggles-group">
       <div class="setting-toggle">
         <span>显示秒数</span>
         <button class="toggle-switch on" id="toggleSeconds" role="switch" aria-checked="true"></button>
@@ -1240,6 +1606,33 @@ body.battery-saver .glass-card {
         <span>像素漂移 (OLED 保护)</span>
         <button class="toggle-switch on" id="toggleWander" role="switch" aria-checked="true"></button>
       </div>
+      <div class="setting-toggle">
+        <span>消息中心</span>
+        <button class="toggle-switch on" id="toggleMsg" role="switch" aria-checked="true"></button>
+      </div>
+      <div class="setting-toggle">
+        <span>整点报时消息</span>
+        <button class="toggle-switch" id="toggleChime" role="switch" aria-checked="false"></button>
+      </div>
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-label">摆件朝向</div>
+      <div class="seg-row" id="segOrient">
+        <button class="seg-btn" data-orient="auto">自动</button>
+        <button class="seg-btn" data-orient="portrait">竖屏</button>
+        <button class="seg-btn" data-orient="landscape">横屏摆件</button>
+      </div>
+      <div class="setting-note">横屏摆件会尝试锁定屏幕方向（需全屏/已安装模式）</div>
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-label">系统通知</div>
+      <div class="notify-row">
+        <span class="setting-note" id="notifyState">未授权</span>
+        <button class="btn-mini" id="btnNotify">开启</button>
+      </div>
+      <div class="setting-note">授权后消息中心的提醒可同时弹出系统通知；本机页面可用 <code>?msg=内容</code>、BroadcastChannel「pixel3a-clock」或 <code>pushMessage()</code> 投递消息</div>
     </div>
 
     <div class="settings-title" style="font-size:0.9rem;margin-top:0.8rem;padding-top:0.5rem;">📊 专注统计</div>
@@ -1273,19 +1666,34 @@ body.battery-saver .glass-card {
 
 <script>
 /* ══════════════════════════════════════════════════════
-   活 · Clock  —  核心脚本 v6
-   OKLCH · AI Adaptive · Ambient Aware · Battery Smart
-   Serenity Focused · Pixel 3a Optimized
+   活 · Clock  —  核心脚本 v8 "Horizon · 横岭"
+   Landscape Ornament · Message Hub · Ambient Intelligence
+   Comfort-First · OLED Perfection
    ══════════════════════════════════════════════════════ */
 (() => {
   'use strict';
 
-  /* ── 常量 ── */
-  const STORE_KEY = 'clockV6State';
+  /* ── 常量 ──
+     localStorage 键沿用 V7 命名空间，老设备升级后设置不丢 */
+  const STORE_KEY = 'clockV7State';
   const FACES = ['numeric', 'analog', 'word', 'flip'];
   const WEEKDAYS = ['周日','周一','周二','周三','周四','周五','周六'];
   const CN_NUMBERS = ['零','一','二','三','四','五','六','七','八','九','十','十一','十二'];
   const CN_HOURS = ['子','丑','丑','寅','寅','卯','卯','辰','辰','巳','巳','午','午','未','未','申','申','酉','酉','戌','戌','亥','亥','子'];
+  const CN_SOLAR_TERMS = [
+    { name:'小寒', month:1, day:5 }, { name:'大寒', month:1, day:20 },
+    { name:'立春', month:2, day:4 }, { name:'雨水', month:2, day:19 },
+    { name:'惊蛰', month:3, day:6 }, { name:'春分', month:3, day:21 },
+    { name:'清明', month:4, day:5 }, { name:'谷雨', month:4, day:20 },
+    { name:'立夏', month:5, day:6 }, { name:'小满', month:5, day:21 },
+    { name:'芒种', month:6, day:6 }, { name:'夏至', month:6, day:21 },
+    { name:'小暑', month:7, day:7 }, { name:'大暑', month:7, day:23 },
+    { name:'立秋', month:8, day:7 }, { name:'处暑', month:8, day:23 },
+    { name:'白露', month:9, day:8 }, { name:'秋分', month:9, day:23 },
+    { name:'寒露', month:10, day:8 }, { name:'霜降', month:10, day:23 },
+    { name:'立冬', month:11, day:7 }, { name:'小雪', month:11, day:22 },
+    { name:'大雪', month:12, day:7 }, { name:'冬至', month:12, day:22 },
+  ];
   const MOON_PHASES = [
     { name:'新月', icon:'🌑', threshold:0.03 },
     { name:'峨眉月', icon:'🌒', threshold:0.22 },
@@ -1297,32 +1705,32 @@ body.battery-saver .glass-card {
     { name:'残月', icon:'🌘', threshold:0.97 },
   ];
 
-  /* ── OKLCH Circadian 色温 v6（24段 · 感知均匀） ── */
+  /* ── OKLCH Circadian 色温 v7（24段 · 更柔和平滑） ── */
   const CIRCADIAN_STOPS = [
-    { h:0,  accent:[42,0.05,268], bg:[2.5,0.006,262] },
-    { h:1,  accent:[40,0.05,266], bg:[2.5,0.006,260] },
-    { h:2,  accent:[38,0.04,264], bg:[2.5,0.006,258] },
-    { h:3,  accent:[36,0.04,262], bg:[2.5,0.006,256] },
-    { h:4,  accent:[40,0.05,268], bg:[3,0.008,258] },
-    { h:5,  accent:[50,0.08,290], bg:[5,0.012,270] },
-    { h:6,  accent:[58,0.12,25],  bg:[8,0.020,30] },
-    { h:7,  accent:[64,0.10,40],  bg:[12,0.025,35] },
-    { h:8,  accent:[67,0.09,248], bg:[10,0.015,245] },
-    { h:9,  accent:[70,0.09,248], bg:[8,0.012,248] },
-    { h:10, accent:[72,0.10,248], bg:[7,0.010,250] },
-    { h:11, accent:[73,0.10,248], bg:[6,0.010,250] },
-    { h:12, accent:[73,0.10,248], bg:[5,0.008,250] },
-    { h:13, accent:[73,0.10,248], bg:[5,0.008,250] },
-    { h:14, accent:[72,0.10,248], bg:[6,0.010,250] },
-    { h:15, accent:[70,0.09,250], bg:[7,0.012,248] },
-    { h:16, accent:[66,0.09,258], bg:[8,0.014,255] },
-    { h:17, accent:[60,0.10,18],  bg:[10,0.018,18] },
-    { h:18, accent:[54,0.12,12],  bg:[12,0.022,12] },
-    { h:19, accent:[50,0.09,350], bg:[9,0.018,355] },
-    { h:20, accent:[48,0.08,295], bg:[7,0.014,295] },
-    { h:21, accent:[46,0.07,282], bg:[5,0.012,280] },
-    { h:22, accent:[44,0.06,275], bg:[4,0.010,272] },
-    { h:23, accent:[42,0.05,270], bg:[3,0.008,266] },
+    { h:0,  accent:[42,0.045,268], bg:[2.5,0.005,262] },
+    { h:1,  accent:[40,0.042,266], bg:[2.5,0.005,260] },
+    { h:2,  accent:[38,0.040,264], bg:[2.5,0.005,258] },
+    { h:3,  accent:[36,0.038,262], bg:[2.5,0.005,256] },
+    { h:4,  accent:[40,0.045,268], bg:[3,0.007,258] },
+    { h:5,  accent:[52,0.07,290],   bg:[5,0.010,270] },
+    { h:6,  accent:[60,0.10,28],    bg:[8,0.018,30] },
+    { h:7,  accent:[65,0.09,38],    bg:[12,0.022,35] },
+    { h:8,  accent:[68,0.085,248],  bg:[10,0.014,245] },
+    { h:9,  accent:[70,0.085,248],  bg:[8,0.012,248] },
+    { h:10, accent:[72,0.09,248],   bg:[7,0.010,250] },
+    { h:11, accent:[73,0.09,248],   bg:[6,0.010,250] },
+    { h:12, accent:[73,0.09,248],   bg:[5,0.008,250] },
+    { h:13, accent:[73,0.09,248],   bg:[5,0.008,250] },
+    { h:14, accent:[72,0.09,248],   bg:[6,0.010,250] },
+    { h:15, accent:[70,0.085,250],  bg:[7,0.012,248] },
+    { h:16, accent:[66,0.085,258],  bg:[8,0.014,255] },
+    { h:17, accent:[60,0.09,20],    bg:[10,0.016,18] },
+    { h:18, accent:[54,0.10,13],    bg:[11,0.020,12] },
+    { h:19, accent:[50,0.08,350],   bg:[9,0.016,355] },
+    { h:20, accent:[48,0.07,295],   bg:[7,0.013,295] },
+    { h:21, accent:[46,0.065,282],  bg:[5,0.011,280] },
+    { h:22, accent:[44,0.06,275],   bg:[4,0.009,272] },
+    { h:23, accent:[42,0.05,270],   bg:[3,0.007,266] },
   ];
 
   /* ── 默认纸条 ── */
@@ -1332,6 +1740,7 @@ body.battery-saver .glass-card {
     '{weather} {temp}',
     '距周五 {toFriday}',
     '日出 {sunrise} · 日落 {sunset}',
+    '{solar_term}',
     '#quote',
   ];
 
@@ -1348,8 +1757,9 @@ body.battery-saver .glass-card {
     '你做得很好', '一切都会好的', '别忘了喝水', '伸个懒腰吧',
     '你已经走了很远', '休息一下眼睛', '深呼吸，放松肩膀', '起来走动走动吧',
   ];
-  const TIME_QUOTE_MORNING = ['一日之计在于晨', '朝起早，夜眠迟', '清晨的光是最好的开始', '早起的鸟儿有虫吃'];
-  const TIME_QUOTE_EVENING = ['夜阑卧听风吹雨', '星光不问赶路人', '今晚也要好眠哦', '月明星稀，乌鹊南飞'];
+  const TIME_QUOTE_MORNING = ['一日之计在于晨', '清晨的光是最好的开始', '早起的鸟儿有虫吃', '朝起早，夜眠迟'];
+  const TIME_QUOTE_EVENING = ['星光不问赶路人', '今晚也要好眠哦', '夜阑卧听风吹雨', '月明星稀，乌鹊南飞'];
+  const TIME_QUOTE_NIGHT = ['夜深了，早点休息', '月光洒落窗前', '在宁静中积蓄力量'];
 
   /* ══════════════════════════════════════
      状态管理
@@ -1369,6 +1779,9 @@ body.battery-saver .glass-card {
     autoBrightness: true,
     ambientLevel: 'auto',
     adaptivePerf: true,
+    orientation: 'auto',
+    msgCenter: true,
+    hourlyChime: false,
     focusData: { today:0, week:0, streak:0, lastDay:'', daily:{} },
     usagePatterns: {},
   };
@@ -1413,6 +1826,7 @@ body.battery-saver .glass-card {
     flipH1: $('flipH1'), flipH2: $('flipH2'), flipM1: $('flipM1'), flipM2: $('flipM2'), flipSep: $('flipSep'),
     dateYear: $('dateYear'), dateMD: $('dateMD'), dateWeekday: $('dateWeekday'),
     weatherIcon: $('weatherIcon'), weatherTemp: $('weatherTemp'), weatherDesc: $('weatherDesc'),
+    weatherRange: $('weatherRange'), wxFelt: $('wxFelt'), wxHum: $('wxHum'), wxWind: $('wxWind'),
     countdownLabel: $('countdownLabel'), countdownVal: $('countdownVal'),
     aqiVal: $('aqiVal'),
     cardWeather: $('cardWeather'), cardAqi: $('cardAqi'),
@@ -1420,6 +1834,10 @@ body.battery-saver .glass-card {
     sunriseTime: $('sunriseTime'), sunsetTime: $('sunsetTime'),
     moonPhaseIcon: $('moonPhaseIcon'), moonPhaseName: $('moonPhaseName'),
     worldClockItem: $('worldClockItem'), worldClockTxt: $('worldClockTxt'),
+    msgPanel: $('msgPanel'), msgScroll: $('msgScroll'), msgCount: $('msgCount'),
+    msgClear: $('msgClear'), msgEmpty: $('msgEmpty'),
+    segOrient: $('segOrient'), notifyState: $('notifyState'), btnNotify: $('btnNotify'),
+    toggleMsg: $('toggleMsg'), toggleChime: $('toggleChime'),
     settingsOverlay: $('settingsOverlay'),
     btnCloseSettings: $('btnCloseSettings'),
     toastContainer: $('toastContainer'),
@@ -1444,9 +1862,11 @@ body.battery-saver .glass-card {
   const lerp = (a, b, t) => a + (b - a) * t;
   const pad2 = n => String(n).padStart(2, '0');
   const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+  const esc = s => String(s).replace(/[&<>"']/g,
+    c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
 
   /* ══════════════════════════════════════
-     Pixel Wander v6 — OLED 烧屏保护（更柔和的漂移策略）
+     Pixel Wander v7 — OLED 烧屏保护
      ══════════════════════════════════════ */
   let wanderTimer = null;
   function startPixelWander() {
@@ -1457,29 +1877,27 @@ body.battery-saver .glass-card {
     if (wanderTimer) clearInterval(wanderTimer);
     const wander = () => {
       if (!state.pixelWander) return;
-      const x = (Math.random() * 4 - 2).toFixed(1);
-      const y = (Math.random() * 3 - 1.5).toFixed(1);
+      const x = (Math.random() * 3.6 - 1.8).toFixed(1);
+      const y = (Math.random() * 2.8 - 1.4).toFixed(1);
       document.documentElement.style.setProperty('--wander-x', x + 'px');
       document.documentElement.style.setProperty('--wander-y', y + 'px');
-      document.documentElement.style.setProperty('--wander-t', '55s');
-      if (dom.app) dom.app.style.transition = 'transform 55s linear';
+      document.documentElement.style.setProperty('--wander-t', '52s');
+      if (dom.app) dom.app.style.transition = 'transform 52s linear';
     };
     wander();
-    wanderTimer = setInterval(wander, 58000);
+    wanderTimer = setInterval(wander, 54000);
   }
 
   /* ══════════════════════════════════════
-     AI Adaptive Engine v6
+     AI Adaptive Engine v7
      ══════════════════════════════════════ */
   const adaptive = {
-    /* 环境光检测 */
     ambientLux: null,
     batteryLevel: 1,
     batteryCharging: true,
     lowPower: false,
 
     init() {
-      // Battery API
       if (navigator.getBattery) {
         navigator.getBattery().then(bat => {
           this.batteryLevel = bat.level;
@@ -1495,10 +1913,9 @@ body.battery-saver .glass-card {
           });
         });
       }
-      // Ambient Light API
       if ('AmbientLightSensor' in window) {
         try {
-          const sensor = new AmbientLightSensor({ frequency: 0.5 });
+          const sensor = new AmbientLightSensor({ frequency: 0.4 });
           sensor.addEventListener('reading', () => {
             this.ambientLux = sensor.illuminance;
             this.applyAmbientAdaptation();
@@ -1507,55 +1924,53 @@ body.battery-saver .glass-card {
           sensor.start();
         } catch(e) {}
       }
-      // 回退：通过时间判断环境光
       this.fallbackAmbientCheck();
-      setInterval(() => this.fallbackAmbientCheck(), 60000);
+      setInterval(() => this.fallbackAmbientCheck(), 55000);
     },
 
     fallbackAmbientCheck() {
       if (this.ambientLux !== null) return;
       const h = new Date().getHours();
-      if (h >= 6 && h < 18) this.ambientLux = 300;
-      else if (h >= 5 && h < 6) this.ambientLux = 50;
-      else if (h >= 18 && h < 20) this.ambientLux = 80;
-      else this.ambientLux = 5;
+      if (h >= 6 && h < 18) this.ambientLux = 320;
+      else if (h >= 5 && h < 6) this.ambientLux = 40;
+      else if (h >= 18 && h < 20) this.ambientLux = 70;
+      else this.ambientLux = 3;
       this.applyAmbientAdaptation();
     },
 
     applyAmbientAdaptation() {
       const lux = this.ambientLux || 100;
       let brightness = 1;
-      if (lux < 10) brightness = 0.55;
-      else if (lux < 50) brightness = 0.7;
-      else if (lux < 150) brightness = 0.85;
+      if (lux < 8) brightness = 0.48;
+      else if (lux < 30) brightness = 0.62;
+      else if (lux < 100) brightness = 0.78;
       else if (lux < 500) brightness = 1.0;
-      else brightness = 1.1;
+      else brightness = 1.08;
 
-      document.documentElement.style.setProperty('--digit-glow', String((brightness - 0.55) * 0.2));
+      document.documentElement.style.setProperty('--digit-glow', String((brightness - 0.48) * 0.18));
 
       if (dom.statusAmbient) {
-        if (lux < 10) dom.statusAmbient.textContent = '🌙';
+        if (lux < 8) dom.statusAmbient.textContent = '🌙';
         else if (lux < 100) dom.statusAmbient.textContent = '🌆';
         else dom.statusAmbient.textContent = '☀️';
       }
     },
 
     checkPowerState() {
-      this.lowPower = this.batteryLevel < 0.15 && !this.batteryCharging;
-      document.body.classList.toggle('battery-saver', this.lowPower);
-      if (this.lowPower && state.adaptivePerf) {
-        toast('🔋 已启用省电模式');
+      const low = this.batteryLevel < 0.15 && !this.batteryCharging;
+      if (low && !this.lowPower) {
+        announce(`🔋 电量 ${Math.round(this.batteryLevel * 100)}% · 已进入省电模式`, { level:'alert' });
       }
+      this.lowPower = low;
+      document.body.classList.toggle('battery-saver', this.lowPower);
     },
 
-    /* 自适应帧率 */
     getTargetFPS() {
-      if (this.lowPower) return 15;
+      if (this.lowPower) return 12;
       if (state.aodMode) return 5;
       return 60;
     },
 
-    /* 学习用户偏好 */
     recordInteraction(type) {
       const h = new Date().getHours();
       const key = h < 6 ? 'night' : h < 12 ? 'morning' : h < 18 ? 'afternoon' : 'evening';
@@ -1565,7 +1980,6 @@ body.battery-saver .glass-card {
       saveState();
     },
 
-    /* 智能推荐钟面 */
     getRecommendedFace() {
       const h = new Date().getHours();
       const key = h < 6 ? 'night' : h < 12 ? 'morning' : h < 18 ? 'afternoon' : 'evening';
@@ -1580,12 +1994,12 @@ body.battery-saver .glass-card {
   };
 
   /* ══════════════════════════════════════
-     Circadian 背景系统 v6（基于 OKLCH · 更平滑）
+     Circadian 背景系统 v7（分钟级平滑）
      ══════════════════════════════════════ */
   const circadian = {
     init() {
       this.apply();
-      setInterval(() => this.apply(), 3 * 60 * 1000);
+      setInterval(() => this.apply(), 60000);
     },
 
     getStops(hour) {
@@ -1603,22 +2017,14 @@ body.battery-saver .glass-card {
       return { a, b, t };
     },
 
-    oklchToString(ok, lOffset) {
-      const [l0, c0, h0] = ok;
-      const l = clamp(l0 + lOffset, 0, 100);
-      return `oklch(${l}% ${c0} ${h0})`;
-    },
-
     apply() {
       const now = new Date();
       const hour = now.getHours() + now.getMinutes() / 60;
       const { a, b, t } = this.getStops(hour);
 
-      // OKLCH 插值
       const acL = lerp(a.accent[0], b.accent[0], t);
       const acC = lerp(a.accent[1], b.accent[1], t);
       let acH = lerp(a.accent[2], b.accent[2], t);
-      // 色相环绕
       if (Math.abs(a.accent[2] - b.accent[2]) > 180) {
         if (a.accent[2] > b.accent[2]) acH = lerp(a.accent[2], b.accent[2] + 360, t) % 360;
         else acH = lerp(a.accent[2] + 360, b.accent[2], t) % 360;
@@ -1626,17 +2032,16 @@ body.battery-saver .glass-card {
 
       const accentStr = `oklch(${acL.toFixed(1)}% ${acC.toFixed(3)} ${acH.toFixed(1)})`;
       document.documentElement.style.setProperty('--accent', accentStr);
-      document.documentElement.style.setProperty('--accent-l', acL / 100);
-      document.documentElement.style.setProperty('--accent-c', acC);
+      document.documentElement.style.setProperty('--accent-l', (acL / 100).toFixed(3));
+      document.documentElement.style.setProperty('--accent-c', acC.toFixed(3));
       document.documentElement.style.setProperty('--accent-h', acH.toFixed(1));
 
-      // 提取 RGB 供兼容
       const rgb = oklchToRgb(acL / 100, acC, acH);
       document.documentElement.style.setProperty('--accent-rgb', rgb);
 
       const bgL = lerp(a.bg[0], b.bg[0], t);
       const bgC = lerp(a.bg[1], b.bg[1], t);
-      document.documentElement.style.setProperty('--bg-base', `oklch(${bgL}% ${bgC} ${lerp(a.bg[2], b.bg[2], t)})`);
+      document.documentElement.style.setProperty('--bg-base', `oklch(${bgL.toFixed(1)}% ${bgC.toFixed(3)} ${lerp(a.bg[2], b.bg[2], t).toFixed(1)})`);
 
       const h2 = now.getHours();
       document.body.classList.toggle('time-night', h2 >= 22 || h2 < 5);
@@ -1649,11 +2054,11 @@ body.battery-saver .glass-card {
       const bgL = lerp(a.bg[0], b.bg[0], t);
       const bgC = lerp(a.bg[1], b.bg[1], t);
       const bgH = lerp(a.bg[2], b.bg[2], t);
-      return `oklch(${bgL}% ${bgC} ${bgH})`;
+      return `oklch(${bgL.toFixed(1)}% ${bgC.toFixed(3)} ${bgH.toFixed(1)})`;
     },
   };
 
-  /* OKLCH → RGB 近似转换 v6 */
+  /* OKLCH → RGB 近似转换 v7 */
   function oklchToRgb(L, C, H) {
     const hRad = H * Math.PI / 180;
     const a = C * Math.cos(hRad);
@@ -1668,7 +2073,7 @@ body.battery-saver .glass-card {
   }
 
   /* ══════════════════════════════════════
-     星云雾背景 v6（更柔和的星光 · 自适应帧率）
+     星云雾背景 v7（更柔和星光 · 自适应帧率）
      ══════════════════════════════════════ */
   const nebula = {
     canvas: null, ctx: null, w: 0, h: 0, stars: [],
@@ -1694,13 +2099,13 @@ body.battery-saver .glass-card {
 
     createStars() {
       this.stars = [];
-      const count = Math.floor((this.w * this.h) / 14000);
+      const count = Math.floor((this.w * this.h) / 16000);
       for (let i = 0; i < count; i++) {
         this.stars.push({
           x: Math.random() * this.w, y: Math.random() * this.h,
-          r: Math.random() * 0.9 + 0.15,
-          alpha: Math.random() * 0.45 + 0.12,
-          speed: Math.random() * 0.04 + 0.01,
+          r: Math.random() * 0.85 + 0.12,
+          alpha: Math.random() * 0.42 + 0.10,
+          speed: Math.random() * 0.038 + 0.008,
           phase: Math.random() * Math.PI * 2,
         });
       }
@@ -1708,7 +2113,7 @@ body.battery-saver .glass-card {
 
     loop() {
       const now = performance.now();
-      const interval = adaptive.lowPower ? 80 : 16;
+      const interval = adaptive.lowPower ? 90 : 18;
       if (now - this.lastFrame < interval) {
         requestAnimationFrame(() => this.loop());
         return;
@@ -1718,19 +2123,19 @@ body.battery-saver .glass-card {
       const ctx = this.ctx, w = this.w, h = this.h;
       ctx.clearRect(0, 0, w, h);
       const bgColor = circadian.getBgColor();
-      const grd = ctx.createRadialGradient(w*0.5, h*0.5, 0, w*0.5, h*0.5, Math.max(w,h)*0.6);
+      const grd = ctx.createRadialGradient(w*0.5, h*0.5, 0, w*0.5, h*0.5, Math.max(w,h)*0.58);
       grd.addColorStop(0, bgColor);
-      grd.addColorStop(0.5, 'oklch(7% 0.012 255 / 0.18)');
+      grd.addColorStop(0.55, 'oklch(7% 0.010 255 / 0.15)');
       grd.addColorStop(1, 'transparent');
       ctx.fillStyle = grd;
       ctx.fillRect(0, 0, w, h);
 
       const t = now / 1000;
       for (const s of this.stars) {
-        const flick = s.alpha * (0.6 + 0.4 * Math.sin(t * s.speed * 1.2 + s.phase));
+        const flick = s.alpha * (0.55 + 0.45 * Math.sin(t * s.speed * 1.1 + s.phase));
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        ctx.fillStyle = `oklch(80% 0.015 250 / ${flick})`;
+        ctx.fillStyle = `oklch(82% 0.012 250 / ${flick.toFixed(3)})`;
         ctx.fill();
       }
       requestAnimationFrame(() => this.loop());
@@ -1738,7 +2143,7 @@ body.battery-saver .glass-card {
   };
 
   /* ══════════════════════════════════════
-     氛围粒子 v6（更柔和 · 天气联动）
+     氛围粒子 v7（更柔和 · 更低频）
      ══════════════════════════════════════ */
   const aurora = {
     canvas: null, ctx: null, w: 0, h: 0, particles: [], lastFrame: 0,
@@ -1762,20 +2167,20 @@ body.battery-saver .glass-card {
     },
 
     createParticles() {
-      const count = adaptive.lowPower ? 10 : Math.min(Math.floor(this.w * this.h / 40000), 32);
+      const count = adaptive.lowPower ? 8 : Math.min(Math.floor(this.w * this.h / 45000), 28);
       this.particles = [];
       for (let i = 0; i < count; i++) {
         this.particles.push({
           x: Math.random() * this.w, y: Math.random() * this.h,
-          vx: (Math.random() - 0.5) * 0.08, vy: (Math.random() - 0.5) * 0.06,
-          r: Math.random() * 35 + 15, alpha: Math.random() * 0.025 + 0.008,
+          vx: (Math.random() - 0.5) * 0.07, vy: (Math.random() - 0.5) * 0.05,
+          r: Math.random() * 32 + 12, alpha: Math.random() * 0.022 + 0.006,
         });
       }
     },
 
     animate() {
       const now = performance.now();
-      const interval = adaptive.lowPower ? 120 : 20;
+      const interval = adaptive.lowPower ? 130 : 22;
       if (now - this.lastFrame < interval) {
         requestAnimationFrame(() => this.animate());
         return;
@@ -1789,8 +2194,8 @@ body.battery-saver .glass-card {
         if (p.x < -p.r) p.x = w + p.r; if (p.x > w + p.r) p.x = -p.r;
         if (p.y < -p.r) p.y = h + p.r; if (p.y > h + p.r) p.y = -p.r;
         const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
-        grd.addColorStop(0, `oklch(65% 0.05 250 / ${p.alpha})`);
-        grd.addColorStop(1, `oklch(65% 0.05 250 / 0)`);
+        grd.addColorStop(0, `oklch(66% 0.045 250 / ${p.alpha.toFixed(4)})`);
+        grd.addColorStop(1, `oklch(66% 0.045 250 / 0)`);
         ctx.fillStyle = grd;
         ctx.fillRect(p.x - p.r, p.y - p.r, p.r * 2, p.r * 2);
       }
@@ -1799,25 +2204,16 @@ body.battery-saver .glass-card {
   };
 
   /* ══════════════════════════════════════
-     时钟面渲染 v6
+     时钟面渲染 v7
      ══════════════════════════════════════ */
   let prev = { h:-1, m:-1, s:-1 };
   let flipState = { h1: 0, h2: 0, m1: 0, m2: 0 };
-  const frameTimes = [];
-  let fps = 60;
-
-  function trackFPS(now) {
-    frameTimes.push(now);
-    while (frameTimes.length > 0 && frameTimes[0] < now - 1000) frameTimes.shift();
-    if (frameTimes.length % 30 === 0) fps = frameTimes.length;
-  }
 
   function renderTime() {
     const now = new Date();
     const h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
     const secPct = (s + now.getMilliseconds()/1000) / 60;
 
-    /* 数字面 */
     if (state.faceIndex === 0) {
       if (prev.h !== h) dom.ndH.textContent = pad2(h);
       if (prev.m !== m) dom.ndM.textContent = pad2(m);
@@ -1831,7 +2227,6 @@ body.battery-saver .glass-card {
       }
     }
 
-    /* 指针面 */
     if (state.faceIndex === 1) {
       const hAngle = (h % 12 + m / 60) * 30;
       const mAngle = (m + s / 60) * 6;
@@ -1841,42 +2236,37 @@ body.battery-saver .glass-card {
       dom.originS.style.transform = `rotate(${sAngle}deg)`;
     }
 
-    /* 文字面 */
     if (state.faceIndex === 2) {
       if (prev.h !== h || prev.m !== m) {
-        const { main, sub } = toWordTime(h, m);
-        dom.wordMain.textContent = main;
-        dom.wordSub.textContent = sub;
+        const wt = toWordTime(h, m);
+        dom.wordMain.textContent = wt.main;
+        dom.wordSub.textContent = wt.sub;
       }
       dom.wordSecFill.style.width = Math.round(secPct * 100) + '%';
     }
 
-    /* Flip 翻页 */
     if (state.faceIndex === 3) {
-      const h1 = Math.floor(h / 10), h2 = h % 10;
-      const m1 = Math.floor(m / 10), m2 = m % 10;
-      updateFlipCard(dom.flipH1, flipState.h1, h1);
-      updateFlipCard(dom.flipH2, flipState.h2, h2);
-      updateFlipCard(dom.flipM1, flipState.m1, m1);
-      updateFlipCard(dom.flipM2, flipState.m2, m2);
-      flipState = { h1: h1 || 0, h2: h2 || 0, m1: m1 || 0, m2: m2 || 0 };
+      const h1v = Math.floor(h / 10), h2v = h % 10;
+      const m1v = Math.floor(m / 10), m2v = m % 10;
+      updateFlipCard(dom.flipH1, flipState.h1, h1v);
+      updateFlipCard(dom.flipH2, flipState.h2, h2v);
+      updateFlipCard(dom.flipM1, flipState.m1, m1v);
+      updateFlipCard(dom.flipM2, flipState.m2, m2v);
+      flipState = { h1: h1v || 0, h2: h2v || 0, m1: m1v || 0, m2: m2v || 0 };
       if (dom.flipSep) dom.flipSep.style.visibility = state.showSeconds ? '' : 'hidden';
     }
 
-    /* 日期 */
     if (prev.h !== h || prev.m !== m) {
       dom.dateYear.textContent = now.getFullYear();
       dom.dateMD.textContent = pad2(now.getMonth()+1) + '-' + pad2(now.getDate());
       dom.dateWeekday.textContent = WEEKDAYS[now.getDay()];
     }
 
-    /* 状态栏时间 */
     dom.statusTime.textContent = pad2(h) + ':' + pad2(m);
-
     prev = { h, m, s };
   }
 
-  /* ── 数字转中文（v6 更自然） ── */
+  /* ── 数字转中文 v7 ── */
   function toWordTime(h, m) {
     const period = h < 5 ? '凌晨' : h < 8 ? '清晨' : h < 12 ? '上午' : h < 14 ? '中午' : h < 18 ? '下午' : h < 21 ? '傍晚' : '夜晚';
     const hourZodiac = CN_HOURS[h];
@@ -1884,7 +2274,7 @@ body.battery-saver .glass-card {
     return { main: hourZodiac + '时' + minuteStr, sub: period };
   }
 
-  /* ── Flip 翻页更新 ── */
+  /* ── Flip 翻页更新 v7 ── */
   function updateFlipCard(unitEl, oldVal, newVal) {
     if (oldVal === newVal) return;
     const card = unitEl.querySelector('.flip-card.static');
@@ -1904,7 +2294,7 @@ body.battery-saver .glass-card {
     setTimeout(() => {
       topHalf.remove(); botHalf.remove();
       unitEl.innerHTML = `<div class="flip-card static"><span class="flip-num">${newVal}</span></div>`;
-    }, 480);
+    }, 500);
   }
 
   /* ══════════════════════════════════════
@@ -1920,14 +2310,14 @@ body.battery-saver .glass-card {
       const r1 = 88, r2 = isHour ? 78 : 84;
       const x1 = Math.sin(angle) * r2, y1 = -Math.cos(angle) * r2;
       const x2 = Math.sin(angle) * r1, y2 = -Math.cos(angle) * r1;
-      const w = isHour ? 1.8 : 0.5;
-      const color = isHour ? 'oklch(88% 0.01 250 / 0.45)' : 'oklch(88% 0.005 250 / 0.12)';
+      const w = isHour ? 1.6 : 0.45;
+      const color = isHour ? 'oklch(88% 0.01 250 / 0.42)' : 'oklch(88% 0.005 250 / 0.10)';
       ticksHTML += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`;
       if (isHour) {
         const num = i === 0 ? 12 : (i / 5);
         const nr = 67;
         const nx = Math.sin(angle) * nr, ny = -Math.cos(angle) * nr;
-        numsHTML += `<text x="${nx.toFixed(1)}" y="${ny.toFixed(1)}" fill="oklch(70% 0.01 250 / 0.4)" font-size="10" font-weight="400" text-anchor="middle" dominant-baseline="central" style="font-family:ui-rounded,system-ui,sans-serif;">${num}</text>`;
+        numsHTML += `<text x="${nx.toFixed(1)}" y="${ny.toFixed(1)}" fill="oklch(70% 0.01 250 / 0.38)" font-size="10" font-weight="400" text-anchor="middle" dominant-baseline="central" style="font-family:ui-rounded,system-ui,sans-serif;">${num}</text>`;
       }
     }
     ticksGroup.innerHTML = ticksHTML;
@@ -1948,24 +2338,35 @@ body.battery-saver .glass-card {
   }
 
   /* ══════════════════════════════════════
-     天气 / 日出日落 / AQI
+     天气 / 日出日落 / AQI v7
      ══════════════════════════════════════ */
   let weatherCache = null, weatherCacheTime = 0;
   let aqiCache = null, aqiCacheTime = 0;
+  let weatherFailNote = 0, aqiWarnLevel = -1;
   const WEATHER_TTL = 30 * 60 * 1000;
 
   async function fetchWeather() {
-    if (!state.showWeather) { dom.cardWeather.style.display = 'none'; return; }
-    dom.cardWeather.style.display = '';
+    const off = !state.showWeather;
+    dom.cardWeather.classList.toggle('is-off', off);
+    if (off) return;
     if (weatherCache && Date.now() - weatherCacheTime < WEATHER_TTL) { renderWeather(weatherCache); return; }
     try {
       const pos = await getPosition();
-      const url = `https://api.open-meteo.com/v1/forecast?latitude=${pos.lat}&longitude=${pos.lon}&current=temperature_2m,weather_code&daily=sunrise,sunset&timezone=auto`;
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${pos.lat}&longitude=${pos.lon}`
+        + '&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code'
+        + '&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto';
       const res = await fetch(url), data = await res.json();
       weatherCache = data; weatherCacheTime = Date.now();
+      weatherFailNote = 0;
       renderWeather(data);
       dom.statusText.textContent = '已连接';
-    } catch(e) { dom.weatherDesc.textContent = '获取失败'; }
+    } catch(e) {
+      dom.weatherDesc.textContent = '获取失败';
+      if (!weatherFailNote || Date.now() - weatherFailNote > 3 * WEATHER_TTL) {
+        weatherFailNote = Date.now();
+        announce('天气数据获取失败，将在下个周期重试', { level:'warn', toast:false });
+      }
+    }
   }
 
   function getPosition() {
@@ -1987,9 +2388,17 @@ body.battery-saver .glass-card {
     dom.weatherTemp.textContent = temp + '°';
     dom.weatherDesc.textContent = desc;
     if (data.daily) {
+      const lo = data.daily.temperature_2m_min?.[0], hi = data.daily.temperature_2m_max?.[0];
+      if (lo != null && hi != null) dom.weatherRange.textContent = `${Math.round(lo)}° / ${Math.round(hi)}°`;
       if (data.daily.sunrise) dom.sunriseTime.textContent = data.daily.sunrise[0].split('T')[1];
       if (data.daily.sunset) dom.sunsetTime.textContent = data.daily.sunset[0].split('T')[1];
     }
+    if (dom.wxFelt && cur.apparent_temperature != null)
+      dom.wxFelt.textContent = Math.round(cur.apparent_temperature) + '°';
+    if (dom.wxHum && cur.relative_humidity_2m != null)
+      dom.wxHum.textContent = Math.round(cur.relative_humidity_2m) + '%';
+    if (dom.wxWind && cur.wind_speed_10m != null)
+      dom.wxWind.textContent = Math.round(cur.wind_speed_10m) + 'km/h';
   }
 
   function weatherCodeToIcon(code) {
@@ -2018,12 +2427,16 @@ body.battery-saver .glass-card {
   function renderAQI(data) {
     if (!data || !data.current) return;
     const aqi = data.current.us_aqi || 0;
-    let color = '#4ade80', label = '优';
-    if (aqi > 50) { color = '#fbbf24'; label = '良'; }
-    if (aqi > 100) { color = '#f97316'; label = '轻'; }
-    if (aqi > 150) { color = '#ef4444'; label = '中'; }
-    if (aqi > 200) { color = '#a855f7'; label = '重'; }
+    let color = '#4ade80', label = '优', level = 0;
+    if (aqi > 50)  { color = '#fbbf24'; label = '良'; level = 1; }
+    if (aqi > 100) { color = '#f97316'; label = '轻'; level = 2; }
+    if (aqi > 150) { color = '#ef4444'; label = '中'; level = 3; }
+    if (aqi > 200) { color = '#a855f7'; label = '重'; level = 4; }
     dom.aqiVal.innerHTML = `<span style="color:${color}">${aqi}</span> ${label}`;
+    if (level >= 2 && level > aqiWarnLevel) {
+      announce(`空气 ${label}（AQI ${aqi}），建议减少户外活动`, { level: level >= 3 ? 'alert' : 'warn' });
+    }
+    aqiWarnLevel = level;
   }
 
   /* ══════════════════════════════════════
@@ -2049,26 +2462,59 @@ body.battery-saver .glass-card {
   }
 
   /* ══════════════════════════════════════
+     二十四节气计算 v7（新功能）
+     ══════════════════════════════════════ */
+  function getNearbySolarTerm() {
+    const now = new Date();
+    const m = now.getMonth() + 1, d = now.getDate();
+    let closest = null, minDiff = 999;
+    for (const st of CN_SOLAR_TERMS) {
+      const diff = Math.abs((st.month - m) * 31 + (st.day - d));
+      if (diff < minDiff) { minDiff = diff; closest = st; }
+    }
+    if (closest && minDiff <= 3) return closest.name;
+    return null;
+  }
+
+  /* ══════════════════════════════════════
      倒计时
      ══════════════════════════════════════ */
+  /* 里程碑去重：updateCountdown 每秒都会被调用，同一目标时刻只提醒一次 */
+  const COUNTDOWN_MILESTONES = [30, 5, 1];
+  let countdownTarget = 0, countdownFired = new Set();
+
   function updateCountdown() {
     const now = new Date();
     const [endH, endM] = state.endTime.split(':').map(Number);
     const end = new Date(now);
     end.setHours(endH, endM, 0, 0);
-    if (end <= now) end.setDate(end.getDate() + 1);
+    const rolled = end <= now;
+    if (rolled) end.setDate(end.getDate() + 1);
+
+    const key = end.getTime();
+    if (key !== countdownTarget) {
+      if (countdownTarget && rolled) announce('🎉 已到下班时间，收工！', { level:'info', notify:true });
+      countdownTarget = key;
+      countdownFired = new Set();
+    }
+
     const diff = end - now;
-    if (diff <= 0) { dom.countdownVal.textContent = '已下班'; return; }
     const hours = Math.floor(diff / 3600000);
     const mins = Math.floor((diff % 3600000) / 60000);
     const secs = Math.floor((diff % 60000) / 1000);
     dom.countdownVal.textContent = pad2(hours)+':'+pad2(mins)+':'+pad2(secs);
-    if (state.notifEnabled && diff <= 30*60*1000 && diff > 29*60*1000) toast('还有 30 分钟下班！');
-    if (state.notifEnabled && diff <= 60*1000 && diff > 59*1000) toast('就要下班了！🎉');
+
+    const leftMin = diff / 60000;
+    for (const m of COUNTDOWN_MILESTONES) {
+      if (leftMin <= m && !countdownFired.has(m)) {
+        countdownFired.add(m);
+        announce(m === 1 ? '就要下班了！🎉' : `还有 ${m} 分钟下班`, { level:'warn', notify:true });
+      }
+    }
   }
 
   /* ══════════════════════════════════════
-     纸条轮播 v6
+     纸条轮播 v7
      ══════════════════════════════════════ */
   let stripIdx = 0;
 
@@ -2077,12 +2523,12 @@ body.battery-saver .glass-card {
     const tpl = state.strips[stripIdx % state.strips.length];
     stripIdx++;
     dom.stripText.style.opacity = '0';
-    dom.stripText.style.transform = 'translateY(6px)';
+    dom.stripText.style.transform = 'translateY(5px)';
     setTimeout(() => {
       dom.stripText.textContent = resolveStripVars(tpl);
       dom.stripText.style.opacity = '1';
       dom.stripText.style.transform = 'translateY(0)';
-    }, 200);
+    }, 180);
   }
 
   function resolveStripVars(text) {
@@ -2092,11 +2538,12 @@ body.battery-saver .glass-card {
     const workedMin = Math.floor(workedMs / 60000);
     const workedStr = Math.floor(workedMin/60)+'时'+pad2(workedMin%60)+'分';
     const toFri = now.getDay() <= 5 ? (5-now.getDay())+'天' : '今天';
+    const solar = getNearbySolarTerm();
     if (result.includes('#quote')) {
       const h = now.getHours();
       let pool = QUOTES;
       if (h >= 5 && h < 10) pool = TIME_QUOTE_MORNING.concat(QUOTES);
-      else if (h >= 20) pool = TIME_QUOTE_EVENING.concat(QUOTES);
+      else if (h >= 20) pool = TIME_QUOTE_EVENING.concat(TIME_QUOTE_NIGHT).concat(QUOTES);
       result = result.replace('#quote', pool[Math.floor(Math.random()*pool.length)]);
     }
     if (result.includes('#affirmation'))
@@ -2108,11 +2555,12 @@ body.battery-saver .glass-card {
       .replace(/\{temp\}/g, dom.weatherTemp.textContent || '')
       .replace(/\{toFriday\}/g, toFri)
       .replace(/\{sunrise\}/g, dom.sunriseTime.textContent || '--:--')
-      .replace(/\{sunset\}/g, dom.sunsetTime.textContent || '--:--');
+      .replace(/\{sunset\}/g, dom.sunsetTime.textContent || '--:--')
+      .replace(/\{solar_term\}/g, solar ? '· ' + solar : '');
   }
 
   /* ══════════════════════════════════════
-     专注统计 v6
+     专注统计 v7
      ══════════════════════════════════════ */
   function initFocusData() {
     const fd = state.focusData || {};
@@ -2160,8 +2608,8 @@ body.battery-saver .glass-card {
         const d = new Date(now); d.setDate(now.getDate()-i);
         const key = d.toISOString().split('T')[0];
         const mins = Math.floor((fd.daily?.[key]||0)/60);
-        const h = Math.min(26, mins*0.45);
-        const intensity = mins > 60 ? 'var(--accent)' : mins > 20 ? 'oklch(from var(--accent) l c h / 0.35)' : 'oklch(100% 0 0 / 0.04)';
+        const h = Math.min(24, mins*0.42);
+        const intensity = mins > 60 ? 'var(--accent)' : mins > 20 ? 'oklch(from var(--accent) l c h / 0.32)' : 'oklch(100% 0 0 / 0.035)';
         html += `<div class="heat-bar" style="height:${Math.max(3,h)}px;background:${intensity}" title="${key}: ${mins}m"></div>`;
       }
       dom.weekHeatmap.innerHTML = html;
@@ -2169,7 +2617,7 @@ body.battery-saver .glass-card {
   }
 
   /* ══════════════════════════════════════
-     模式切换 v6
+     模式切换 v7
      ══════════════════════════════════════ */
   function switchFace(index) {
     index = ((index % FACES.length) + FACES.length) % FACES.length;
@@ -2183,7 +2631,7 @@ body.battery-saver .glass-card {
   }
 
   /* ══════════════════════════════════════
-     禅模式 v6
+     禅模式 v7
      ══════════════════════════════════════ */
   let zenTimeoutId = null;
   function toggleZenMode() {
@@ -2191,7 +2639,6 @@ body.battery-saver .glass-card {
     document.body.classList.toggle('zen-mode', state.zenMode);
     if (state.zenMode) {
       toast('🧘 禅模式 · 长按退出');
-      // 30分钟后自动退出
       if (zenTimeoutId) clearTimeout(zenTimeoutId);
       zenTimeoutId = setTimeout(() => {
         state.zenMode = false;
@@ -2207,7 +2654,7 @@ body.battery-saver .glass-card {
   }
 
   /* ══════════════════════════════════════
-     手势识别 + 键盘控制 v6
+     手势识别 + 键盘控制 v7
      ══════════════════════════════════════ */
   let touchStartX = 0, touchStartY = 0, touchStartTime = 0, lastTapTime = 0;
   let longPressTimer = null;
@@ -2240,7 +2687,7 @@ body.battery-saver .glass-card {
         lastTapTime = now;
         return;
       }
-      if (absDx > 50 && absDx > absDy * 1.5) {
+      if (absDx > 45 && absDx > absDy * 1.5) {
         if (dx > 0) switchFace(state.faceIndex - 1);
         else switchFace(state.faceIndex + 1);
       }
@@ -2265,15 +2712,24 @@ body.battery-saver .glass-card {
   let stripIntervalId = null, lastStripSec = 0;
   function toggleFocusTimer() {
     focusTimerActive = !focusTimerActive;
-    if (focusTimerActive) { toast('🍅 专注开始'); dom.app.classList.add('focus-mode'); }
-    else { toast('⏸ 专注暂停'); dom.app.classList.remove('focus-mode'); }
+    document.body.classList.toggle('focus-mode', focusTimerActive);
+    if (focusTimerActive) {
+      announce('🍅 专注开始', { source:'system' });
+    } else {
+      const mins = state.focusData?.today || 0;
+      announce(`⏸ 专注结束 · 今日累计 ${mins} 分钟`, { source:'system' });
+    }
   }
 
   /* ══════════════════════════════════════
-     设置面板 v6
+     设置面板 v7
      ══════════════════════════════════════ */
   function openSettings() { syncSettingsUI(); dom.settingsOverlay.classList.add('open'); }
   function closeSettings() { dom.settingsOverlay.classList.remove('open'); }
+
+  function applyMsgCenter() {
+    if (dom.msgPanel) dom.msgPanel.classList.toggle('is-off', !state.msgCenter);
+  }
 
   function syncSettingsUI() {
     dom.endTimeInput.value = state.endTime;
@@ -2288,6 +2744,10 @@ body.battery-saver .glass-card {
     updateToggle(dom.toggleZen, state.zenMode);
     updateToggle(dom.toggleNotif, state.notifEnabled);
     updateToggle(dom.toggleWander, state.pixelWander);
+    updateToggle(dom.toggleMsg, state.msgCenter);
+    updateToggle(dom.toggleChime, state.hourlyChime);
+    syncNotifyState();
+    applyOrientation();
     renderFocusPanel();
   }
 
@@ -2308,6 +2768,29 @@ body.battery-saver .glass-card {
     dom.toggleZen?.addEventListener('click', () => { toggleZenMode(); document.body.classList.toggle('aod-mode', false); });
     dom.toggleNotif?.addEventListener('click', () => { state.notifEnabled = !state.notifEnabled; updateToggle(dom.toggleNotif, state.notifEnabled); });
     dom.toggleWander?.addEventListener('click', () => { state.pixelWander = !state.pixelWander; updateToggle(dom.toggleWander, state.pixelWander); startPixelWander(); });
+    dom.toggleMsg?.addEventListener('click', () => {
+      state.msgCenter = !state.msgCenter;
+      updateToggle(dom.toggleMsg, state.msgCenter);
+      applyMsgCenter(); saveState();
+    });
+    dom.toggleChime?.addEventListener('click', () => {
+      state.hourlyChime = !state.hourlyChime;
+      updateToggle(dom.toggleChime, state.hourlyChime); saveState();
+    });
+    dom.segOrient?.addEventListener('click', e => {
+      const btn = e.target.closest('.seg-btn');
+      if (!btn) return;
+      state.orientation = btn.dataset.orient;
+      saveState(); applyOrientation();
+    });
+    dom.btnNotify?.addEventListener('click', () => {
+      if (notificationPermission() === 'granted') {
+        addMessage({ title:'测试', body:'这是一条来自消息中心的测试通知', source:'system', notify:true });
+      } else {
+        askNotificationPermission();
+      }
+    });
+    dom.msgClear?.addEventListener('click', clearMessages);
     dom.endTimeInput?.addEventListener('input', () => { dom.endTimeVal.textContent = dom.endTimeInput.value; });
     dom.stripIntervalInput?.addEventListener('input', () => { dom.stripIntervalVal.textContent = dom.stripIntervalInput.value; });
     dom.btnSave.addEventListener('click', () => {
@@ -2333,7 +2816,7 @@ body.battery-saver .glass-card {
   }
 
   /* ══════════════════════════════════════
-     Toast 通知
+     Toast 通知 v7
      ══════════════════════════════════════ */
   function toast(msg) {
     const container = dom.toastContainer;
@@ -2342,19 +2825,256 @@ body.battery-saver .glass-card {
     el.className = 'toast'; el.textContent = msg;
     container.appendChild(el);
     requestAnimationFrame(() => el.classList.add('show'));
-    setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 400); }, 2800);
+    setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 400); }, 2600);
   }
 
   /* ══════════════════════════════════════
-     整点脉动
+     朝向布局 v8 — 横屏摆件
+     auto 仅在真实手机横屏（矮视口）时启用，
+     桌面宽窗口仍走竖屏设备预览框。
+     ══════════════════════════════════════ */
+  const mqLandscape = window.matchMedia('(orientation: landscape)');
+
+  function isStandalone() {
+    return window.matchMedia('(display-mode: standalone)').matches ||
+           window.matchMedia('(display-mode: fullscreen)').matches ||
+           !!navigator.standalone;
+  }
+
+  function wantsLandscape() {
+    if (state.orientation === 'landscape') return true;
+    if (state.orientation === 'portrait') return false;
+    return mqLandscape.matches && window.innerHeight <= 620;
+  }
+
+  function applyOrientation() {
+    const land = wantsLandscape();
+    document.body.classList.toggle('land-mode', land);
+    if (dom.segOrient) {
+      dom.segOrient.querySelectorAll('.seg-btn').forEach(btn =>
+        btn.classList.toggle('on', btn.dataset.orient === state.orientation));
+    }
+    if (land && isStandalone() && screen.orientation && screen.orientation.lock) {
+      screen.orientation.lock('landscape').catch(() => {});
+    }
+  }
+
+  /* ══════════════════════════════════════
+     消息中心 v8 — 内置聚合 + 本地通道
+     来源：system（本机提醒）/ notify（系统通知）/ local（外部投递）
+     投递：?msg=…  #msg=…  BroadcastChannel('pixel3a-clock')
+           localStorage['clockV7Inbox']  window.pushMessage()
+     ══════════════════════════════════════ */
+  const MSG_STORE = 'clockV7Messages';
+  const MSG_INBOX = 'clockV7Inbox';
+  const MSG_CHANNEL = 'pixel3a-clock';
+  const MSG_MAX = 40;
+  const MSG_TTL = 12 * 3600 * 1000;
+  const MSG_VIEW = 14;
+  const MSG_LABEL = { system:'系统', notify:'通知', local:'留言' };
+
+  let messages = loadMessages();
+
+  function loadMessages() {
+    try {
+      const list = JSON.parse(localStorage.getItem(MSG_STORE) || '[]');
+      return Array.isArray(list) ? list.filter(m => m && m.body && m.ts) : [];
+    } catch(e) { return []; }
+  }
+
+  function persistMessages() {
+    try { localStorage.setItem(MSG_STORE, JSON.stringify(messages.slice(0, MSG_MAX))); } catch(e) {}
+  }
+
+  function pruneMessages() {
+    const cutoff = Date.now() - MSG_TTL;
+    const kept = messages.filter(m => m.ts >= cutoff);
+    if (kept.length !== messages.length) {
+      messages = kept;
+      persistMessages();
+      renderMessages();
+    }
+  }
+
+  function addMessage(input) {
+    if (!state.msgCenter || !input) return null;
+    const raw = typeof input === 'string' ? { body: input } : input;
+    const body = String(raw.body || raw.title || '').trim().slice(0, 220);
+    if (!body) return null;
+    const source = MSG_LABEL[raw.source] ? raw.source : 'local';
+    const level = (raw.level === 'warn' || raw.level === 'alert') ? raw.level : 'info';
+    const item = {
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      title: String(raw.title || '').trim().slice(0, 40),
+      body,
+      source,
+      level,
+      ts: Number(raw.ts) > 0 ? Number(raw.ts) : Date.now(),
+    };
+    messages.unshift(item);
+    if (messages.length > MSG_MAX) messages.length = MSG_MAX;
+    persistMessages();
+    renderMessages();
+    if (raw.notify && state.notifEnabled) postSystemNotification(item);
+    return item;
+  }
+
+  function msgTimeLabel(ts) {
+    const d = new Date(ts);
+    if (d.toDateString() === new Date().toDateString()) {
+      return pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+    }
+    return (d.getMonth() + 1) + '-' + d.getDate();
+  }
+
+  function renderMessages() {
+    if (!dom.msgScroll) return;
+    if (dom.msgCount) dom.msgCount.textContent = messages.length;
+    const list = messages.slice(0, MSG_VIEW);
+    if (!list.length) {
+      dom.msgScroll.innerHTML =
+        '<div class="msg-empty">暂无消息 · 可用 <code>?msg=你好</code> 或 <code>pushMessage()</code> 推送</div>';
+      return;
+    }
+    dom.msgScroll.innerHTML = list.map(m => {
+      const head = m.title ? esc(m.title) + ' · ' + esc(m.body) : esc(m.body);
+      return `<div class="msg-item" data-level="${m.level}">` +
+        `<div class="msg-bar"></div>` +
+        `<div class="msg-body">` +
+        `<div class="msg-line" title="${esc(m.body)}">${head}</div>` +
+        `<div class="msg-sub"><span class="msg-src">${MSG_LABEL[m.source]}</span>` +
+        `<span class="msg-time">${msgTimeLabel(m.ts)}</span></div>` +
+        `</div></div>`;
+    }).join('');
+  }
+
+  function clearMessages() {
+    messages = [];
+    persistMessages();
+    renderMessages();
+    toast('消息已清空');
+  }
+
+  /* 一条提醒同时落到 toast + 消息中心（+ 可选系统通知） */
+  function announce(text, opts) {
+    const o = opts || {};
+    if (state.notifEnabled && o.toast !== false) toast(text);
+    addMessage({
+      title: o.title || '',
+      body: text,
+      source: o.source || 'system',
+      level: o.level || 'info',
+      notify: !!o.notify,
+    });
+  }
+
+  function notificationPermission() {
+    return ('Notification' in window) ? Notification.permission : 'unsupported';
+  }
+
+  /* Android Chrome 不提供 new Notification 构造器，优先走 SW registration */
+  function postSystemNotification(item) {
+    const title = item.title || '活 · Clock';
+    const options = { body: item.body, tag: item.id, icon: 'icon.svg', badge: 'icon.svg', data: { id: item.id } };
+    if (navigator.serviceWorker && navigator.serviceWorker.ready) {
+      navigator.serviceWorker.ready
+        .then(reg => reg.showNotification(title, options))
+        .catch(() => directNotify(title, options));
+    } else {
+      directNotify(title, options);
+    }
+  }
+
+  function directNotify(title, options) {
+    try { new Notification(title, options); } catch(e) {}
+  }
+
+  function askNotificationPermission() {
+    if (notificationPermission() === 'unsupported') { toast('本机不支持系统通知'); return; }
+    if (notificationPermission() === 'granted') { toast('已授权系统通知'); syncNotifyState(); return; }
+    navigator.permissions?.query({ name: 'notifications' }).then(p => {
+      if (p.state === 'denied') { toast('已被拒绝，请到站点设置里恢复'); return; }
+      requestNow();
+    }).catch(requestNow);
+    function requestNow() {
+      Notification.requestPermission().then(() => {
+        syncNotifyState();
+        toast(notificationPermission() === 'granted' ? '系统通知已开启' : '未获得通知授权');
+      }).catch(() => syncNotifyState());
+    }
+  }
+
+  function syncNotifyState() {
+    if (!dom.notifyState) return;
+    const p = notificationPermission();
+    const map = { granted:'已授权', denied:'已拒绝', default:'未授权', unsupported:'不支持' };
+    dom.notifyState.textContent = map[p] || p;
+    if (dom.btnNotify) dom.btnNotify.textContent = p === 'granted' ? '测试' : '开启';
+  }
+
+  function readInboxFromUrl() {
+    try {
+      const url = new URL(location.href);
+      let body = url.searchParams.get('msg') || url.searchParams.get('m');
+      if (!body && url.hash.startsWith('#msg=')) body = decodeURIComponent(url.hash.slice(5));
+      if (!body) return;
+      addMessage({
+        title: url.searchParams.get('title') || '',
+        body,
+        source: 'local',
+        level: url.searchParams.get('level') || 'info',
+      });
+      ['msg', 'm', 'title', 'level'].forEach(k => url.searchParams.delete(k));
+      history.replaceState(null, '', url.pathname + url.search + '#');
+    } catch(e) {}
+  }
+
+  function initMessageChannels() {
+    if ('BroadcastChannel' in window) {
+      try {
+        const bc = new BroadcastChannel(MSG_CHANNEL);
+        bc.onmessage = ev => addMessage(ev.data);
+      } catch(e) {}
+    }
+
+    window.addEventListener('storage', ev => {
+      if (ev.key !== MSG_INBOX || !ev.newValue) return;
+      try { addMessage(JSON.parse(ev.newValue)); } catch(e) {}
+    });
+
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker.addEventListener('message', ev => {
+        const d = ev.data;
+        if (d && d.kind === 'clock-message') addMessage(d.payload);
+      });
+    }
+
+    /* 供控制台、书签脚本或伴生页面调用 */
+    window.pushMessage = (title, body, opts) => {
+      if (title && typeof title === 'object') return addMessage(title);
+      return addMessage({ title: String(title || ''), body: String(body || ''), ...(opts || {}) });
+    };
+
+    readInboxFromUrl();
+    renderMessages();
+    setInterval(pruneMessages, 10 * 60 * 1000);
+  }
+
+  /* ══════════════════════════════════════
+     整点脉动 v7
      ══════════════════════════════════════ */
   let lastHour = -1;
   function checkHourPulse() {
     const h = new Date().getHours();
-    if (h !== lastHour) {
-      lastHour = h;
-      dom.bgPulse.classList.add('active');
-      setTimeout(() => dom.bgPulse.classList.remove('active'), 2500);
+    if (h === lastHour) return;
+    const first = lastHour === -1;
+    lastHour = h;
+    dom.bgPulse.classList.add('active');
+    setTimeout(() => dom.bgPulse.classList.remove('active'), 2600);
+    if (!first && state.hourlyChime) {
+      const label = h < 5 ? '夜深' : h < 8 ? '清晨' : h < 11 ? '上午'
+        : h < 13 ? '正午' : h < 18 ? '下午' : h < 22 ? '傍晚' : '深夜';
+      announce(`${pad2(h)}:00 · ${label}`, { title:'整点' });
     }
   }
 
@@ -2380,7 +3100,7 @@ body.battery-saver .glass-card {
   }
 
   /* ══════════════════════════════════════
-     主循环调度 v6
+     主循环调度 v7
      ══════════════════════════════════════ */
   let frameCount = 0;
 
@@ -2399,16 +3119,20 @@ body.battery-saver .glass-card {
   }
 
   /* ══════════════════════════════════════
-     初始化 v6
+     初始化 v7
      ══════════════════════════════════════ */
   function init() {
     buildAnalogDial();
     initFocusData();
+    applyOrientation();
     adaptive.init();
     circadian.init();
     nebula.init();
     aurora.init();
     startPixelWander();
+
+    mqLandscape.addEventListener('change', applyOrientation);
+    window.addEventListener('resize', applyOrientation);
 
     document.querySelectorAll('.face-dot').forEach(dot => {
       dot.addEventListener('click', () => switchFace(parseInt(dot.dataset.face)));
@@ -2418,11 +3142,13 @@ body.battery-saver .glass-card {
     initSettingsUI();
     switchFace(state.faceIndex);
 
-    // 恢复禅模式状态
+    applyMsgCenter();
+    initMessageChannels();
+    syncNotifyState();
+
     if (state.zenMode) {
       document.body.classList.add('zen-mode');
     }
-    // 恢复AOD状态
     if (state.aodMode) {
       document.body.classList.add('aod-mode');
     }
@@ -2445,7 +3171,7 @@ body.battery-saver .glass-card {
     registerSW();
     requestAnimationFrame(mainLoop);
 
-    setTimeout(() => toast('长按进入禅模式 | 双击专注'), 1500);
+    setTimeout(() => toast('长按进入禅模式 | 双击专注'), 1400);
   }
 
   if (document.readyState === 'loading') {
