@@ -1,12 +1,14 @@
 {
   "name": "活 · Clock",
-  "short_name": "活",
-  "description": "Pixel 3a 桌面摆件时钟 — 四模式 × Circadian节律 × 星云雾 × 智能感知",
+  "short_name": "活·Clock",
+  "description": "活 — 与光同频的 Pixel 3a 横屏时钟天气消息摆件 · OLED-Optimized · OKLCH Circadian · Message Hub",
   "start_url": "./index.html",
   "display": "fullscreen",
   "orientation": "any",
-  "background_color": "#05050a",
-  "theme_color": "#05050a",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "categories": ["utilities", "lifestyle", "productivity"],
+  "screenshots": [],
   "icons": [
     {
       "src": "icon.svg",
@@ -14,8 +16,5 @@
       "type": "image/svg+xml",
       "purpose": "any maskable"
     }
-  ],
-  "categories": ["lifestyle", "utilities"],
-  "lang": "zh-CN",
-  "dir": "ltr"
+  ]
 }
