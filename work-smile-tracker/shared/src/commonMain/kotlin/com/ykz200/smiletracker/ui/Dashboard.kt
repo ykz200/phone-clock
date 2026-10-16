@@ -100,7 +100,7 @@ private const val BREATHING_CYCLE_MS = 5500     // v8.0 更缓慢的呼吸
 private const val ENTRANCE_STIFFNESS = 130f     // v8.0 更柔和的入场
 private val ENTRANCE_SPRING = spring<Float>(dampingRatio = 0.82f, stiffness = ENTRANCE_STIFFNESS)
 private val MICRO_SPRING = spring<Float>(dampingRatio = 0.60f, stiffness = 220f)  // v8.0 更柔和微交互
-private val COLOR_SPRINE = spring<Color>(dampingRatio = 0.88f, stiffness = 90f)   // v8.0 更柔的色彩过渡
+private val COLOR_SPRING = spring<Color>(dampingRatio = 0.88f, stiffness = 90f)   // v8.0 更柔的色彩过渡 (fixed: SPRINE → SPRING)
 private const val GLOW_PULSE_MS = 380           // v8.0
 private const val CHART_ANIM_MS = 2400           // v8.0 更流畅的图表动画
 private const val BURNIN_PERIOD_X_MS = 120000    // v8.0 更长周期减少视觉疲劳
@@ -496,7 +496,7 @@ private fun DashboardScreen() {
 private fun DashboardTopBarV5(showWeekly: Boolean, onToggleWeekly: () -> Unit) {
     val titleColor by animateColorAsState(
         targetValue = if (showWeekly) AccentPurple else TextPrimary,
-        animationSpec = COLOR_SPRINE, label = "titleColorV5"
+        animationSpec = COLOR_SPRING, label = "titleColorV5"
     )
 
     CenterAlignedTopAppBar(
@@ -909,7 +909,7 @@ private fun RealTimeFaceCardV4(face: FaceAnalysis?) {
             face == null -> TextMuted
             else -> AccentBlue
         },
-        animationSpec = COLOR_SPRINE, label = "accentColorV4"
+        animationSpec = COLOR_SPRING, label = "accentColorV4"
     )
 
     GlassCardV4(glowColor = accentColor) {

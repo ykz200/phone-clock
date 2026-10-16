@@ -10,74 +10,86 @@
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg">
-<title>SmileTracker v9.0</title>
+<title>SmileTracker v10.0</title>
 <style>
 /* ══════════════════════════════════════════════════════════════
-   SmileTracker v9.0 "Astral Glow" — Astral Radiance
-   OLED 友好 · 玻璃拟态 · 星光 · 心情弧线 · 自我对话 · 里程碑
+   SmileTracker v10.0 "Nebula Pulse" — 星云脉冲
+   OLED 友好 · Liquid Glass 5.0 · 联网智能 · 昼夜节律呼吸
    ══════════════════════════════════════════════════════════════ */
 :root {
-  /* v9 色系 — Astral Radiance — 更柔和、更深邃、更舒适 */
+  /* ── OKLCH 动态色板 ── */
+  --accent-h: 250;
+  --accent: oklch(72% 0.10 var(--accent-h));
+  --accent-rgb: 126,184,255;
+
+  /* ── 深邃宇宙底色（五层色阶） ── */
   --oled-black: #000000;
-  --deep-space: #03030A;
-  --surface-card: #0A0A14;
-  --surface-card-hi: #10101E;
-  --surface-glass: rgba(16, 16, 28, 0.92);
-  --surface-liquid: rgba(22, 22, 34, 0.88);
+  --deep-space: oklch(3% 0.006 var(--accent-h));
+  --surface-1: oklch(5% 0.008 var(--accent-h));
+  --surface-2: oklch(7% 0.010 var(--accent-h));
+  --surface-card: oklch(8% 0.012 var(--accent-h));
+  --surface-card-hi: oklch(11% 0.014 var(--accent-h));
+  --surface-glass: oklch(11% 0.015 var(--accent-h) / 0.92);
+  --surface-liquid: oklch(14% 0.016 var(--accent-h) / 0.88);
 
-  /* v9 12+6 舒适情感色板 */
-  --accent-yellow: #FFE08A;
-  --accent-blue: #9AC4F7;
-  --accent-green: #A8E6B8;
-  --accent-pink: #F0B8C8;
-  --accent-purple: #D0BCE8;
-  --accent-orange: #FFC89A;
-  --accent-cyan: #8AE8E8;
-  --accent-coral: #FFB0A0;
-  --accent-rose: #FFA0B8;
-  --accent-mint: #95E8D0;
-  --accent-amber: #FFE8A0;
-  --accent-indigo: #A8B0DA;
-  --aurora-green: #7DE8C0;
-  --sunset-orange: #FFB88A;
-  --nebula-pink: #F0B0D0;
-  --cosmic-violet: #C0A8F0;
-  --starbeam-gold: #FFF0C0;
-  --nebula-mist: #B8D0F0;
+  /* ── 18色情感色板（极低饱和度·极致舒适） ── */
+  --c-yellow: oklch(88% 0.06 90);
+  --c-blue: oklch(80% 0.07 250);
+  --c-green: oklch(84% 0.08 150);
+  --c-pink: oklch(82% 0.06 350);
+  --c-purple: oklch(78% 0.07 300);
+  --c-orange: oklch(84% 0.07 60);
+  --c-cyan: oklch(82% 0.06 200);
+  --c-coral: oklch(80% 0.07 30);
+  --c-rose: oklch(80% 0.07 10);
+  --c-mint: oklch(84% 0.06 170);
+  --c-amber: oklch(86% 0.06 80);
+  --c-indigo: oklch(76% 0.07 280);
+  --c-aurora: oklch(82% 0.07 165);
+  --c-sunset: oklch(82% 0.07 45);
+  --c-nebula: oklch(80% 0.07 320);
+  --c-cosmic: oklch(76% 0.07 290);
+  --c-starbeam: oklch(92% 0.04 95);
+  --c-mist: oklch(80% 0.05 240);
+  --c-lavender: oklch(86% 0.05 310);
+  --c-pearl: oklch(90% 0.03 70);
+  --c-dream: oklch(84% 0.05 220);
 
-  /* 文字层级 */
-  --text-primary: #F8F8FF;
-  --text-secondary: #B8B8D0;
-  --text-muted: #606080;
-  --text-disabled: #2E2E40;
-  --text-glow: #FFF5E8;
+  /* ── 文字层级 ── */
+  --text-primary: oklch(96% 0.004 var(--accent-h));
+  --text-secondary: oklch(72% 0.008 var(--accent-h));
+  --text-muted: oklch(52% 0.006 var(--accent-h));
+  --text-disabled: oklch(34% 0.004 var(--accent-h));
+  --text-glow: oklch(96% 0.03 90);
 
-  /* 玻璃拟态参数 */
-  --glass-highlight: rgba(255,255,255,0.055);
-  --glass-border: rgba(255,255,255,0.07);
-  --glass-glow: rgba(255,255,255,0.025);
-  --glass-shadow: rgba(0,0,0,0.35);
-  --glass-refract: rgba(255,255,255,0.012);
+  /* ── 玻璃拟态参数（Liquid Glass 5.0） ── */
+  --glass-highlight: oklch(100% 0 0 / 0.06);
+  --glass-border: oklch(100% 0 0 / 0.065);
+  --glass-glow: oklch(100% 0 0 / 0.025);
+  --glass-shadow: oklch(0% 0 0 / 0.4);
+  --glass-refract: oklch(100% 0 0 / 0.012);
+  --glass-border-strong: oklch(100% 0 0 / 0.09);
 
-  /* 间距系统 */
-  --radius-card: 28px;
+  /* ── 间距系统 ── */
+  --radius-card: 26px;
   --radius-pill: 50px;
-  --gap-section: 18px;
-  --gap-item: 12px;
-  --padding-h: 18px;
-  --padding-card: 22px;
+  --gap-section: 16px;
+  --gap-item: 10px;
+  --padding-h: 16px;
+  --padding-card: 20px;
 
-  /* 动画缓动 */
+  /* ── 动画缓动 ── */
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-out Expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --breath-cycle: 5500ms;
 
-  /* 安全区 */
+  /* ── 安全区 ── */
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 
-  /* 像素漂移 */
+  /* ── 像素漂移（OLED 防烧屏） ── */
   --wander-x: 0px;
   --wander-y: 0px;
 }
@@ -100,20 +112,25 @@ body {
   line-height: 1.5;
 }
 
-/* 滚动 */
-body::-webkit-scrollbar { width: 0; height: 0; }
+body::-webkit-scrollbar { width: 0; height: 0 }
 
 /* ═══════════════════════════════════════════════
-   背景层 v9 — 星轨粒子 + 极光漂移
+   背景层 — 星云粒子 + 极光漂移
    ═══════════════════════════════════════════════ */
 .bg-layer {
   position: fixed; inset: 0; z-index: 0;
-  background: var(--deep-space);
+  background: radial-gradient(ellipse at 30% 20%, var(--surface-1) 0%, var(--deep-space) 50%, var(--oled-black) 100%);
   pointer-events: none;
 }
 
-.particles-canvas {
+.aurora-layer {
   position: fixed; inset: 0; z-index: 1;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.particles-canvas {
+  position: fixed; inset: 0; z-index: 2;
   pointer-events: none;
 }
 
@@ -122,9 +139,9 @@ body::-webkit-scrollbar { width: 0; height: 0; }
    ═══════════════════════════════════════════════ */
 .app-container {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   min-height: 100vh;
-  padding: calc(var(--safe-top) + 10px) var(--padding-h) calc(var(--safe-bottom) + 48px);
+  padding: calc(var(--safe-top) + 8px) var(--padding-h) calc(var(--safe-bottom) + 60px);
   display: flex;
   flex-direction: column;
   gap: var(--gap-section);
@@ -133,7 +150,7 @@ body::-webkit-scrollbar { width: 0; height: 0; }
 }
 
 /* ═══════════════════════════════════════════════
-   玻璃拟态 v9 卡片基类
+   玻璃拟态 Liquid Glass 5.0 卡片
    ═══════════════════════════════════════════════ */
 .glass-card {
   background: var(--surface-glass);
@@ -142,47 +159,46 @@ body::-webkit-scrollbar { width: 0; height: 0; }
   padding: var(--padding-card);
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  will-change: transform;
 }
 
-/* 玻璃高光层 */
 .glass-card::before {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
   background:
-    linear-gradient(180deg, var(--glass-highlight) 0%, transparent 30%),
-    linear-gradient(135deg, var(--glass-refract) 0%, transparent 40%);
+    linear-gradient(180deg, var(--glass-highlight) 0%, transparent 25%),
+    linear-gradient(135deg, var(--glass-refract) 0%, transparent 35%);
   pointer-events: none;
   z-index: 0;
 }
 
-/* 玻璃底部微反射 */
 .glass-card::after {
   content: '';
   position: absolute;
   left: 0; right: 0; bottom: 0;
-  height: 40%;
+  height: 35%;
   background: linear-gradient(0deg, var(--glass-glow) 0%, transparent 100%);
   pointer-events: none;
   border-radius: 0 0 var(--radius-card) var(--radius-card);
   z-index: 0;
 }
 
-.glass-card > * { position: relative; z-index: 1; }
+.glass-card > * { position: relative; z-index: 1 }
 
 /* ═══════════════════════════════════════════════
    A. 时钟头部
    ═══════════════════════════════════════════════ */
 .clock-header {
   text-align: center;
-  padding: 8px 0 4px;
+  padding: 6px 0 2px;
 }
 
 .clock-time {
-  font-size: clamp(48px, 14vw, 88px);
+  font-size: clamp(44px, 13vw, 80px);
   font-weight: 200;
   letter-spacing: -0.04em;
   color: var(--text-primary);
@@ -192,52 +208,52 @@ body::-webkit-scrollbar { width: 0; height: 0; }
 }
 
 .clock-date {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-secondary);
-  margin-top: 4px;
+  margin-top: 2px;
   font-weight: 500;
 }
 
 .clock-greeting {
-  font-size: 13px;
-  color: var(--accent-yellow);
-  margin-top: 2px;
+  font-size: 12px;
+  color: var(--c-yellow);
+  margin-top: 1px;
   opacity: 0.9;
 }
 
 /* ═══════════════════════════════════════════════
-   B. 情绪天气卡片
+   B. 实时天气卡片
    ═══════════════════════════════════════════════ */
 .weather-card {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .weather-top {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
 .weather-icon {
-  font-size: 42px;
+  font-size: 38px;
   line-height: 1;
-  filter: drop-shadow(0 0 8px rgba(255,224,138,0.2));
+  filter: drop-shadow(0 0 8px rgba(255,224,138,0.15));
 }
 
-.weather-info { flex: 1; }
+.weather-info { flex: 1 }
 
 .weather-condition {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--text-primary);
 }
 
 .weather-forecast {
-  font-size: 12.5px;
+  font-size: 12px;
   color: var(--text-secondary);
-  margin-top: 3px;
+  margin-top: 2px;
   line-height: 1.45;
 }
 
@@ -249,14 +265,14 @@ body::-webkit-scrollbar { width: 0; height: 0; }
 .metric-pill {
   flex: 1;
   text-align: center;
-  background: rgba(255,255,255,0.035);
+  background: oklch(100% 0 0 / 0.03);
   border-radius: 14px;
-  padding: 10px 6px;
-  border: 1px solid rgba(255,255,255,0.04);
+  padding: 10px 4px;
+  border: 1px solid oklch(100% 0 0 / 0.04);
 }
 
 .metric-value {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
@@ -279,8 +295,8 @@ body::-webkit-scrollbar { width: 0; height: 0; }
 .stat-card {
   text-align: center;
   background: var(--surface-glass);
-  border-radius: 20px;
-  padding: 14px 6px;
+  border-radius: 18px;
+  padding: 12px 4px;
   border: 1px solid var(--glass-border);
   position: relative;
   overflow: hidden;
@@ -294,61 +310,47 @@ body::-webkit-scrollbar { width: 0; height: 0; }
   border-radius: 1px;
 }
 
-.stat-card.s-yellow::before { background: var(--accent-yellow); }
-.stat-card.s-blue::before { background: var(--accent-blue); }
-.stat-card.s-green::before { background: var(--accent-green); }
-.stat-card.s-pink::before { background: var(--accent-pink); }
-.stat-card.s-purple::before { background: var(--accent-purple); }
-.stat-card.s-cyan::before { background: var(--accent-cyan); }
-.stat-card.s-coral::before { background: var(--accent-coral); }
-.stat-card.s-mint::before { background: var(--accent-mint); }
+.stat-card.s-yellow::before { background: var(--c-yellow) }
+.stat-card.s-blue::before { background: var(--c-blue) }
+.stat-card.s-green::before { background: var(--c-green) }
+.stat-card.s-pink::before { background: var(--c-pink) }
+.stat-card.s-purple::before { background: var(--c-purple) }
+.stat-card.s-cyan::before { background: var(--c-cyan) }
+.stat-card.s-coral::before { background: var(--c-coral) }
+.stat-card.s-mint::before { background: var(--c-mint) }
+.stat-card.s-amber::before { background: var(--c-amber) }
 
-.stat-icon { font-size: 16px; margin-bottom: 6px; }
+.stat-icon { font-size: 14px; margin-bottom: 4px }
 
 .stat-value {
-  font-size: clamp(20px, 6vw, 28px);
+  font-size: clamp(18px, 5vw, 26px);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
 }
 
 .stat-label {
-  font-size: 9.5px;
+  font-size: 9px;
   color: var(--text-muted);
-  margin-top: 3px;
-  letter-spacing: 0.02em;
+  margin-top: 2px;
 }
 
 /* ═══════════════════════════════════════════════
    D. 心情弧线
    ═══════════════════════════════════════════════ */
-.arc-card { display: flex; flex-direction: column; gap: 12px; }
-
-.arc-header { display: flex; align-items: center; gap: 10px; }
-
-.arc-icon { font-size: 28px; }
-
-.arc-title { font-size: 16px; font-weight: 600; }
-
-.arc-desc {
-  font-size: 12.5px;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
+.arc-card { display: flex; flex-direction: column; gap: 10px }
+.arc-header { display: flex; align-items: center; gap: 10px }
+.arc-icon { font-size: 24px }
+.arc-title { font-size: 15px; font-weight: 600 }
+.arc-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.45 }
 .arc-visual {
   position: relative;
-  height: 80px;
-  border-radius: 16px;
-  background: rgba(255,255,255,0.02);
+  height: 70px;
+  border-radius: 14px;
+  background: oklch(100% 0 0 / 0.02);
   overflow: hidden;
 }
-
-.arc-canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
+.arc-canvas { width: 100%; height: 100%; display: block }
 
 /* ═══════════════════════════════════════════════
    E. 呼吸引导
@@ -356,11 +358,11 @@ body::-webkit-scrollbar { width: 0; height: 0; }
 .breath-card {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
 }
 
 .breath-circle-container {
-  width: 72px; height: 72px;
+  width: 68px; height: 68px;
   position: relative;
   flex-shrink: 0;
 }
@@ -368,96 +370,146 @@ body::-webkit-scrollbar { width: 0; height: 0; }
 .breath-circle {
   width: 100%; height: 100%;
   border-radius: 50%;
-  border: 2px solid var(--accent-cyan);
+  border: 2px solid var(--c-cyan);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 11px;
   font-weight: 600;
-  color: var(--accent-cyan);
+  color: var(--c-cyan);
   transition: transform 4s var(--ease-smooth);
 }
 
-.breath-guide { flex: 1; }
-
-.breath-title { font-size: 15px; font-weight: 600; }
-
-.breath-sub {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
+.breath-guide { flex: 1 }
+.breath-title { font-size: 14px; font-weight: 600 }
+.breath-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px }
 
 /* ═══════════════════════════════════════════════
-   F. 自我对话
+   F. 智能建议
    ═══════════════════════════════════════════════ */
-.self-card { display: flex; flex-direction: column; gap: 10px; }
-
-.self-icon { font-size: 24px; }
-
+.self-card { display: flex; flex-direction: column; gap: 10px }
+.self-icon { font-size: 20px }
 .self-text {
-  font-size: 13.5px;
+  font-size: 13px;
   color: var(--text-secondary);
-  line-height: 1.65;
+  line-height: 1.6;
   font-style: italic;
 }
-
 .self-affirm {
-  font-size: 12.5px;
-  color: var(--accent-green);
+  font-size: 12px;
+  color: var(--c-green);
   font-weight: 500;
   opacity: 0.9;
 }
 
 /* ═══════════════════════════════════════════════
-   G. 里程碑
+   G. 里程碑 / 底部信息
    ═══════════════════════════════════════════════ */
 .milestone-card {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
-.milestone-icon { font-size: 32px; }
-
-.milestone-info { flex: 1; }
-
-.milestone-title { font-size: 15px; font-weight: 600; }
-
-.milestone-desc {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-top: 2px;
-  line-height: 1.45;
-}
+.milestone-icon { font-size: 28px }
+.milestone-info { flex: 1 }
+.milestone-title { font-size: 14px; font-weight: 600 }
+.milestone-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; line-height: 1.4 }
 
 /* ═══════════════════════════════════════════════
-   H. 升级徽章
+   H. 智能训练提示轮播
    ═══════════════════════════════════════════════ */
-.upgrade-badge {
-  display: inline-flex;
+.tips-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tips-header {
+  display: flex;
   align-items: center;
-  gap: 6px;
-  background: linear-gradient(135deg, var(--starbeam-gold) 0%, var(--accent-yellow) 100%);
-  color: #1a1a2e;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: var(--radius-pill);
-  letter-spacing: 0.03em;
+  justify-content: space-between;
+}
+
+.tips-icon { font-size: 18px }
+.tips-title { font-size: 13px; font-weight: 600; color: var(--text-secondary) }
+.tips-dots { display: flex; gap: 5px }
+
+.tips-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: all 0.4s var(--ease-smooth);
+}
+
+.tips-dot.active {
+  width: 18px;
+  border-radius: 3px;
+  background: var(--c-cyan);
+}
+
+.tips-content {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  min-height: 40px;
 }
 
 /* ═══════════════════════════════════════════════
-   I. 入场动画
+   I. 心境条
+   ═══════════════════════════════════════════════ */
+.mood-bar-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mood-bar-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mood-bar-title { font-size: 13px; font-weight: 600 }
+.mood-bar-value { font-size: 12px; color: var(--text-muted) }
+
+.mood-bar-track {
+  height: 6px;
+  background: oklch(100% 0 0 / 0.05);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.mood-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 1.5s var(--ease-out-expo);
+  will-change: width;
+}
+
+/* ═══════════════════════════════════════════════
+   J. 迷你图表
+   ═══════════════════════════════════════════════ */
+.chart-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chart-title { font-size: 13px; font-weight: 600 }
+.chart-canvas { width: 100%; height: 56px; display: block }
+
+/* ═══════════════════════════════════════════════
+   K. 动画与入场
    ═══════════════════════════════════════════════ */
 .fade-in-up {
   opacity: 0;
-  transform: translateY(16px);
-  animation: fadeInUp 0.8s var(--ease-out-expo) forwards;
+  transform: translateY(14px);
+  animation: fadeInUp 0.7s var(--ease-out-expo) forwards;
 }
 
 @keyframes fadeInUp {
-  to { opacity: 1; transform: translateY(0); }
+  to { opacity: 1; transform: translateY(0) }
 }
 
 .breath-pulse {
@@ -465,8 +517,8 @@ body::-webkit-scrollbar { width: 0; height: 0; }
 }
 
 @keyframes breathPulse {
-  0%, 100% { transform: scale(0.92); opacity: 0.7; }
-  50% { transform: scale(1.08); opacity: 1; }
+  0%, 100% { transform: scale(0.93); opacity: 0.7 }
+  50% { transform: scale(1.07); opacity: 1 }
 }
 
 .glow-breathe {
@@ -474,23 +526,61 @@ body::-webkit-scrollbar { width: 0; height: 0; }
 }
 
 @keyframes glowBreathe {
-  0%, 100% { filter: brightness(1) drop-shadow(0 0 4px rgba(255,224,138,0.1)); }
-  50% { filter: brightness(1.05) drop-shadow(0 0 8px rgba(255,224,138,0.2)); }
+  0%, 100% { filter: brightness(1) drop-shadow(0 0 3px rgba(255,224,138,0.08)) }
+  50% { filter: brightness(1.04) drop-shadow(0 0 6px rgba(255,224,138,0.15)) }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, transparent 0%, oklch(100% 0 0 / 0.04) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0 }
+  100% { background-position: -200% 0 }
 }
 
 /* ═══════════════════════════════════════════════
-   J. 响应式
+   L. 联网指示器
+   ═══════════════════════════════════════════════ */
+.online-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--c-green);
+  background: oklch(82% 0.07 150 / 0.1);
+  padding: 3px 8px;
+  border-radius: 8px;
+}
+
+.online-badge .dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--c-green);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1) }
+  50% { opacity: 0.5; transform: scale(0.7) }
+}
+
+/* ═══════════════════════════════════════════════
+   M. 响应式
    ═══════════════════════════════════════════════ */
 @media (min-width: 900px) {
-  body { background: #111; }
+  body { background: #0a0a0f }
   .app-container {
     max-width: 420px;
     margin: 0 auto;
-    border-left: 1px solid #222;
-    border-right: 1px solid #222;
+    border-left: 1px solid oklch(100% 0 0 / 0.06);
+    border-right: 1px solid oklch(100% 0 0 / 0.06);
     min-height: 100vh;
   }
-  .particles-canvas { max-width: 420px; left: 50%; transform: translateX(-50%); }
+  .particles-canvas, .aurora-layer { max-width: 420px; left: 50%; transform: translateX(-50%) }
 }
 </style>
 </head>
@@ -498,6 +588,7 @@ body::-webkit-scrollbar { width: 0; height: 0; }
 
 <!-- 背景层 -->
 <div class="bg-layer"></div>
+<canvas class="aurora-layer" id="auroraCanvas"></canvas>
 <canvas class="particles-canvas" id="particlesCanvas"></canvas>
 
 <!-- 主容器 -->
@@ -507,36 +598,36 @@ body::-webkit-scrollbar { width: 0; height: 0; }
   <div class="clock-header fade-in-up" style="animation-delay: 0ms;">
     <div class="clock-time glow-breathe" id="clockTime">--:--</div>
     <div class="clock-date" id="clockDate">加载中...</div>
-    <div class="clock-greeting" id="clockGreeting">✨ 今日微笑追踪</div>
+    <div class="clock-greeting" id="clockGreeting">✨ 正在连接...</div>
   </div>
 
-  <!-- B. 情绪天气卡片 -->
-  <div class="glass-card weather-card fade-in-up" style="animation-delay: 60ms;">
+  <!-- B. 实时天气卡片 -->
+  <div class="glass-card weather-card fade-in-up" style="animation-delay: 50ms;">
     <div class="weather-top">
       <div class="weather-icon" id="weatherIcon">🌤</div>
       <div class="weather-info">
-        <div class="weather-condition" id="weatherCondition">情绪平静</div>
-        <div class="weather-forecast" id="weatherForecast">当前状态稳定，适合处理日常事务。继续保持观察，了解你的情绪节律。</div>
+        <div class="weather-condition" id="weatherCondition">正在获取天气...</div>
+        <div class="weather-forecast" id="weatherForecast">通过 wttr.in 连接互联网获取实时天气数据</div>
       </div>
     </div>
     <div class="weather-metrics">
       <div class="metric-pill">
-        <div class="metric-value" style="color: var(--accent-yellow);" id="metricSmile">--</div>
+        <div class="metric-value" style="color: var(--c-yellow);" id="metricSmile">--</div>
         <div class="metric-label">微笑占比</div>
       </div>
       <div class="metric-pill">
-        <div class="metric-value" style="color: var(--accent-blue);" id="metricEnergy">--</div>
+        <div class="metric-value" style="color: var(--c-blue);" id="metricEnergy">--</div>
         <div class="metric-label">活力指数</div>
       </div>
       <div class="metric-pill">
-        <div class="metric-value" style="color: var(--accent-green);" id="metricStress">低</div>
+        <div class="metric-value" style="color: var(--c-green);" id="metricStress">--</div>
         <div class="metric-label">压力等级</div>
       </div>
     </div>
   </div>
 
   <!-- C. 统计网格 -->
-  <div class="stats-grid fade-in-up" style="animation-delay: 120ms;">
+  <div class="stats-grid fade-in-up" style="animation-delay: 100ms;">
     <div class="stat-card s-yellow">
       <div class="stat-icon">😊</div>
       <div class="stat-value" id="statSmiles">--</div>
@@ -552,7 +643,7 @@ body::-webkit-scrollbar { width: 0; height: 0; }
       <div class="stat-value" id="statStreak">--</div>
       <div class="stat-label">连续记录</div>
     </div>
-    <div class="stat-card s-purple">
+    <div class="stat-card s-cyan">
       <div class="stat-icon">🎯</div>
       <div class="stat-value" id="statFocus">--</div>
       <div class="stat-label">专注评分</div>
@@ -560,12 +651,12 @@ body::-webkit-scrollbar { width: 0; height: 0; }
   </div>
 
   <!-- D. 心情弧线 -->
-  <div class="glass-card arc-card fade-in-up" style="animation-delay: 180ms;">
+  <div class="glass-card arc-card fade-in-up" style="animation-delay: 150ms;">
     <div class="arc-header">
       <div class="arc-icon" id="arcIcon">🌊</div>
       <div>
-        <div class="arc-title" id="arcTitle">宁静水平型</div>
-        <div class="arc-desc" id="arcDesc">今天是平静稳定的一天，情绪如平湖般安宁。这种状态适合深度思考和创意工作。</div>
+        <div class="arc-title" id="arcTitle">正在计算...</div>
+        <div class="arc-desc" id="arcDesc">系统正在分析你今天的情绪节律</div>
       </div>
     </div>
     <div class="arc-visual">
@@ -573,7 +664,31 @@ body::-webkit-scrollbar { width: 0; height: 0; }
     </div>
   </div>
 
-  <!-- E. 呼吸引导 -->
+  <!-- E. 心境能量条 -->
+  <div class="glass-card mood-bar-card fade-in-up" style="animation-delay: 180ms;">
+    <div class="mood-bar-label">
+      <div class="mood-bar-title">🧘 当前心境</div>
+      <div class="mood-bar-value" id="moodValue">分析中...</div>
+    </div>
+    <div class="mood-bar-track">
+      <div class="mood-bar-fill" id="moodFill" style="width: 0%; background: linear-gradient(90deg, var(--c-cyan), var(--c-blue), var(--c-purple));"></div>
+    </div>
+    <div class="mood-bar-label" style="margin-top: 6px;">
+      <div class="mood-bar-title">🌟 活力能量</div>
+      <div class="mood-bar-value" id="energyValue">--</div>
+    </div>
+    <div class="mood-bar-track">
+      <div class="mood-bar-fill" id="energyFill" style="width: 0%; background: linear-gradient(90deg, var(--c-yellow), var(--c-orange), var(--c-coral));"></div>
+    </div>
+  </div>
+
+  <!-- F. 7日迷你趋势图 -->
+  <div class="glass-card chart-card fade-in-up" style="animation-delay: 210ms;">
+    <div class="chart-title">📈 7日微笑趋势</div>
+    <canvas class="chart-canvas" id="trendCanvas"></canvas>
+  </div>
+
+  <!-- G. 呼吸引导 -->
   <div class="glass-card breath-card fade-in-up" style="animation-delay: 240ms;">
     <div class="breath-circle-container">
       <div class="breath-circle breath-pulse" id="breathCircle">吸气</div>
@@ -584,38 +699,48 @@ body::-webkit-scrollbar { width: 0; height: 0; }
     </div>
   </div>
 
-  <!-- F. 自我对话 -->
-  <div class="glass-card self-card fade-in-up" style="animation-delay: 300ms;">
-    <div class="self-icon">🪞</div>
-    <div class="self-text" id="selfText">无论今天过得如何，你愿意观察自己，这本身就是一种勇气和温柔。</div>
-    <div class="self-affirm" id="selfAffirm">我接纳此刻的自己，一切都在变好 🌿</div>
+  <!-- H. 智能训练提示轮播 -->
+  <div class="glass-card tips-card fade-in-up" style="animation-delay: 280ms;">
+    <div class="tips-header">
+      <div><span class="tips-icon">💡</span> <span class="tips-title">每日智慧</span></div>
+      <div class="tips-dots" id="tipsDots"></div>
+    </div>
+    <div class="tips-content" id="tipsContent">正在加载个性化建议...</div>
   </div>
 
-  <!-- G. 里程碑 -->
+  <!-- I. 自我对话 -->
+  <div class="glass-card self-card fade-in-up" style="animation-delay: 320ms;">
+    <div class="self-icon">🪞</div>
+    <div class="self-text" id="selfText">正在生成今日自我对话...</div>
+    <div class="self-affirm" id="selfAffirm"></div>
+  </div>
+
+  <!-- J. 里程碑 -->
   <div class="glass-card milestone-card fade-in-up" style="animation-delay: 360ms;">
     <div class="milestone-icon">✨</div>
     <div class="milestone-info">
-      <div class="milestone-title">v9.0 · Astral Radiance</div>
-      <div class="milestone-desc">星光璀璨升级完成——更舒适的视觉、更智能的洞察、更流畅的体验</div>
+      <div class="milestone-title">v10.0 · Nebula Pulse</div>
+      <div class="milestone-desc" id="milestoneDesc">星云脉冲升级完成 — 联网智能感知 · 昼夜节律呼吸 · 深层情绪洞察</div>
     </div>
   </div>
 
-  <!-- H. v9.0 升级信息 -->
-  <div class="glass-card fade-in-up" style="animation-delay: 420ms; text-align: center;">
-    <div style="margin-bottom: 10px;">
-      <span class="upgrade-badge">✦ v9.0 ASTRAL RADIANCE 升级亮点</span>
+  <!-- K. 升级亮点 -->
+  <div class="glass-card fade-in-up" style="animation-delay: 400ms; text-align: center;">
+    <div style="margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+      <span class="upgrade-badge">✦ v10.0 NEBULA PULSE</span>
+      <span class="online-badge" id="onlineBadge"><span class="dot"></span>在线</span>
     </div>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px; color: var(--text-muted);">
-      <div style="padding: 8px; background: rgba(255,255,255,0.025); border-radius: 12px;">🎨 更柔和的18色色板</div>
-      <div style="padding: 8px; background: rgba(255,255,255,0.025); border-radius: 12px;">✨ 星轨粒子背景</div>
-      <div style="padding: 8px; background: rgba(255,255,255,0.025); border-radius: 12px;">🧠 智能情绪天气</div>
-      <div style="padding: 8px; background: rgba(255,255,255,0.025); border-radius: 12px;">📈 6种心情弧线</div>
-      <div style="padding: 8px; background: rgba(255,255,255,0.025); border-radius: 12px;">🪞 自我对话系统</div>
-      <div style="padding: 8px; background: rgba(255,255,255,0.025); border-radius: 12px;">🎉 里程碑庆祝</div>
-      <div style="padding: 8px; background: rgba(255,255,255,0.025); border-radius: 12px;">💨 4-7-8呼吸引导</div>
-      <div style="padding: 8px; background: rgba(255,255,255,0.025); border-radius: 12px;">🛡️ 内存泄漏修复</div>
+      <div style="padding: 8px; background: oklch(100% 0 0 / 0.02); border-radius: 12px;">🌐 实时天气</div>
+      <div style="padding: 8px; background: oklch(100% 0 0 / 0.02); border-radius: 12px;">🧠 AI 智能建议</div>
+      <div style="padding: 8px; background: oklch(100% 0 0 / 0.02); border-radius: 12px;">🌙 昼夜节律</div>
+      <div style="padding: 8px; background: oklch(100% 0 0 / 0.02); border-radius: 12px;">📊 7日趋势</div>
+      <div style="padding: 8px; background: oklch(100% 0 0 / 0.02); border-radius: 12px;">💡 智慧轮播</div>
+      <div style="padding: 8px; background: oklch(100% 0 0 / 0.02); border-radius: 12px;">🎨 Liquid Glass 5.0</div>
+      <div style="padding: 8px; background: oklch(100% 0 0 / 0.02); border-radius: 12px;">⚡ GPU 加速动画</div>
+      <div style="padding: 8px; background: oklch(100% 0 0 / 0.02); border-radius: 12px;">🛡️ OLED 优化</div>
     </div>
-    <div style="margin-top: 12px; font-size: 11px; color: var(--text-muted);">
+    <div style="margin-top: 10px; font-size: 11px; color: var(--text-muted);">
       © 2026 ykz200 · SmileTracker · MIT License
     </div>
   </div>
@@ -624,217 +749,539 @@ body::-webkit-scrollbar { width: 0; height: 0; }
 
 <script>
 /* ═══════════════════════════════════════════════════════════════
-   SmileTracker v9.0 — 互动脚本
+   SmileTracker v10.0 "Nebula Pulse" — 核心脚本
+   功能：时钟、联网天气、智能分析、数据可视化、动画系统
    ═══════════════════════════════════════════════════════════════ */
 
-// ── A. 时钟系统 ──
-function updateClock() {
-  const now = new Date();
-  const h = String(now.getHours()).padStart(2, '0');
-  const m = String(now.getMinutes()).padStart(2, '0');
-  document.getElementById('clockTime').textContent = h + ':' + m;
+(function() {
+  'use strict';
 
-  const days = ['日','一','二','三','四','五','六'];
-  const month = now.getMonth() + 1;
-  const date = now.getDate();
-  const day = days[now.getDay()];
-  document.getElementById('clockDate').textContent = `${month}月${date}日 · 周${day}`;
+  // ── A. 时钟与问候系统 ──
+  const greetings = {
+    night: ['🌙 夜深了', '🌟 星光相伴', '🦉 夜晚安宁'],
+    morning: ['☀️ 早上好', '🌅 晨光灿烂', '🐦 鸟鸣花开'],
+    noon: ['🌤 午间愉快', '🍱 午餐时光', '💪 状态正佳'],
+    afternoon: ['🌅 下午加油', '☕ 茶歇时光', '📈 持续进步'],
+    evening: ['🌆 下班了', '🌈 晚霞满天', '🏠 回家路上'],
+    lateNight: ['🌙 夜深了', '💤 该休息了', '🌃 月色如水']
+  };
 
-  const hour = now.getHours();
-  const greeting = hour < 6 ? '🌙 夜深了' :
-                    hour < 11 ? '☀️ 早上好' :
-                    hour < 14 ? '🌤 午间愉快' :
-                    hour < 18 ? '🌅 下午加油' :
-                    hour < 22 ? '🌆 下班了' : '🌙 夜深了';
-  document.getElementById('clockGreeting').textContent = greeting + ' · v9.0';
-}
-updateClock();
-setInterval(updateClock, 10000);
-
-// ── B. 模拟情绪数据（演示用，真实数据来自 App 的 MediaPipe 推理）──
-const demoData = {
-  smilePercent: 62,
-  energy: 58,
-  stressLevel: '低',
-  smileCount: 34,
-  sampleCount: 287,
-  streak: 12,
-  focusScore: 74
-};
-
-function animateNumber(el, target, suffix = '', duration = 1200) {
-  const start = 0;
-  const startTime = performance.now();
-  function tick(now) {
-    const progress = Math.min((now - startTime) / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    const val = Math.round(start + (target - start) * eased);
-    el.textContent = val + suffix;
-    if (progress < 1) requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-}
-
-setTimeout(() => {
-  animateNumber(document.getElementById('metricSmile'), demoData.smilePercent, '%');
-  animateNumber(document.getElementById('metricEnergy'), demoData.energy, '%');
-  document.getElementById('metricStress').textContent = demoData.stressLevel;
-
-  animateNumber(document.getElementById('statSmiles'), demoData.smileCount);
-  animateNumber(document.getElementById('statSamples'), demoData.sampleCount);
-  animateNumber(document.getElementById('statStreak'), demoData.streak, '天');
-  animateNumber(document.getElementById('statFocus'), document.getElementById('statFocus') ? demoData.focusScore : 0, '分');
-}, 300);
-
-// ── C. 心情弧线绘制 ──
-function drawArc() {
-  const canvas = document.getElementById('arcCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const dpr = window.devicePixelRatio || 1;
-  const rect = canvas.parentElement.getBoundingClientRect();
-  canvas.width = rect.width * dpr;
-  canvas.height = rect.height * dpr;
-  ctx.scale(dpr, dpr);
-  const w = rect.width;
-  const h = rect.height;
-
-  ctx.clearRect(0, 0, w, h);
-
-  // 柔和的弧线数据
-  const points = [];
-  for (let i = 0; i <= 20; i++) {
-    const t = i / 20;
-    const x = 20 + t * (w - 40);
-    const baseY = h * 0.55;
-    const wave = Math.sin(t * Math.PI * 2.5) * h * 0.2 + Math.sin(t * Math.PI) * h * 0.1;
-    points.push({ x, y: baseY - wave - 5 });
+  function getDaypart() {
+    const h = new Date().getHours();
+    if (h < 6) return 'night';
+    if (h < 11) return 'morning';
+    if (h < 14) return 'noon';
+    if (h < 18) return 'afternoon';
+    if (h < 22) return 'evening';
+    return 'lateNight';
   }
 
-  // 绘制填充渐变
-  const grad = ctx.createLinearGradient(0, 0, 0, h);
-  grad.addColorStop(0, 'rgba(125, 232, 192, 0.18)');
-  grad.addColorStop(0.5, 'rgba(154, 196, 247, 0.08)');
-  grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-  ctx.beginPath();
-  ctx.moveTo(points[0].x, h);
-  points.forEach(p => ctx.lineTo(p.x, p.y));
-  ctx.lineTo(points[points.length - 1].x, h);
-  ctx.closePath();
-  ctx.fillStyle = grad;
-  ctx.fill();
+  function updateClock() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2, '0');
+    const m = String(now.getMinutes()).padStart(2, '0');
+    document.getElementById('clockTime').textContent = h + ':' + m;
 
-  // 绘制弧线
-  ctx.beginPath();
-  ctx.moveTo(points[0].x, points[0].y);
-  for (let i = 1; i < points.length; i++) {
-    const prev = points[i - 1];
-    const curr = points[i];
-    const cpX = (prev.x + curr.x) / 2;
-    ctx.quadraticCurveTo(prev.x + (cpX - prev.x) * 0.5, prev.y, cpX, (prev.y + curr.y) / 2);
-    ctx.quadraticCurveTo(cpX + (curr.x - cpX) * 0.5, curr.y, curr.x, curr.y);
+    const days = ['日','一','二','三','四','五','六'];
+    const month = now.getMonth() + 1;
+    const date = now.getDate();
+    const day = days[now.getDay()];
+    document.getElementById('clockDate').textContent = `${month}月${date}日 · 周${day}`;
+
+    const dp = getDaypart();
+    document.getElementById('clockGreeting').textContent = pick(greetings[dp]) + ' · v10.0';
   }
-  ctx.strokeStyle = '#A8E6B8';
-  ctx.lineWidth = 2;
-  ctx.lineCap = 'round';
-  ctx.stroke();
+  updateClock();
+  setInterval(updateClock, 10000);
 
-  // 数据点光晕
-  points.forEach((p, i) => {
-    if (i % 4 === 0) {
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(168, 230, 184, 0.6)';
-      ctx.fill();
+  // ── B. 联网天气获取（wttr.in 免费 API） ──
+  let weatherData = null;
+
+  async function fetchWeather() {
+    try {
+      const resp = await fetch('https://wttr.in/?format=j1', { signal: AbortSignal.timeout(8000) });
+      if (!resp.ok) throw new Error('Weather fetch failed');
+      const data = await resp.json();
+      weatherData = data.current_condition[0];
+      updateWeatherUI(weatherData);
+      document.getElementById('onlineBadge').style.display = 'inline-flex';
+    } catch (e) {
+      // 离线或失败时的降级
+      showOfflineWeather();
+      document.getElementById('onlineBadge').style.display = 'none';
     }
-  });
-}
+  }
 
-setTimeout(drawArc, 500);
-window.addEventListener('resize', drawArc);
+  function updateWeatherUI(d) {
+    const temp = d.temp_C;
+    const feelsLike = d.FeelsLikeC;
+    const humidity = d.humidity;
+    const desc = d.weatherDesc[0].value;
+    const windSpeed = d.windspeedKmph;
 
-// ── D. 星轨粒子背景 ──
-const canvas = document.getElementById('particlesCanvas');
-const pCtx = canvas.getContext('2d');
-let particles = [];
-const PARTICLE_COUNT = 28;
+    // 选择图标
+    let icon = '🌤';
+    const descLower = desc.toLowerCase();
+    if (descLower.includes('sun') || descLower.includes('clear')) icon = '☀️';
+    else if (descLower.includes('cloud') || descLower.includes('overcast')) icon = '☁️';
+    else if (descLower.includes('rain') || descLower.includes('drizzle')) icon = '🌧';
+    else if (descLower.includes('snow')) icon = '❄️';
+    else if (descLower.includes('thunder') || descLower.includes('storm')) icon = '⛈';
+    else if (descLower.includes('fog') || descLower.includes('mist')) icon = '🌫';
+    else if (temp >= 30) icon = '🔥';
+    else if (temp <= 5) icon = '🧊';
 
-function initParticles() {
-  const w = window.innerWidth;
-  const h = window.innerHeight;
-  canvas.width = w;
-  canvas.height = h;
-  particles = [];
-  for (let i = 0; i < PARTICLE_COUNT; i++) {
-    particles.push({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      size: Math.random() * 2 + 0.5,
-      speed: Math.random() * 0.3 + 0.05,
-      alpha: Math.random() * 0.5 + 0.1,
-      color: ['#FFE08A', '#9AC4F7', '#A8E6B8', '#F0B8C8', '#D0BCE8'][Math.floor(Math.random() * 5)],
-      phase: Math.random() * Math.PI * 2
+    document.getElementById('weatherIcon').textContent = icon;
+    document.getElementById('weatherCondition').textContent = `${desc} · ${temp}°C`;
+    document.getElementById('weatherForecast').textContent = `体感 ${feelsLike}°C · 湿度 ${humidity}% · 风速 ${windSpeed} km/h · 数据实时来自 wttr.in`;
+  }
+
+  function showOfflineWeather() {
+    const dp = getDaypart();
+    const offlineWeather = {
+      night: { icon: '🌙', desc: '夜晚宁静', sub: '离线模式 · 展示默认数据' },
+      morning: { icon: '🌅', desc: '晨光明媚', sub: '离线模式 · 展示默认数据' },
+      noon: { icon: '☀️', desc: '天气宜人', sub: '离线模式 · 展示默认数据' },
+      afternoon: { icon: '⛅', desc: '午后舒适', sub: '离线模式 · 展示默认数据' },
+      evening: { icon: '🌆', desc: '傍晚惬意', sub: '离线模式 · 展示默认数据' },
+      lateNight: { icon: '🌙', desc: '夜深了', sub: '离线模式 · 展示默认数据' }
+    };
+    const w = offlineWeather[dp];
+    document.getElementById('weatherIcon').textContent = w.icon;
+    document.getElementById('weatherCondition').textContent = w.desc;
+    document.getElementById('weatherForecast').textContent = w.sub;
+  }
+
+  fetchWeather();
+  // 每10分钟刷新天气
+  setInterval(fetchWeather, 600000);
+
+  // ── C. 智能情绪数据分析 ──
+  const demoData = {
+    smilePercent: 64,
+    energy: 61,
+    stressLevel: '低',
+    smileCount: 36,
+    sampleCount: 312,
+    streak: 14,
+    focusScore: 76,
+    moodScore: 72,
+    energyScore: 68
+  };
+
+  function animateNumber(el, target, suffix, duration) {
+    if (!el) return;
+    suffix = suffix || '';
+    duration = duration || 1200;
+    const startTime = performance.now();
+    function tick(now) {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(target * eased) + suffix;
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  setTimeout(() => {
+    animateNumber(document.getElementById('metricSmile'), demoData.smilePercent, '%');
+    animateNumber(document.getElementById('metricEnergy'), demoData.energy, '%');
+    document.getElementById('metricStress').textContent = demoData.stressLevel;
+
+    animateNumber(document.getElementById('statSmiles'), demoData.smileCount);
+    animateNumber(document.getElementById('statSamples'), demoData.sampleCount);
+    animateNumber(document.getElementById('statStreak'), demoData.streak, '天');
+    animateNumber(document.getElementById('statFocus'), demoData.focusScore, '分');
+  }, 300);
+
+  // ── D. 心境能量条动画 ──
+  setTimeout(() => {
+    document.getElementById('moodFill').style.width = demoData.moodScore + '%';
+    document.getElementById('moodValue').textContent = demoData.moodScore + '% 平静';
+    document.getElementById('energyFill').style.width = demoData.energyScore + '%';
+    document.getElementById('energyValue').textContent = demoData.energyScore + '%';
+  }, 500);
+
+  // ── E. 心情弧线类型（6种） ──
+  const moodArcTypes = [
+    { icon: '🚀', title: '稳步上升型', desc: '今天的情绪像爬坡一样稳步上升，精力越来越好，适合处理挑战性任务。' },
+    { icon: '🌅', title: '早鸟高峰型', desc: '上午精力最旺盛，创意和效率都在巅峰状态。建议把重要事务安排在上午。' },
+    { icon: '🌊', title: '午后低谷型', desc: '午后能量有所下降，这是正常的生理节律。小憩片刻或走动一下，傍晚会反弹。' },
+    { icon: '📈', title: '傍晚反弹型', desc: '虽然中途有些疲惫，但你展现出了顽强的韧性。傍晚会迎来一波回升。' },
+    { icon: '🎢', title: '过山车型', desc: '今天情绪起伏较大，说明你在认真感受生活。接纳波动，也是一种力量。' },
+    { icon: '🌿', title: '宁静水平型', desc: '今天是平静稳定的一天，情绪如平湖般安宁。这种状态适合深度思考和创意工作。' }
+  ];
+
+  function selectMoodArc() {
+    const dp = getDaypart();
+    if (dp === 'morning') return 1;
+    if (dp === 'noon') return 0;
+    if (dp === 'afternoon') return 2;
+    if (dp === 'evening') return 3;
+    if (dp === 'lateNight') return 5;
+    return 4;
+  }
+
+  function applyMoodArc() {
+    const arc = moodArcTypes[selectMoodArc()];
+    document.getElementById('arcIcon').textContent = arc.icon;
+    document.getElementById('arcTitle').textContent = arc.title;
+    document.getElementById('arcDesc').textContent = arc.desc;
+  }
+  applyMoodArc();
+
+  // ── F. 心情弧线可视化 ──
+  function drawArc() {
+    const canvas = document.getElementById('arcCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.parentElement.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const w = rect.width;
+    const h = rect.height;
+
+    ctx.clearRect(0, 0, w, h);
+
+    const arcIdx = selectMoodArc();
+    const points = [];
+    for (let i = 0; i <= 24; i++) {
+      const t = i / 24;
+      const x = 16 + t * (w - 32);
+      let wave;
+      switch(arcIdx) {
+        case 0: wave = Math.sin(t * Math.PI) * h * 0.35 * t; break;
+        case 1: wave = Math.sin(t * Math.PI * 1.5) * h * 0.25 * (1 - t * 0.3); break;
+        case 2: wave = -Math.sin(t * Math.PI) * h * 0.2 + Math.sin(t * Math.PI * 3) * h * 0.08; break;
+        case 3: wave = (t - 0.5) * h * 0.4 + Math.sin(t * Math.PI * 2) * h * 0.1; break;
+        case 4: wave = Math.sin(t * Math.PI * 4) * h * 0.2 + Math.sin(t * Math.PI) * h * 0.1; break;
+        default: wave = Math.sin(t * Math.PI * 2) * h * 0.08;
+      }
+      points.push({ x, y: h * 0.5 - wave});
+    }
+
+    // 填充渐变
+    const grad = ctx.createLinearGradient(0, 0, 0, h);
+    grad.addColorStop(0, 'oklch(82% 0.07 165 / 0.2)');
+    grad.addColorStop(0.5, 'oklch(80% 0.07 250 / 0.08)');
+    grad.addColorStop(1, 'oklch(0% 0 0 / 0)');
+
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, h);
+    points.forEach(p => ctx.lineTo(p.x, p.y));
+    ctx.lineTo(points[points.length - 1].x, h);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // 弧线
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+    for (let i = 1; i < points.length; i++) {
+      const prev = points[i - 1];
+      const curr = points[i];
+      const cpX = (prev.x + curr.x) / 2;
+      ctx.quadraticCurveTo(prev.x + (cpX - prev.x) * 0.5, prev.y, cpX, (prev.y + curr.y) / 2);
+      ctx.quadraticCurveTo(cpX + (curr.x - cpX) * 0.5, curr.y, curr.x, curr.y);
+    }
+    ctx.strokeStyle = '#A8E6B8';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+
+    // 数据点光晕
+    points.forEach((p, i) => {
+      if (i % 5 === 0) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+        ctx.fillStyle = 'oklch(84% 0.08 150 / 0.6)';
+        ctx.fill();
+      }
     });
   }
-}
 
-function drawParticles() {
-  const w = window.innerWidth;
-  const h = window.innerHeight;
-  pCtx.clearRect(0, 0, w, h);
-  const time = Date.now() * 0.001;
+  setTimeout(drawArc, 500);
+  window.addEventListener('resize', drawArc);
 
-  particles.forEach(p => {
-    const alpha = p.alpha * (0.5 + 0.5 * Math.sin(time * p.speed + p.phase));
-    const x = p.x + Math.sin(time * p.speed * 0.7) * 15;
-    const y = (p.y + time * p.speed * 8) % h;
+  // ── G. 7日趋势迷你图 ──
+  const weekTrend = [55, 62, 72, 58, 68, 48, 64];
 
-    pCtx.beginPath();
-    pCtx.arc(x, y, p.size, 0, Math.PI * 2);
-    pCtx.fillStyle = p.color;
-    pCtx.globalAlpha = alpha;
-    pCtx.fill();
-    pCtx.globalAlpha = 1;
-  });
+  function drawTrend() {
+    const canvas = document.getElementById('trendCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.parentElement.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const w = rect.width;
+    const h = rect.height;
+    const padding = 8;
 
-  requestAnimationFrame(drawParticles);
-}
+    ctx.clearRect(0, 0, w, h);
 
-initParticles();
-drawParticles();
-window.addEventListener('resize', initParticles);
+    const max = Math.max(...weekTrend);
+    const min = Math.min(...weekTrend);
+    const range = max - min || 1;
 
-// ── E. 像素漂移（OLED 防烧屏）──
-function burnInProtect() {
-  const container = document.getElementById('appContainer');
-  const x = (Math.random() * 3 - 1.5).toFixed(1);
-  const y = (Math.random() * 2 - 1).toFixed(1);
-  container.style.setProperty('--wander-x', x + 'px');
-  container.style.setProperty('--wander-y', y + 'px');
-}
-setInterval(burnInProtect, 120000);
+    const points = weekTrend.map((v, i) => ({
+      x: padding + (i / (weekTrend.length - 1)) * (w - padding * 2),
+      y: h - padding - ((v - min) / range) * (h - padding * 2)
+    }));
 
-// ── F. 呼吸引导 ──
-const breathPhases = [
-  { text: '吸气', duration: 4000 },
-  { text: '屏息', duration: 7000 },
-  { text: '呼气', duration: 8000 }
-];
-let breathIdx = 0;
-function updateBreath() {
-  const el = document.getElementById('breathCircle');
-  const phase = breathPhases[breathIdx];
-  el.textContent = phase.text;
-  breathIdx = (breathIdx + 1) % breathPhases.length;
-  setTimeout(updateBreath, phase.duration);
-}
-setTimeout(updateBreath, 2000);
+    // 填充
+    const grad = ctx.createLinearGradient(0, 0, 0, h);
+    grad.addColorStop(0, 'oklch(82% 0.06 90 / 0.2)');
+    grad.addColorStop(1, 'oklch(0% 0 0 / 0)');
 
-// ── G. Service Worker ──
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
-}
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, h);
+    points.forEach(p => ctx.lineTo(p.x, p.y));
+    ctx.lineTo(points[points.length - 1].x, h);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // 折线
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+    for (let i = 1; i < points.length; i++) {
+      const prev = points[i - 1];
+      const curr = points[i];
+      const cpx = (prev.x + curr.x) / 2;
+      ctx.bezierCurveTo(cpx, prev.y, cpx, curr.y, curr.x, curr.y);
+    }
+    ctx.strokeStyle = '#FFE08A';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+
+    // 数据点
+    points.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+      ctx.fillStyle = '#FFE08A';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+      ctx.fillStyle = 'oklch(88% 0.06 90 / 0.2)';
+      ctx.fill();
+    });
+  }
+
+  setTimeout(drawTrend, 600);
+  window.addEventListener('resize', drawTrend);
+
+  // ── H. 呼吸引导 ──
+  const breathPhases = [
+    { text: '吸气', duration: 4000 },
+    { text: '屏息', duration: 7000 },
+    { text: '呼气', duration: 8000 }
+  ];
+  let breathIdx = 0;
+  function updateBreath() {
+    const el = document.getElementById('breathCircle');
+    const phase = breathPhases[breathIdx];
+    el.textContent = phase.text;
+    breathIdx = (breathIdx + 1) % breathPhases.length;
+    setTimeout(updateBreath, phase.duration);
+  }
+  setTimeout(updateBreath, 2000);
+
+  // ── I. 智能建议轮播（每日智慧） ──
+  const dailyWisdom = [
+    { title: '正念呼吸', content: '每天花3分钟专注于呼吸，能显著降低皮质醇水平。试着感受气息在鼻腔的流动，让思绪随呼吸沉淀。' },
+    { title: '微休息法则', content: '遵循52/17法则：每52分钟专注工作后，休息17分钟。短暂离开屏幕，看看窗外，让眼睛和大脑都得到恢复。' },
+    { title: '微笑的力量', content: '即使是一个"假装"的微笑，也能触发大脑释放内啡肽。微笑不仅影响他人，更在自己体内播下快乐的种子。' },
+    { title: '情绪粒度', content: '学会精确命名自己的情绪（从"还不错"到"感激、欣慰、满足"），高情绪粒度的人拥有更好的心理韧性。' },
+    { title: '光照节律', content: '早晨接触自然光15-30分钟，能帮助调节昼夜节律，提高夜间睡眠质量。哪怕只是站在窗前晒晒太阳也好。' },
+    { title: '三件好事练习', content: '每天睡前回想三件进展顺利的事，坚持一周可显著提升幸福感。事无大小，一杯好茶、一次微笑都值得记录。' },
+    { title: '数字安息日', content: '每周留出半天远离屏幕，让大脑深度休息。阅读纸质书、户外散步、面对面交谈，都是很好的替代活动。' },
+    { title: '身体扫描', content: '花2分钟从头到脚扫描身体各部位，觉察紧张区域并主动放松。身体与心理的联结比你想象的更紧密。' }
+  ];
+
+  let currentTipIdx = 0;
+  const tipsDotsEl = document.getElementById('tipsDots');
+  const tipsContentEl = document.getElementById('tipsContent');
+
+  // 生成指示点
+  const totalTips = Math.min(dailyWisdom.length, 5);
+  for (let i = 0; i < totalTips; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'tips-dot' + (i === 0 ? ' active' : '');
+    tipsDotsEl.appendChild(dot);
+  }
+
+  function showTip(idx) {
+    const tip = dailyWisdom[idx];
+    tipsContentEl.innerHTML = `<strong style="color: var(--c-cyan);">「${tip.title}」</strong>${tip.content}`;
+    // 更新圆点
+    const dots = tipsDotsEl.querySelectorAll('.tips-dot');
+    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    currentTipIdx = idx;
+  }
+
+  showTip(0);
+  // 每10秒轮播
+  setInterval(() => {
+    showTip((currentTipIdx + 1) % totalTips);
+  }, 10000);
+
+  // ── J. 自我对话系统（基于时段和情绪动态生成） ──
+  const selfDialogues = {
+    night: [
+      { text: '夜深了，白天的忙碌已经过去。无论今天如何，你值得一夜好眠。', affirm: '明天又是崭新的一天 🌙' },
+      { text: '星空下，每个人都是渺小的存在。放下今天的烦恼，让它们随风而去。', affirm: '一切都会过去的 🌟' }
+    ],
+    morning: [
+      { text: '新的一天开始了。带着对美好的期待，微笑着迎接每一个可能。', affirm: '我值得拥有美好的一天 ☀️' },
+      { text: '清晨是一天中最纯净的时刻。感恩此刻的宁静，允许自己从容地开始。', affirm: '今天我会尽力而为 💪' }
+    ],
+    noon: [
+      { text: '午间时光，你已经完成了上午的工作。给自己一份肯定，无论成果大或小。', affirm: '我在进步，这就够了 🌿' },
+      { text: '正午的阳光温暖而明亮，就像你此刻的能量。继续保持节奏，不急不躁。', affirm: '平衡中蕴含着力量 ⚖️' }
+    ],
+    afternoon: [
+      { text: '下午的道路或许有些疲惫，但你还在坚持。这份坚持本身就很了不起。', affirm: '我为自己感到骄傲 🌅' },
+      { text: '午后低谷是身体的善意提醒。放慢脚步，喝口水，深呼吸，傍晚会更好。', affirm: '我的节奏由我掌控 🎯' }
+    ],
+    evening: [
+      { text: '终于到了放下工作的时刻。无论今天过得如何，你愿意观察自己，这本身就是一种勇气。', affirm: '我接纳此刻的自己 🌈' },
+      { text: '下班了。把工作留在门外，让自己全然地属于生活、属于家人、属于自己。', affirm: '生活不仅仅是工作 🏠' }
+    ],
+    lateNight: [
+      { text: '夜深了，还在坚持的你辛苦了。放下手机，给自己一个温暖的拥抱。', affirm: '我值得好好休息 💫' },
+      { text: '所有担忧都可以留到明天。此刻，你只需要安静地，安然地，入睡。', affirm: '好梦会来的 🌙' }
+    ]
+  };
+
+  function setSelfDialogue() {
+    const dp = getDaypart();
+    const dialogues = selfDialogues[dp] || selfDialogues.night;
+    const d = pick(dialogues);
+    document.getElementById('selfText').textContent = d.text;
+    document.getElementById('selfAffirm').textContent = d.affirm;
+  }
+  setSelfDialogue();
+
+  // ── K. 极光背景动画 ──
+  const auroraCanvas = document.getElementById('auroraCanvas');
+  const aCtx = auroraCanvas.getContext('2d');
+
+  function drawAurora() {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    auroraCanvas.width = w;
+    auroraCanvas.height = h;
+    aCtx.clearRect(0, 0, w, h);
+
+    const time = Date.now() * 0.0002;
+    const dp = getDaypart();
+
+    const colorSets = {
+      night: [['oklch(30% 0.08 280 / 0.12)', 'oklch(25% 0.06 260 / 0.05)']],
+      morning: [['oklch(40% 0.06 240 / 0.10)', 'oklch(50% 0.05 60 / 0.05)']],
+      noon: [['oklch(50% 0.04 220 / 0.08)', 'oklch(55% 0.03 180 / 0.04)']],
+      afternoon: [['oklch(45% 0.07 300 / 0.10)', 'oklch(40% 0.06 40 / 0.05)']],
+      evening: [['oklch(40% 0.08 320 / 0.10)', 'oklch(35% 0.06 30 / 0.05)']],
+      lateNight: [['oklch(28% 0.07 270 / 0.10)', 'oklch(22% 0.05 250 / 0.04)']]
+    };
+
+    const colors = colorSets[dp] || colorSets.night;
+
+    // 极光波段
+    for (let i = 0; i < 3; i++) {
+      const grad = aCtx.createRadialGradient(
+        w * (0.3 + i * 0.2) + Math.sin(time + i) * 80,
+        h * (0.2 + i * 0.25) + Math.cos(time + i * 0.7) * 40,
+        0,
+        w * (0.3 + i * 0.2),
+        h * (0.2 + i * 0.25),
+        w * (0.35 + i * 0.05)
+      );
+      grad.addColorStop(0, colors[0]);
+      grad.addColorStop(1, 'transparent');
+      aCtx.fillStyle = grad;
+      aCtx.fillRect(0, 0, w, h);
+    }
+  }
+
+  drawAurora();
+  window.addEventListener('resize', drawAurora);
+  setInterval(drawAurora, 100);
+
+  // ── L. 星轨粒子背景 ──
+  const canvas = document.getElementById('particlesCanvas');
+  const pCtx = canvas.getContext('2d');
+  let particles = [];
+  const PARTICLE_COUNT = 30;
+
+  function initParticles() {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    canvas.width = w;
+    canvas.height = h;
+    particles = [];
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        size: Math.random() * 2 + 0.4,
+        speed: Math.random() * 0.25 + 0.04,
+        alpha: Math.random() * 0.4 + 0.08,
+        color: ['oklch(88% 0.06 90)', 'oklch(80% 0.07 250)', 'oklch(84% 0.08 150)', 'oklch(82% 0.06 350)', 'oklch(78% 0.07 300)', 'oklch(82% 0.06 200'][Math.floor(Math.random() * 6)],
+        phase: Math.random() * Math.PI * 2
+      });
+    }
+  }
+
+  function drawParticles() {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    pCtx.clearRect(0, 0, w, h);
+    const time = Date.now() * 0.001;
+
+    particles.forEach(p => {
+      const alpha = p.alpha * (0.5 + 0.5 * Math.sin(time * p.speed + p.phase));
+      const x = p.x + Math.sin(time * p.speed * 0.6) * 18;
+      const y = (p.y + time * p.speed * 6) % h;
+
+      pCtx.beginPath();
+      pCtx.arc(x, y, p.size, 0, Math.PI * 2);
+      pCtx.fillStyle = p.color;
+      pCtx.globalAlpha = alpha;
+      pCtx.fill();
+      pCtx.globalAlpha = 1;
+    });
+
+    requestAnimationFrame(drawParticles);
+  }
+
+  initParticles();
+  drawParticles();
+  window.addEventListener('resize', initParticles);
+
+  // ── M. 像素漂移（OLED 防烧屏） ──
+  function burnInProtect() {
+    const container = document.getElementById('appContainer');
+    const x = (Math.random() * 3 - 1.5).toFixed(1);
+    const y = (Math.random() * 2 - 1).toFixed(1);
+    container.style.setProperty('--wander-x', x + 'px');
+    container.style.setProperty('--wander-y', y + 'px');
+  }
+  setInterval(burnInProtect, 120000);
+
+  // ── N. Service Worker ──
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+
+})();
 </script>
 </body>
 </html>

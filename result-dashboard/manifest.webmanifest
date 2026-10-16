@@ -1,7 +1,7 @@
 {
-  "name": "SmileTracker v9.0 · 情绪追踪",
+  "name": "SmileTracker v10.0 · 情绪追踪 · 星云脉冲",
   "short_name": "SmileTracker",
-  "description": "打工人桌面实时表情追踪 · OLED 友好 · Astral Glow v9.0 · 玻璃拟态",
+  "description": "打工人桌面实时表情追踪 · OLED 友好 · Nebula Pulse v10.0 · Liquid Glass 5.0 · 联网智能",
   "start_url": "./index.html",
   "display": "fullscreen",
   "orientation": "any",

@@ -1,5 +1,5 @@
-/* SmileTracker v9.0 — Service Worker */
-const CACHE_NAME = 'st-v9-results';
+/* SmileTracker v10.0 — Service Worker · Nebula Pulse */
+const CACHE_NAME = 'st-v10-nebula';
 const ASSETS = ['./', './index.html', './icon.svg', './manifest.webmanifest'];
 
 self.addEventListener('install', e => {
@@ -16,18 +16,18 @@ self.addEventListener('activate', e => {
   self.clients.claim();
 });
 
+/* 网络优先 + 缓存降级（保证联网时获取最新内容） */
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
   e.respondWith(
-    caches.match(e.request).then(cached => {
-      const fetched = fetch(e.request).then(res => {
-        if (res && res.status === 200) {
-          const clone = res.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone)).catch(() => {});
-        }
-        return res;
-      }).catch(() => cached || new Response('Offline', { status: 503 }));
-      return cached || fetched;
+    fetch(e.request).then(res => {
+      if (res && res.status === 200) {
+        const clone = res.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone)).catch(() => {});
+      }
+      return res;
+    }).catch(() => {
+      return caches.match(e.request).then(cached => cached || new Response('Offline', { status: 503 }));
     })
   );
 });
