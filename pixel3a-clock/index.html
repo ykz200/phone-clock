@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="活·Clock">
 <meta name="application-name" content="活·Clock">
-<meta name="description" content="活 — 与光同频的 Pixel 3a 横屏时钟天气消息摆件">
+<meta name="description" content="活 — 与光同频的 Pixel 3a 横屏时钟天气资讯摆件">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#0a0a0f" media="(prefers-color-scheme: light)">
 <link rel="manifest" href="manifest.webmanifest">
@@ -16,8 +16,8 @@
 <title>活 · Clock</title>
 <style>
 /* ════════════════════════════════════════════════════════════
-   活 · v8.0 "Horizon · 横岭"  for Pixel 3a
-   Landscape Ornament · Message Hub · Lumina Glass · Daypart Aware
+   活 · v8.1 "Signal · 风讯"  for Pixel 3a
+   Landscape Ornament · Message Hub · News Digest · Lumina Glass · Daypart Aware
    Comfort-First · Pixel-Perfect OLED
    ════════════════════════════════════════════════════════════ */
 
@@ -921,6 +921,70 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
 }
 .btn-mini:active { transform: scale(0.94); color: var(--text-1); }
 
+/* ── 资讯订阅 ── */
+.input-mini {
+  flex: 1;
+  min-width: 0;
+  padding: 0.36rem 0.6rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 11px;
+  background: oklch(0% 0 0 / 0.28);
+  color: var(--text-2);
+  font-size: 0.72rem;
+  font-family: inherit;
+}
+.input-mini:focus { outline: none; border-color: var(--glass-border-strong); color: var(--text-1); }
+.time-row { display: flex; align-items: center; gap: 8px; }
+.time-row .input-mini { flex: 0 0 auto; width: 104px; }
+.time-row .setting-note { margin-top: 0; }
+.feed-list { display: flex; flex-direction: column; gap: 5px; margin-top: 0.45rem; }
+.feed-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid oklch(100% 0 0 / 0.04);
+  border-radius: 12px;
+  background: oklch(100% 0 0 / 0.02);
+}
+.feed-name {
+  font-size: 0.72rem;
+  color: var(--text-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 38%;
+  flex-shrink: 0;
+}
+.feed-url {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.58rem;
+  font-family: ui-monospace, "Roboto Mono", monospace;
+  color: var(--text-4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.feed-del {
+  flex-shrink: 0;
+  width: 20px; height: 20px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-4);
+  font-size: 0.76rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.25s, background 0.25s;
+}
+.feed-del:active { color: var(--text-1); background: oklch(100% 0 0 / 0.07); }
+.feed-add { display: flex; gap: 5px; margin-top: 6px; }
+.feed-add .input-mini:last-of-type { flex: 2; }
+.news-cols { display: grid; grid-template-columns: 1fr; gap: 2px 0; }
+.msg-line[data-url] { cursor: pointer; }
+.msg-line[data-url]:active { color: var(--text-1); }
+
 .setting-toggle {
   display: flex;
   align-items: center;
@@ -1156,6 +1220,13 @@ body.land-mode .toggles-group {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0 26px;
+}
+
+/* 资讯订阅组横向铺开：393px 高的摆件里少滚一屏 */
+body.land-mode .settings-panel > .news-group { grid-column: 1 / -1; }
+body.land-mode .news-group .news-cols {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 18px;
 }
 
 /* 横屏 × 极窄（分屏 / 折叠外屏）：收窄右栏，保证时钟不塌 */
@@ -1635,6 +1706,34 @@ body.battery-saver .glass-card {
       <div class="setting-note">授权后消息中心的提醒可同时弹出系统通知；本机页面可用 <code>?msg=内容</code>、BroadcastChannel「pixel3a-clock」或 <code>pushMessage()</code> 投递消息</div>
     </div>
 
+    <div class="setting-group news-group">
+      <div class="setting-label">资讯订阅</div>
+      <div class="news-cols">
+        <div class="news-col">
+          <div class="setting-toggle">
+            <span>定时抓取</span>
+            <button class="toggle-switch" id="toggleNews" role="switch" aria-checked="true"></button>
+          </div>
+          <div class="time-row">
+            <input class="input-mini" type="time" id="newsTimeInput" value="07:30" step="60">
+            <span class="setting-note" id="newsState">未抓取</span>
+            <button class="btn-mini" id="btnNewsNow">立即刷新</button>
+          </div>
+          <div class="setting-note">每天到点抓取一次；若开机时已错过当日刷新点，8 秒后补抓一次</div>
+        </div>
+        <div class="news-col">
+          <div class="feed-list" id="newsFeedList"></div>
+          <div class="feed-add">
+            <input class="input-mini" type="text" id="newsNameInput" placeholder="名称" maxlength="16">
+            <input class="input-mini" type="url" id="newsUrlInput" placeholder="RSS / Atom 地址" maxlength="300">
+            <button class="btn-mini" id="btnNewsAdd">添加</button>
+          </div>
+          <input class="input-mini" type="text" id="newsProxyInput" placeholder="代理前缀，末尾带 = （可留空）" maxlength="200" style="width:100%;margin-top:6px;flex:none;">
+          <div class="setting-note">代理前缀仅在源未开放 CORS 时需要；内置尝试顺序：直连 → allorigins → corsproxy.io → codetabs，成功的通道会记住并优先使用</div>
+        </div>
+      </div>
+    </div>
+
     <div class="settings-title" style="font-size:0.9rem;margin-top:0.8rem;padding-top:0.5rem;">📊 专注统计</div>
     <div class="focus-panel">
       <div class="focus-stats">
@@ -1666,8 +1765,8 @@ body.battery-saver .glass-card {
 
 <script>
 /* ══════════════════════════════════════════════════════
-   活 · Clock  —  核心脚本 v8 "Horizon · 横岭"
-   Landscape Ornament · Message Hub · Ambient Intelligence
+   活 · Clock  —  核心脚本 v8.1 "Signal · 风讯"
+   Landscape Ornament · Message Hub · News Digest · Ambient Intelligence
    Comfort-First · OLED Perfection
    ══════════════════════════════════════════════════════ */
 (() => {
@@ -1744,6 +1843,12 @@ body.battery-saver .glass-card {
     '#quote',
   ];
 
+  /* ── 内置资讯订阅（RSS / Atom，可在设置里增删）── */
+  const DEFAULT_FEEDS = [
+    { name: '青岛机场·航线', url: 'https://news.google.com/rss/search?q=%E9%9D%92%E5%B2%9B%E6%9C%BA%E5%9C%BA%20%E8%88%AA%E7%BA%BF%20when%3A30d&hl=zh-CN&gl=CN&ceid=CN:zh-Hans' },
+    { name: '青岛·城市要闻', url: 'https://news.google.com/rss/search?q=%E9%9D%92%E5%B2%9B%20%E4%BA%A4%E9%80%9A%20when%3A30d&hl=zh-CN&gl=CN&ceid=CN:zh-Hans' },
+  ];
+
   /* ── 内置纸条标签 ── */
   const QUOTES = [
     '保持专注，静水流深', '今天也是崭新的', '慢慢来，比较快',
@@ -1782,6 +1887,10 @@ body.battery-saver .glass-card {
     orientation: 'auto',
     msgCenter: true,
     hourlyChime: false,
+    newsOn: true,
+    newsTime: '07:30',
+    newsProxy: '',
+    newsFeeds: DEFAULT_FEEDS.map(f => ({ ...f })),
     focusData: { today:0, week:0, streak:0, lastDay:'', daily:{} },
     usagePatterns: {},
   };
@@ -1838,6 +1947,9 @@ body.battery-saver .glass-card {
     msgClear: $('msgClear'), msgEmpty: $('msgEmpty'),
     segOrient: $('segOrient'), notifyState: $('notifyState'), btnNotify: $('btnNotify'),
     toggleMsg: $('toggleMsg'), toggleChime: $('toggleChime'),
+    toggleNews: $('toggleNews'), newsTimeInput: $('newsTimeInput'), newsState: $('newsState'),
+    btnNewsNow: $('btnNewsNow'), newsFeedList: $('newsFeedList'), newsNameInput: $('newsNameInput'),
+    newsUrlInput: $('newsUrlInput'), btnNewsAdd: $('btnNewsAdd'), newsProxyInput: $('newsProxyInput'),
     settingsOverlay: $('settingsOverlay'),
     btnCloseSettings: $('btnCloseSettings'),
     toastContainer: $('toastContainer'),
@@ -2746,6 +2858,11 @@ body.battery-saver .glass-card {
     updateToggle(dom.toggleWander, state.pixelWander);
     updateToggle(dom.toggleMsg, state.msgCenter);
     updateToggle(dom.toggleChime, state.hourlyChime);
+    updateToggle(dom.toggleNews, state.newsOn);
+    if (dom.newsTimeInput) dom.newsTimeInput.value = state.newsTime || '07:30';
+    if (dom.newsProxyInput) dom.newsProxyInput.value = state.newsProxy || '';
+    renderFeeds();
+    renderNewsState();
     syncNotifyState();
     applyOrientation();
     renderFocusPanel();
@@ -2777,6 +2894,25 @@ body.battery-saver .glass-card {
       state.hourlyChime = !state.hourlyChime;
       updateToggle(dom.toggleChime, state.hourlyChime); saveState();
     });
+    dom.toggleNews?.addEventListener('click', () => {
+      state.newsOn = !state.newsOn;
+      updateToggle(dom.toggleNews, state.newsOn); saveState(); scheduleNews();
+    });
+    dom.btnNewsNow?.addEventListener('click', () => refreshNews(true));
+    dom.btnNewsAdd?.addEventListener('click', () => {
+      const url = safeUrl(dom.newsUrlInput.value);
+      if (!url) { toast('地址需是 http(s) 的 RSS / Atom 链接'); return; }
+      const name = String(dom.newsNameInput.value || '').trim().slice(0, 16) || '未命名';
+      state.newsFeeds = (Array.isArray(state.newsFeeds) ? state.newsFeeds : []).concat([{ name, url }]);
+      dom.newsNameInput.value = ''; dom.newsUrlInput.value = '';
+      renderFeeds(); saveState();
+    });
+    dom.newsFeedList?.addEventListener('click', e => {
+      const btn = e.target.closest('[data-del]');
+      if (!btn) return;
+      state.newsFeeds = (Array.isArray(state.newsFeeds) ? state.newsFeeds : []).filter((f, i) => i !== +btn.dataset.del);
+      renderFeeds(); saveState();
+    });
     dom.segOrient?.addEventListener('click', e => {
       const btn = e.target.closest('.seg-btn');
       if (!btn) return;
@@ -2798,7 +2934,10 @@ body.battery-saver .glass-card {
       state.stripInterval = parseInt(dom.stripIntervalInput.value) || 15;
       state.strips = dom.stripContentInput.value.split('\n').filter(l => l.trim());
       if (!state.strips.length) state.strips = DEFAULT_STRIPS.slice();
+      state.newsTime = /^\d{1,2}:\d{2}$/.test(dom.newsTimeInput.value) ? dom.newsTimeInput.value : state.newsTime;
+      state.newsProxy = String(dom.newsProxyInput.value || '').trim().slice(0, 200);
       saveState();
+      scheduleNews();
       stripIdx = 0;
       const newSec = Math.max(3, state.stripInterval);
       if (stripIntervalId && newSec !== lastStripSec) {
@@ -2871,7 +3010,7 @@ body.battery-saver .glass-card {
   const MSG_MAX = 40;
   const MSG_TTL = 12 * 3600 * 1000;
   const MSG_VIEW = 14;
-  const MSG_LABEL = { system:'系统', notify:'通知', local:'留言' };
+  const MSG_LABEL = { system:'系统', notify:'通知', local:'留言', news:'资讯' };
 
   let messages = loadMessages();
 
@@ -2887,8 +3026,8 @@ body.battery-saver .glass-card {
   }
 
   function pruneMessages() {
-    const cutoff = Date.now() - MSG_TTL;
-    const kept = messages.filter(m => m.ts >= cutoff);
+    const now = Date.now();
+    const kept = messages.filter(m => m.ts >= now - (m.exp || MSG_TTL));
     if (kept.length !== messages.length) {
       messages = kept;
       persistMessages();
@@ -2896,19 +3035,32 @@ body.battery-saver .glass-card {
     }
   }
 
+  function safeUrl(u) {
+    const s = String(u || '').trim().slice(0, 400);
+    if (!s) return '';
+    try {
+      return /^https?:$/i.test(new URL(s).protocol) ? s : '';
+    } catch(e) { return ''; }
+  }
+
   function addMessage(input) {
     if (!state.msgCenter || !input) return null;
     const raw = typeof input === 'string' ? { body: input } : input;
     const body = String(raw.body || raw.title || '').trim().slice(0, 220);
     if (!body) return null;
+    const key = raw.key ? String(raw.key).slice(0, 200) : '';
+    if (key && messages.some(m => m.key === key)) return null;
     const source = MSG_LABEL[raw.source] ? raw.source : 'local';
     const level = (raw.level === 'warn' || raw.level === 'alert') ? raw.level : 'info';
     const item = {
       id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      key,
       title: String(raw.title || '').trim().slice(0, 40),
       body,
       source,
       level,
+      url: safeUrl(raw.url),
+      exp: Number(raw.exp) > 0 ? Number(raw.exp) : 0,
       ts: Number(raw.ts) > 0 ? Number(raw.ts) : Date.now(),
     };
     messages.unshift(item);
@@ -2933,15 +3085,16 @@ body.battery-saver .glass-card {
     const list = messages.slice(0, MSG_VIEW);
     if (!list.length) {
       dom.msgScroll.innerHTML =
-        '<div class="msg-empty">暂无消息 · 可用 <code>?msg=你好</code> 或 <code>pushMessage()</code> 推送</div>';
+        '<div class="msg-empty">暂无消息 · 可用 <code>?msg=你好</code> 推送，或在设置里开资讯订阅</div>';
       return;
     }
     dom.msgScroll.innerHTML = list.map(m => {
       const head = m.title ? esc(m.title) + ' · ' + esc(m.body) : esc(m.body);
+      const link = m.url ? ` data-url="${esc(m.url)}"` : '';
       return `<div class="msg-item" data-level="${m.level}">` +
         `<div class="msg-bar"></div>` +
         `<div class="msg-body">` +
-        `<div class="msg-line" title="${esc(m.body)}">${head}</div>` +
+        `<div class="msg-line"${link} title="${esc(m.body)}">${head}</div>` +
         `<div class="msg-sub"><span class="msg-src">${MSG_LABEL[m.source]}</span>` +
         `<span class="msg-time">${msgTimeLabel(m.ts)}</span></div>` +
         `</div></div>`;
@@ -3055,9 +3208,222 @@ body.battery-saver .glass-card {
       return addMessage({ title: String(title || ''), body: String(body || ''), ...(opts || {}) });
     };
 
+    /* 带链接的消息（资讯条目）点击后打开原文 */
+    if (dom.msgScroll) {
+      dom.msgScroll.addEventListener('click', ev => {
+        const line = ev.target.closest('.msg-line[data-url]');
+        if (line) window.open(line.dataset.url, '_blank', 'noopener');
+      });
+    }
+
     readInboxFromUrl();
     renderMessages();
     setInterval(pruneMessages, 10 * 60 * 1000);
+  }
+
+  /* ══════════════════════════════════════
+     资讯订阅 v9 — 定时抓 RSS/Atom，去重后落到消息中心
+     浏览器跨域限制：先直连，失败再依次走代理链；设置里的自定义前缀优先
+     ══════════════════════════════════════ */
+  const NEWS_SEEN = 'clockV7NewsSeen';
+  const NEWS_META = 'clockV7NewsMeta';
+  const NEWS_MAX_PER_RUN = 3;
+  const NEWS_RETRY = 30 * 60 * 1000;
+  const NEWS_FRESH = 3 * 24 * 3600 * 1000;
+  const NEWS_KEEP = 48 * 3600 * 1000;
+  const NEWS_PROXIES = [
+    { label: '直连', prefix: '' },
+    { label: 'allorigins', prefix: 'https://api.allorigins.win/raw?url=' },
+    { label: 'corsproxy', prefix: 'https://corsproxy.io/?url=' },
+    { label: 'codetabs', prefix: 'https://api.codetabs.com/v1/proxy?quest=' },
+  ];
+  let newsBusy = false;
+  let newsTimer = 0;
+
+  function newsSeenList() {
+    try {
+      const v = JSON.parse(localStorage.getItem(NEWS_SEEN) || '[]');
+      return Array.isArray(v) ? v : [];
+    } catch(e) { return []; }
+  }
+
+  function newsSeenSave(list) {
+    try { localStorage.setItem(NEWS_SEEN, JSON.stringify(list.slice(-300))); } catch(e) {}
+  }
+
+  function newsMeta() {
+    try { return JSON.parse(localStorage.getItem(NEWS_META) || '{}') || {}; } catch(e) { return {}; }
+  }
+
+  function newsMetaSave(patch) {
+    try { localStorage.setItem(NEWS_META, JSON.stringify({ ...newsMeta(), ...patch })); } catch(e) {}
+    renderNewsState();
+  }
+
+  function activeFeeds() {
+    const list = Array.isArray(state.newsFeeds) ? state.newsFeeds : [];
+    return list.filter(f => f && safeUrl(f.url));
+  }
+
+  function channelList() {
+    const custom = String(state.newsProxy || '').trim();
+    return (custom ? [{ label: '自定义', prefix: custom }] : []).concat(NEWS_PROXIES);
+  }
+
+  /* 前缀以 = 结尾时按 query 参数编码，否则原样拼接 */
+  function buildRequestUrl(prefix, target) {
+    if (!prefix) return target;
+    return /=$/.test(prefix) ? prefix + encodeURIComponent(target) : prefix + target;
+  }
+
+  function feedText(node, tag) {
+    const el = node.getElementsByTagName(tag)[0];
+    return el ? (el.textContent || '') : '';
+  }
+
+  function parseFeed(text) {
+    let doc;
+    try { doc = new DOMParser().parseFromString(text, 'text/xml'); } catch(e) { return []; }
+    if (doc.getElementsByTagName('parsererror').length) return [];
+    const nodes = [].slice.call(doc.getElementsByTagName('item')).concat(
+                  [].slice.call(doc.getElementsByTagName('entry')));
+    const out = [];
+    for (const n of nodes) {
+      const title = feedText(n, 'title').trim();
+      if (!title) continue;
+      const linkEl = n.getElementsByTagName('link')[0];
+      const url = linkEl ? (linkEl.getAttribute('href') || linkEl.textContent || '').trim() : '';
+      const stamp = feedText(n, 'pubDate') || feedText(n, 'published') || feedText(n, 'updated');
+      const ts = Date.parse(stamp);
+      out.push({ title: title.slice(0, 200), url, ts: isNaN(ts) ? 0 : ts, key: (url || title).slice(0, 200) });
+    }
+    return out;
+  }
+
+  /* Google News 之类把来源挂在标题尾部：「标题 - 媒体名」 */
+  function splitHeadline(raw, fallback) {
+    const i = raw.lastIndexOf(' - ');
+    if (i > 4) {
+      const site = raw.slice(i + 3).trim();
+      if (site && site.length <= 16) return { headline: raw.slice(0, i).trim(), site };
+    }
+    return { headline: raw, site: fallback };
+  }
+
+  async function fetchFeed(feed) {
+    const chans = channelList();
+    const remembered = chans.findIndex(c => c.label === newsMeta().chLabel);
+    const start = remembered >= 0 ? remembered : 0;
+    for (let i = 0; i < chans.length; i++) {
+      const ch = chans[(start + i) % chans.length];
+      try {
+        const res = await fetch(buildRequestUrl(ch.prefix, feed.url), {
+          cache: 'no-store',
+          /* 摆件不能卡在某个不可达的源上：单次尝试 12 秒未响应就换下一条通道 */
+          signal: typeof AbortSignal.timeout === 'function' ? AbortSignal.timeout(12000) : undefined,
+        });
+        if (!res.ok) continue;
+        const items = parseFeed(await res.text());
+        if (!items.length) continue;
+        newsMetaSave({ chLabel: ch.label });
+        return { items, channel: ch.label };
+      } catch(e) {}
+    }
+    return { items: [], channel: '' };
+  }
+
+  async function refreshNews(manual) {
+    if (newsBusy) return;
+    const list = activeFeeds();
+    if (!list.length) {
+      newsMetaSave({ lastError: '没有有效订阅' });
+      if (manual) toast('没有有效的订阅地址');
+      return;
+    }
+    newsBusy = true;
+    renderNewsState('抓取中');
+    const seen = newsSeenList();
+    let added = 0, okFeeds = 0;
+    for (const f of list) {
+      const r = await fetchFeed({ name: f.name, url: f.url });
+      if (!r.channel) continue;
+      okFeeds++;
+      const fresh = r.items
+        .filter(it => (!it.ts || Date.now() - it.ts <= NEWS_FRESH) && seen.indexOf(it.key) < 0)
+        .slice(0, NEWS_MAX_PER_RUN);
+      for (const it of fresh) {
+        const h = splitHeadline(it.title, f.name || '资讯');
+        const item = addMessage({
+          title: h.site, body: h.headline, url: it.url,
+          source: 'news', key: it.key, ts: it.ts || 0, exp: NEWS_KEEP,
+        });
+        if (item) { added++; seen.push(it.key); }
+      }
+    }
+    newsSeenSave(seen);
+    newsBusy = false;
+    newsMetaSave({ lastTs: Date.now(), lastAdded: added, lastError: okFeeds ? '' : '全部通道失败' });
+    if (manual) {
+      toast(!okFeeds ? '抓取失败 · 检查网络或代理前缀' : added ? `资讯已更新 · 新增 ${added} 条` : '暂无新资讯');
+    } else if (!okFeeds) {
+      announce('资讯抓取失败，检查网络或代理前缀', { level: 'warn', toast: false });
+    }
+    scheduleNews();
+  }
+
+  function nextNewsAt() {
+    const p = String(state.newsTime || '07:30').split(':');
+    const d = new Date();
+    d.setHours(Number(p[0]) || 0, Number(p[1]) || 0, 0, 0);
+    if (d.getTime() <= Date.now()) d.setDate(d.getDate() + 1);
+    return d.getTime();
+  }
+
+  function scheduleNews() {
+    clearTimeout(newsTimer);
+    if (!state.newsOn) { renderNewsState(); return; }
+    const m = newsMeta();
+    const at = nextNewsAt();
+    let delay;
+    if (m.lastError && m.lastTs) {
+      /* 免费代理时好时坏，失败后半小时重试，但不越过下一次定时点 */
+      delay = Math.min(NEWS_RETRY, at - Date.now());
+    } else {
+      /* 摆件可能整夜息屏，错过当日刷新点就在启动 8 秒后补一次 */
+      delay = (m.lastTs || 0) < at - 24 * 3600 * 1000 ? 8000 : at - Date.now();
+    }
+    newsTimer = setTimeout(() => refreshNews(false), Math.max(delay, 1000));
+  }
+
+  function renderNewsState(override) {
+    if (!dom.newsState) return;
+    if (override) { dom.newsState.textContent = override; return; }
+    if (newsBusy) { dom.newsState.textContent = '抓取中'; return; }
+    if (!state.newsOn) { dom.newsState.textContent = '已关闭'; return; }
+    const m = newsMeta();
+    if (!m.lastTs) { dom.newsState.textContent = '未抓取'; return; }
+    const d = new Date(m.lastTs);
+    const bits = [m.lastError ? '失败' : (m.lastAdded || 0) + ' 条',
+                  pad2(d.getHours()) + ':' + pad2(d.getMinutes())];
+    if (m.chLabel) bits.push(m.chLabel);
+    dom.newsState.textContent = bits.join(' · ');
+  }
+
+  function renderFeeds() {
+    if (!dom.newsFeedList) return;
+    const list = Array.isArray(state.newsFeeds) ? state.newsFeeds : [];
+    dom.newsFeedList.innerHTML = list.length
+      ? list.map((f, i) =>
+          `<div class="feed-item"><span class="feed-name">${esc(f.name || '未命名')}</span>` +
+          `<span class="feed-url" title="${esc(f.url)}">${esc(f.url)}</span>` +
+          `<button class="feed-del" data-del="${i}" aria-label="删除订阅">✕</button></div>`).join('')
+      : '<div class="setting-note">还没有订阅源</div>';
+  }
+
+  function initNews() {
+    renderFeeds();
+    renderNewsState();
+    scheduleNews();
   }
 
   /* ══════════════════════════════════════
@@ -3144,6 +3510,7 @@ body.battery-saver .glass-card {
 
     applyMsgCenter();
     initMessageChannels();
+    initNews();
     syncNotifyState();
 
     if (state.zenMode) {
