@@ -1,5 +1,5 @@
-/* 活 · Clock — Service Worker v8.1 */
-const CACHE_NAME = 'clock-v8-1';
+/* 活 · Clock — Service Worker v9 */
+const CACHE_NAME = 'clock-v9';
 const ASSETS = ['./', './index.html', './icon.svg', './manifest.webmanifest'];
 
 self.addEventListener('install', e => {

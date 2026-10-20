@@ -16,9 +16,9 @@
 <title>活 · Clock</title>
 <style>
 /* ════════════════════════════════════════════════════════════
-   活 · v8.1 "Signal · 风讯"  for Pixel 3a
-   Landscape Ornament · Message Hub · News Digest · Lumina Glass · Daypart Aware
-   Comfort-First · Pixel-Perfect OLED
+   活 · v9 "Aura · 气场"  for Pixel 3a
+   Landscape Ornament · Message Hub · News Digest · Aura Glass · Bio-Rhythmic
+   Comfort-First · Pixel-Perfect OLED · Ambient Mood · Iridescent Glass
    ════════════════════════════════════════════════════════════ */
 
 :root {
@@ -29,25 +29,31 @@
   --accent-c: 0.10;
   --accent-h: 250;
 
-  /* ── Lumina Glass v7（更低饱和高光 · 柔和玻璃） ── */
-  --glass-bg: oklch(100% 0 0 / 0.028);
-  --glass-bg-strong: oklch(100% 0 0 / 0.05);
-  --glass-border: oklch(100% 0 0 / 0.045);
-  --glass-border-strong: oklch(100% 0 0 / 0.08);
-  --glass-highlight: oklch(100% 0 0 / 0.10);
-  --glass-reflect: oklch(100% 0 0 / 0.015);
-  --glass-noise-opacity: 0.006;
+  /* ── Aura Glass v9（彩虹边缘光 · 更柔和深度玻璃） ── */
+  --glass-bg: oklch(100% 0 0 / 0.024);
+  --glass-bg-strong: oklch(100% 0 0 / 0.044);
+  --glass-border: oklch(100% 0 0 / 0.038);
+  --glass-border-strong: oklch(100% 0 0 / 0.07);
+  --glass-highlight: oklch(100% 0 0 / 0.09);
+  --glass-reflect: oklch(100% 0 0 / 0.012);
+  --glass-noise-opacity: 0.005;
+  --glass-iridescence: oklch(80% 0.03 280 / 0.04);
+  --glass-depth-1: oklch(100% 0 0 / 0.008);
+  --glass-depth-2: oklch(100% 0 0 / 0.018);
 
-  /* ── 文字 v7（更柔和 · 减少刺眼） ── */
+  /* ── 文字 v9（节律可变字重 · 夜间更轻） ── */
   --text-1: oklch(94% 0.004 var(--accent-h));
   --text-2: oklch(72% 0.008 var(--accent-h));
   --text-3: oklch(52% 0.006 var(--accent-h));
   --text-4: oklch(34% 0.004 var(--accent-h));
+  --text-weight-primary: 350;
+  --text-weight-secondary: 450;
 
   /* ── 背景（OLED 纯黑优化） ── */
   --bg-deep: #000000;
   --bg-base: oklch(3% 0.005 var(--accent-h));
   --bg-shift: oklch(5% 0.007 var(--accent-h));
+  --bg-mood-tint: oklch(50% 0.02 var(--accent-h) / 0);
 
   /* ── 动态间距 ── */
   --safe-top: env(safe-area-inset-top, 0px);
@@ -56,13 +62,16 @@
   --safe-right: env(safe-area-inset-right, 0px);
   --punchhole-safe: 34px;
 
+  /* ── 生物节律速度（夜间更慢） ── */
+  --breath-speed: 1;
+
   /* ── 缓动系统 ── */
   --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-smooth: cubic-bezier(0.4, 0.0, 0.2, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
 
-  /* ── 像素漂移偏移 v7 ── */
+  /* ── 像素漂移偏移 v9 ── */
   --wander-x: 0px;
   --wander-y: 0px;
   --wander-t: 0s;
@@ -71,6 +80,10 @@
   --text-breath: 0;
   --digit-glow: 0;
   --daypart-opacity: 1;
+  --bio-pace: 1;
+
+  /* ── 天气情绪色彩 ── */
+  --weather-mood: oklch(50% 0 0 / 0);
 }
 
 /* ── Reset ── */
@@ -90,10 +103,12 @@ body {
   width: 100%;
   height: 100%;
   letter-spacing: -0.005em;
+  font-weight: var(--text-weight-primary);
+  transition: font-weight 2s var(--ease-smooth);
 }
 
 /* ════════════════════════════════════════════
-   背景系统 v7（五层氛围）
+   背景系统 v9（六层氛围 + 天气情绪层）
    ════════════════════════════════════════════ */
 .bg-base {
   position: fixed; inset: 0;
@@ -101,97 +116,139 @@ body {
   z-index: 0;
   transition: background 4s var(--ease-smooth);
 }
-.bg-nebula {
+.bg-mood {
   position: fixed; inset: 0;
   z-index: 1; pointer-events: none;
-  opacity: 0.88;
+  background: var(--weather-mood);
+  mix-blend-mode: soft-light;
+  transition: background 6s var(--ease-smooth);
+  opacity: 0.6;
+}
+.bg-nebula {
+  position: fixed; inset: 0;
+  z-index: 2; pointer-events: none;
+  opacity: 0.82;
 }
 .bg-aurora {
   position: fixed; inset: 0;
-  z-index: 2; pointer-events: none;
+  z-index: 3; pointer-events: none;
   mix-blend-mode: screen;
-  opacity: 0.6;
+  opacity: 0.5;
 }
 .bg-fog {
   position: fixed; inset: 0;
-  z-index: 3; pointer-events: none;
-  opacity: 0.35;
+  z-index: 4; pointer-events: none;
+  opacity: 0.32;
   background:
-    radial-gradient(ellipse 80% 60% at 20% 80%, oklch(from var(--accent) 30% 0.02 h / 0.04) 0%, transparent 70%),
-    radial-gradient(ellipse 70% 50% at 85% 20%, oklch(from var(--accent) 25% 0.015 h / 0.03) 0%, transparent 65%);
+    radial-gradient(ellipse 80% 60% at 20% 80%, oklch(from var(--accent) 30% 0.02 h / 0.035) 0%, transparent 70%),
+    radial-gradient(ellipse 70% 50% at 85% 20%, oklch(from var(--accent) 25% 0.015 h / 0.025) 0%, transparent 65%);
   transition: opacity 6s var(--ease-smooth);
 }
 .bg-noise {
   position: fixed; inset: 0;
-  z-index: 4; pointer-events: none;
+  z-index: 5; pointer-events: none;
   opacity: var(--glass-noise-opacity);
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.62' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 180px 180px;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
 }
 .bg-vignette {
   position: fixed; inset: 0;
-  z-index: 5; pointer-events: none;
-  background: radial-gradient(ellipse 75% 75% at 50% 45%, transparent 35%, rgba(0,0,0,0.5) 100%);
+  z-index: 6; pointer-events: none;
+  background: radial-gradient(ellipse 78% 78% at 50% 45%, transparent 30%, rgba(0,0,0,0.55) 100%);
   transition: background 4s var(--ease-smooth);
 }
 .bg-pulse {
   position: fixed; inset: 0;
-  z-index: 6; pointer-events: none;
+  z-index: 7; pointer-events: none;
   opacity: 0;
-  background: radial-gradient(circle at 50% 45%, oklch(from var(--accent) l c h / 0.05) 0%, transparent 55%);
+  background: radial-gradient(circle at 50% 45%, oklch(from var(--accent) l c h / 0.04) 0%, transparent 50%);
   transition: opacity 3s var(--ease-smooth);
 }
 .bg-pulse.active { opacity: 1; }
 .bg-light-cone {
   position: fixed; inset: 0;
-  z-index: 7; pointer-events: none;
-  background: radial-gradient(ellipse 55% 30% at 50% -8%, oklch(from var(--accent) 95% 0.008 h / 0.025) 0%, transparent 70%);
+  z-index: 8; pointer-events: none;
+  background: radial-gradient(ellipse 55% 30% at 50% -8%, oklch(from var(--accent) 95% 0.008 h / 0.02) 0%, transparent 70%);
 }
+.bg-weather-particles {
+  position: fixed; inset: 0;
+  z-index: 9; pointer-events: none;
+  opacity: 0;
+  transition: opacity 4s var(--ease-smooth);
+}
+.bg-weather-particles.active { opacity: 1; }
 
 /* ════════════════════════════════════════════
-   Lumina Glass v7（深度柔和）
+   Aura Glass v9（彩虹边缘光 · 深度感）
    ════════════════════════════════════════════ */
 .glass-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(32px) saturate(1.2);
-  -webkit-backdrop-filter: blur(32px) saturate(1.2);
+  background: linear-gradient(145deg, var(--glass-bg) 0%, var(--glass-depth-1) 50%, var(--glass-depth-2) 100%);
+  backdrop-filter: blur(38px) saturate(1.25) brightness(1.02);
+  -webkit-backdrop-filter: blur(38px) saturate(1.25) brightness(1.02);
   border: 1px solid var(--glass-border);
-  border-radius: 18px;
+  border-radius: 20px;
   position: relative;
   overflow: hidden;
-  transition: transform 0.4s var(--spring), background 0.4s var(--ease-smooth), border-color 0.4s;
+  transition: transform 0.42s var(--spring), background 0.42s var(--ease-smooth), border-color 0.42s;
+}
+/* 彩虹边缘光 — 用 conic-gradient 模拟棱镜散射 */
+.glass-card .glass-iris {
+  position: absolute;
+  inset: -50%;
+  background: conic-gradient(from var(--iris-angle, 0deg),
+    oklch(80% 0.06 0 / 0.03),
+    oklch(80% 0.06 60 / 0.02),
+    oklch(80% 0.06 120 / 0.025),
+    oklch(80% 0.06 240 / 0.03),
+    oklch(80% 0.06 300 / 0.02),
+    oklch(80% 0.06 0 / 0.03)
+  );
+  pointer-events: none;
+  z-index: 0;
+  border-radius: inherit;
+  animation: irisSpin calc(120s * var(--breath-speed, 1)) linear infinite;
+  opacity: 0.7;
 }
 .glass-card .glass-noise {
   position: absolute;
   inset: 0;
-  opacity: 0.006;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 100px 100px;
+  opacity: 0.005;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 120px 120px;
   pointer-events: none;
   border-radius: inherit;
+  z-index: 0;
 }
+/* 顶边高光 */
 .glass-card::before {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(168deg, var(--glass-highlight) 0%, transparent 30%, transparent 70%, oklch(100% 0 0 / 0.02) 100%);
+  background: linear-gradient(168deg, var(--glass-highlight) 0%, transparent 25%, transparent 75%, oklch(100% 0 0 / 0.015) 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
+  z-index: 2;
 }
+/* 底部曲面反光 */
 .glass-card::after {
   content: '';
   position: absolute;
-  left: 8%; right: 8%; bottom: 0;
-  height: 40%;
+  left: 10%; right: 10%; bottom: 0;
+  height: 35%;
   background: linear-gradient(to top, var(--glass-reflect), transparent);
   border-radius: 50% 50% 0 0 / 100% 100% 0 0;
   pointer-events: none;
-  opacity: 0.4;
+  opacity: 0.35;
+  z-index: 1;
+}
+@keyframes irisSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* ── 主体应用容器 ── */
@@ -207,13 +264,11 @@ body {
   padding-left: var(--safe-left);
   padding-right: var(--safe-right);
   transform: translate(var(--wander-x), var(--wander-y));
-  transition: transform var(--wander-t) linear, opacity 0.6s var(--ease-smooth);
+  transition: transform var(--wander-t) linear, opacity 0.7s var(--ease-smooth);
   opacity: var(--daypart-opacity);
 }
 
-/* ── 双栏容器 ──
-   竖屏：.col 用 display:contents 拍平，所有区块进入同一条纵向流；
-   横屏：.col 恢复为真实弹性列，左右分区。一套 DOM，两种排版。 */
+/* ── 双栏容器 ── */
 .landscape-wrap {
   display: flex;
   flex-direction: column;
@@ -237,21 +292,23 @@ body {
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 0.76rem;
-  color: var(--text-3);
-  transition: color 1.2s;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--text-2);
+  transition: color 1.5s;
 }
 .status-dot {
   width: 5px; height: 5px;
   border-radius: 50%;
   background: var(--accent);
-  box-shadow: 0 0 7px oklch(from var(--accent) l c h / 0.45);
+  box-shadow: 0 0 7px oklch(from var(--accent) l c h / 0.4);
+  transition: background 2s, box-shadow 2s;
 }
 .status-right { display: flex; align-items: center; gap: 12px; }
 .status-time {
-  font-size: 0.76rem;
-  font-weight: 500;
-  color: var(--text-3);
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-2);
   font-variant-numeric: tabular-nums;
   position: absolute;
   left: 50%;
@@ -286,7 +343,7 @@ body {
 }
 
 /* ════════════════════════════════════════════
-   时钟主舞台 v7 — 纵向优化充分利用 19:9
+   时钟主舞台 v9 — 纵向优化 + 触觉反馈
    ════════════════════════════════════════════ */
 .clock-stage {
   flex: 1;
@@ -305,8 +362,8 @@ body {
   justify-content: center;
   opacity: 0;
   pointer-events: none;
-  transform: translateY(10px) scale(0.98);
-  transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo);
+  transform: translateY(8px) scale(0.97);
+  transition: opacity 0.65s var(--ease-out-expo), transform 0.65s var(--ease-out-expo);
 }
 .clock-face.active {
   opacity: 1;
@@ -314,37 +371,38 @@ body {
   transform: translateY(0) scale(1);
 }
 
-/* ── 数字面 v7 ── */
+/* ── 数字面 v9 ── */
 .numeric-digits {
   display: flex;
   align-items: center;
   gap: 0.12rem;
   font-size: clamp(2.6rem, 17vw, 4rem);
-  font-weight: 200;
+  font-weight: var(--text-weight-primary);
   letter-spacing: 0.03em;
   color: var(--text-1);
   font-variant-numeric: tabular-nums;
-  filter: brightness(0.97 + var(--digit-glow) * 0.03);
-  transition: filter 2.5s var(--ease-smooth);
+  /* 温和的亮度微调代替刺眼明灭 */
+  text-shadow: 0 0 calc(8px * (0.5 + var(--digit-glow) * 0.5)) oklch(from var(--accent) l c h / calc(0.04 + var(--digit-glow) * 0.04));
+  transition: text-shadow 2.5s var(--ease-smooth), font-weight 2s var(--ease-smooth);
 }
 .num-sep {
-  animation: sep-blink 1.05s step-end infinite;
+  animation: sep-blink calc(1.1s * var(--breath-speed, 1)) step-end infinite;
   margin: -0.08em;
-  opacity: 0.6;
+  opacity: 0.55;
 }
 @keyframes sep-blink {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 0.25; }
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 0.22; }
 }
 .num-digit {
   display: inline-block;
   min-width: 0.54em;
   text-align: center;
-  transition: transform 0.35s var(--spring);
+  transition: transform 0.38s var(--spring);
 }
 .num-sec {
   font-size: 0.4em;
-  font-weight: 300;
+  font-weight: var(--text-weight-secondary);
   color: var(--text-3);
   margin-top: 0.42em;
   letter-spacing: 0.04em;
@@ -361,20 +419,21 @@ body {
 .analog-dial svg {
   width: 100%; height: 100%;
   overflow: visible;
-  filter: drop-shadow(0 1px 12px oklch(from var(--accent) l c h / 0.06));
+  filter: drop-shadow(0 1px 14px oklch(from var(--accent) l c h / 0.05));
 }
-.analog-origin { transition: transform 0.45s var(--ease-out-expo); transform-origin: 0 0; }
-.analog-hand { transition: transform 0.45s var(--ease-out-expo); transform-origin: 0 0; }
-.analog-center { fill: var(--accent); filter: drop-shadow(0 0 4px oklch(from var(--accent) l c h / 0.55)); }
+.analog-origin { transition: transform 0.5s var(--ease-out-expo); transform-origin: 0 0; }
+.analog-hand { transition: transform 0.5s var(--ease-out-expo); transform-origin: 0 0; }
+.analog-center { fill: var(--accent); filter: drop-shadow(0 0 5px oklch(from var(--accent) l c h / 0.5)); }
 
-/* ── 文字面 v7 ── */
+/* ── 文字面 v9 ── */
 .word-display { text-align: center; }
 .word-main {
   font-size: clamp(2rem, 8vw, 3rem);
-  font-weight: 300;
+  font-weight: var(--text-weight-primary);
   color: var(--text-1);
   letter-spacing: 0.08em;
   line-height: 1.2;
+  text-shadow: 0 0 oklch(from var(--accent) l c h / 0.03);
 }
 .word-sub {
   font-size: 0.92rem;
@@ -395,8 +454,8 @@ body {
   height: 100%;
   background: var(--accent);
   border-radius: 2px;
-  transition: width 0.55s var(--ease-smooth);
-  box-shadow: 0 0 8px oklch(from var(--accent) l c h / 0.35);
+  transition: width 0.6s var(--ease-smooth);
+  box-shadow: 0 0 10px oklch(from var(--accent) l c h / 0.3);
 }
 
 /* ── Flip 翻页钟 ── */
@@ -410,7 +469,7 @@ body {
   position: relative;
   width: clamp(46px, 13vw, 60px);
   height: clamp(68px, 19vw, 86px);
-  perspective: 480px;
+  perspective: 500px;
 }
 .flip-card {
   position: absolute;
@@ -419,13 +478,13 @@ body {
   align-items: center;
   justify-content: center;
   background: var(--glass-bg-strong);
-  backdrop-filter: blur(22px);
-  -webkit-backdrop-filter: blur(22px);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--glass-border-strong);
   border-radius: 10px;
   overflow: hidden;
   font-size: clamp(1.8rem, 6.5vw, 2.4rem);
-  font-weight: 300;
+  font-weight: var(--text-weight-primary);
   color: var(--text-1);
 }
 .flip-card::after {
@@ -433,25 +492,25 @@ body {
   position: absolute;
   left: 0; right: 0; top: 50%;
   height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.2) 30%, rgba(0,0,0,0.2) 70%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.22) 30%, rgba(0,0,0,0.22) 70%, transparent 100%);
   transform: translateY(-0.5px);
 }
 .flip-sep {
   font-size: clamp(1.5rem, 5.5vw, 1.8rem);
   font-weight: 200;
   color: var(--text-3);
-  animation: sep-blink 1.05s step-end infinite;
+  animation: sep-blink calc(1.1s * var(--breath-speed, 1)) step-end infinite;
 }
 .flipping-top {
   clip-path: inset(0 0 50% 0);
   transform-origin: bottom;
-  animation: flipTop 0.48s var(--ease-smooth) forwards;
+  animation: flipTop calc(0.5s * var(--breath-speed, 1)) var(--ease-smooth) forwards;
 }
 .flipping-bottom {
   clip-path: inset(50% 0 0 0);
   transform-origin: top;
-  animation: flipBot 0.48s var(--ease-smooth) forwards;
-  animation-delay: 0.22s;
+  animation: flipBot calc(0.5s * var(--breath-speed, 1)) var(--ease-smooth) forwards;
+  animation-delay: calc(0.24s * var(--breath-speed, 1));
   opacity: 0;
 }
 @keyframes flipTop {
@@ -460,11 +519,11 @@ body {
 }
 @keyframes flipBot {
   0% { transform: rotateX(90deg); opacity: 0; }
-  20% { opacity: 1; }
+  15% { opacity: 1; }
   100% { transform: rotateX(0deg); opacity: 1; }
 }
 
-/* ── 模式指示点 v7 ── */
+/* ── 模式指示点 v9 ── */
 .face-dots {
   position: absolute;
   bottom: 0.7rem;
@@ -481,17 +540,17 @@ body {
   background: var(--text-4);
   border: none;
   cursor: pointer;
-  transition: all 0.45s var(--spring);
+  transition: all 0.5s var(--spring);
   padding: 0;
 }
 .face-dot.active {
   width: 20px;
   background: var(--accent);
-  box-shadow: 0 0 8px oklch(from var(--accent) l c h / 0.35);
+  box-shadow: 0 0 8px oklch(from var(--accent) l c h / 0.3);
 }
 
 /* ════════════════════════════════════════════
-   信息区 v7
+   信息区 v9
    ════════════════════════════════════════════ */
 .info-zone {
   flex: 0 1 auto;
@@ -501,7 +560,6 @@ body {
   flex-direction: column;
   gap: 0.6rem;
 }
-/* 矮视口 + 强制竖屏时的兜底：信息区自己滚动，不把时钟压成 0 高 */
 body:not(.land-mode) .info-zone { overflow-y: auto; overscroll-behavior: contain; }
 
 .date-row {
@@ -510,7 +568,7 @@ body:not(.land-mode) .info-zone { overflow-y: auto; overscroll-behavior: contain
   justify-content: center;
   gap: 8px;
   padding: 0 1.3rem;
-  font-size: 0.76rem;
+  font-size: 0.84rem;
   color: var(--text-3);
   font-variant-numeric: tabular-nums;
   flex-shrink: 0;
@@ -534,11 +592,12 @@ body:not(.land-mode) .info-zone { overflow-y: auto; overscroll-behavior: contain
 .wx-icon {
   font-size: 2.05rem;
   line-height: 1;
-  filter: drop-shadow(0 0 10px oklch(from var(--accent) l c h / 0.22));
+  filter: drop-shadow(0 0 12px oklch(from var(--accent) l c h / 0.18));
+  transition: filter 2s;
 }
 .wx-temp {
-  font-size: 1.85rem;
-  font-weight: 300;
+  font-size: 1.95rem;
+  font-weight: 500;
   letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
   color: var(--text-1);
@@ -551,9 +610,9 @@ body:not(.land-mode) .info-zone { overflow-y: auto; overscroll-behavior: contain
   gap: 2px;
   min-width: 0;
 }
-.wx-desc { font-size: 0.8rem; color: var(--text-2); }
+.wx-desc { font-size: 0.88rem; font-weight: 500; color: var(--text-2); }
 .wx-range {
-  font-size: 0.7rem;
+  font-size: 0.76rem;
   color: var(--text-3);
   font-variant-numeric: tabular-nums;
 }
@@ -566,17 +625,17 @@ body:not(.land-mode) .info-zone { overflow-y: auto; overscroll-behavior: contain
   justify-content: center;
   gap: 4px;
   padding: 0.3rem 0.2rem;
-  border-radius: 10px;
-  background: oklch(100% 0 0 / 0.02);
-  border: 1px solid oklch(100% 0 0 / 0.03);
-  font-size: 0.67rem;
+  border-radius: 12px;
+  background: oklch(100% 0 0 / 0.018);
+  border: 1px solid oklch(100% 0 0 / 0.025);
+  font-size: 0.74rem;
   color: var(--text-3);
   white-space: nowrap;
   overflow: hidden;
 }
 .wx-chip b {
   color: var(--text-1);
-  font-weight: 500;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
@@ -595,20 +654,21 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 0.68rem;
+  font-size: 0.76rem;
   color: var(--text-3);
   flex-shrink: 0;
 }
-.msg-title { letter-spacing: 0.16em; }
+.msg-title { letter-spacing: 0.16em; font-weight: 600; }
 .msg-count {
   margin-left: auto;
   min-width: 17px;
   padding: 1px 5px;
   border-radius: 9px;
   text-align: center;
-  font-size: 0.64rem;
+  font-size: 0.72rem;
+  font-weight: 600;
   color: var(--text-2);
-  background: oklch(100% 0 0 / 0.05);
+  background: oklch(100% 0 0 / 0.04);
   font-variant-numeric: tabular-nums;
 }
 .msg-clear {
@@ -637,17 +697,17 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
   flex-direction: column;
   gap: 4px;
   scrollbar-width: thin;
-  scrollbar-color: oklch(100% 0 0 / 0.08) transparent;
+  scrollbar-color: oklch(100% 0 0 / 0.07) transparent;
 }
 .msg-empty {
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   line-height: 1.6;
   color: var(--text-4);
   padding: 0.25rem 0;
 }
 .msg-empty code {
   font-family: ui-monospace, "Roboto Mono", monospace;
-  font-size: 0.64rem;
+  font-size: 0.7rem;
   color: var(--text-3);
 }
 .msg-item {
@@ -656,8 +716,8 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
   grid-template-columns: 3px minmax(0, 1fr);
   gap: 8px;
   padding: 0.3rem 0;
-  border-bottom: 1px solid oklch(100% 0 0 / 0.028);
-  animation: msgIn 0.42s var(--ease-out-expo) both;
+  border-bottom: 1px solid oklch(100% 0 0 / 0.022);
+  animation: msgIn 0.45s var(--ease-out-expo) both;
 }
 .msg-item:last-child { border-bottom: none; }
 .msg-item[data-level="warn"] { --mc: #f0c26a; }
@@ -665,12 +725,13 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
 .msg-bar {
   border-radius: 3px;
   background: var(--mc);
-  opacity: 0.62;
-  box-shadow: 0 0 7px oklch(from var(--mc) l c h / 0.28);
+  opacity: 0.55;
+  box-shadow: 0 0 6px oklch(from var(--mc) l c h / 0.25);
 }
 .msg-body { min-width: 0; }
 .msg-line {
-  font-size: 0.75rem;
+  font-size: 0.88rem;
+  font-weight: 600;
   color: var(--text-1);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -680,11 +741,11 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
   display: flex;
   gap: 7px;
   margin-top: 2px;
-  font-size: 0.63rem;
+  font-size: 0.72rem;
   color: var(--text-3);
   min-width: 0;
 }
-.msg-src { opacity: 0.7; flex-shrink: 0; }
+.msg-src { opacity: 0.85; flex-shrink: 0; }
 .msg-time {
   margin-left: auto;
   color: var(--text-4);
@@ -692,7 +753,7 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
   flex-shrink: 0;
 }
 @keyframes msgIn {
-  from { opacity: 0; transform: translateY(-6px); }
+  from { opacity: 0; transform: translateY(-5px); }
   to { opacity: 1; transform: none; }
 }
 
@@ -709,22 +770,22 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  border-radius: 16px;
+  border-radius: 18px;
 }
 .info-strip .glass-card.highlight {
   background: var(--glass-bg-strong);
 }
-.info-strip .icon-emoji { font-size: 1.25rem; line-height: 1; }
+.info-strip .icon-emoji { font-size: 1.3rem; line-height: 1; }
 .info-strip .value {
-  font-size: 0.88rem;
-  font-weight: 500;
+  font-size: 0.98rem;
+  font-weight: 600;
   color: var(--text-1);
   font-variant-numeric: tabular-nums;
   margin-left: auto;
   white-space: nowrap;
 }
 .info-strip .label {
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   color: var(--text-3);
   white-space: nowrap;
   overflow: hidden;
@@ -741,12 +802,13 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
   flex-shrink: 0;
 }
 .strip-text {
-  font-size: 0.82rem;
+  font-size: 0.92rem;
   color: var(--text-2);
   text-align: center;
   max-width: 100%;
   line-height: 1.5;
-  transition: opacity 0.45s var(--ease-smooth), transform 0.45s var(--ease-smooth);
+  font-weight: var(--text-weight-secondary);
+  transition: opacity 0.5s var(--ease-smooth), transform 0.5s var(--ease-smooth);
 }
 
 .bottom-bar {
@@ -761,14 +823,14 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   color: var(--text-3);
   font-variant-numeric: tabular-nums;
 }
-.bottom-bar .item .ic { font-size: 0.76rem; }
+.bottom-bar .item .ic { font-size: 0.86rem; }
 
 /* ════════════════════════════════════════════
-   设置面板 v7
+   设置面板 v9
    ════════════════════════════════════════════ */
 .settings-overlay {
   position: fixed;
@@ -777,12 +839,12 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  background: rgba(0,0,0,0.5);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.4s var(--ease-smooth);
+  transition: opacity 0.42s var(--ease-smooth);
 }
 .settings-overlay.open {
   opacity: 1;
@@ -791,18 +853,18 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
 .settings-panel {
   width: 100%;
   max-width: 480px;
-  background: oklch(7% 0.005 var(--accent-h) / 0.94);
-  backdrop-filter: blur(44px) saturate(1.4);
-  -webkit-backdrop-filter: blur(44px) saturate(1.4);
+  background: oklch(7% 0.005 var(--accent-h) / 0.95);
+  backdrop-filter: blur(48px) saturate(1.5);
+  -webkit-backdrop-filter: blur(48px) saturate(1.5);
   border: 1px solid var(--glass-border);
-  border-radius: 24px 24px 0 0;
+  border-radius: 26px 26px 0 0;
   padding: 0.8rem 1.4rem 1.8rem;
-  max-height: 82vh;
+  max-height: 84vh;
   overflow-y: auto;
   transform: translateY(100%);
-  transition: transform 0.55s var(--spring);
+  transition: transform 0.6s var(--spring);
   scrollbar-width: thin;
-  scrollbar-color: oklch(100% 0 0 / 0.08) transparent;
+  scrollbar-color: oklch(100% 0 0 / 0.07) transparent;
 }
 .settings-overlay.open .settings-panel { transform: translateY(0); }
 
@@ -815,7 +877,7 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
   letter-spacing: 0.02em;
   position: sticky;
   top: 0;
-  background: linear-gradient(to bottom, oklch(7% 0.005 var(--accent-h) / 0.96) 60%, transparent);
+  background: linear-gradient(to bottom, oklch(7% 0.005 var(--accent-h) / 0.97) 60%, transparent);
   z-index: 2;
 }
 .btn-close {
@@ -824,8 +886,8 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
   width: 26px; height: 26px;
   border: none;
   background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border-radius: 50%;
   border: 1px solid var(--glass-border);
   color: var(--text-3);
@@ -840,8 +902,9 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
 
 .setting-group { margin-bottom: 0.9rem; }
 .setting-label {
-  font-size: 0.76rem;
-  color: var(--text-3);
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--text-2);
   margin-bottom: 0.35rem;
   display: flex;
   align-items: center;
@@ -857,7 +920,7 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
   padding: 0.52rem 0.72rem;
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  border-radius: 14px;
+  border-radius: 16px;
   color: var(--text-1);
   font-size: 0.86rem;
   font-family: inherit;
@@ -865,44 +928,44 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
   outline: none;
   -webkit-appearance: none;
 }
-.setting-input:focus { border-color: oklch(from var(--accent) l c h / 0.45); }
+.setting-input:focus { border-color: oklch(from var(--accent) l c h / 0.4); }
 .setting-textarea { min-height: 82px; resize: line; line-height: 1.5; }
 
 .setting-note {
-  font-size: 0.66rem;
+  font-size: 0.74rem;
   color: var(--text-4);
   line-height: 1.5;
   margin-top: 0.3rem;
 }
 .setting-note code {
   font-family: ui-monospace, "Roboto Mono", monospace;
-  font-size: 0.62rem;
+  font-size: 0.7rem;
   color: var(--text-3);
 }
 .seg-row {
   display: flex;
   gap: 4px;
   padding: 3px;
-  background: oklch(100% 0 0 / 0.025);
+  background: oklch(100% 0 0 / 0.02);
   border: 1px solid var(--glass-border);
-  border-radius: 14px;
+  border-radius: 16px;
 }
 .seg-btn {
   flex: 1;
-  padding: 0.42rem 0.2rem;
+  padding: 0.44rem 0.2rem;
   border: none;
-  border-radius: 11px;
+  border-radius: 13px;
   background: transparent;
   color: var(--text-3);
-  font-size: 0.76rem;
+  font-size: 0.82rem;
   font-family: inherit;
   cursor: pointer;
-  transition: background 0.3s var(--ease-smooth), color 0.3s;
+  transition: background 0.32s var(--ease-smooth), color 0.32s;
 }
 .seg-btn.on {
   background: var(--glass-bg-strong);
   color: var(--text-1);
-  box-shadow: 0 1px 8px oklch(0% 0 0 / 0.25);
+  box-shadow: 0 1px 10px oklch(0% 0 0 / 0.22);
 }
 .notify-row { display: flex; align-items: center; gap: 8px; }
 .notify-row .setting-note { margin-top: 0; }
@@ -910,10 +973,10 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
   margin-left: auto;
   padding: 0.3rem 0.8rem;
   border: 1px solid var(--glass-border-strong);
-  border-radius: 12px;
+  border-radius: 14px;
   background: var(--glass-bg);
   color: var(--text-2);
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   font-family: inherit;
   cursor: pointer;
   flex-shrink: 0;
@@ -927,8 +990,8 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
   min-width: 0;
   padding: 0.36rem 0.6rem;
   border: 1px solid var(--glass-border);
-  border-radius: 11px;
-  background: oklch(0% 0 0 / 0.28);
+  border-radius: 13px;
+  background: oklch(0% 0 0 / 0.25);
   color: var(--text-2);
   font-size: 0.72rem;
   font-family: inherit;
@@ -943,9 +1006,9 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
   align-items: center;
   gap: 7px;
   padding: 0.3rem 0.5rem;
-  border: 1px solid oklch(100% 0 0 / 0.04);
-  border-radius: 12px;
-  background: oklch(100% 0 0 / 0.02);
+  border: 1px solid oklch(100% 0 0 / 0.035);
+  border-radius: 14px;
+  background: oklch(100% 0 0 / 0.015);
 }
 .feed-name {
   font-size: 0.72rem;
@@ -970,7 +1033,7 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
   flex-shrink: 0;
   width: 20px; height: 20px;
   border: none;
-  border-radius: 7px;
+  border-radius: 8px;
   background: transparent;
   color: var(--text-4);
   font-size: 0.76rem;
@@ -978,7 +1041,7 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
   cursor: pointer;
   transition: color 0.25s, background 0.25s;
 }
-.feed-del:active { color: var(--text-1); background: oklch(100% 0 0 / 0.07); }
+.feed-del:active { color: var(--text-1); background: oklch(100% 0 0 / 0.06); }
 .feed-add { display: flex; gap: 5px; margin-top: 6px; }
 .feed-add .input-mini:last-of-type { flex: 2; }
 .news-cols { display: grid; grid-template-columns: 1fr; gap: 2px 0; }
@@ -990,7 +1053,7 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
   align-items: center;
   justify-content: space-between;
   padding: 0.55rem 0;
-  border-bottom: 1px solid oklch(100% 0 0 / 0.025);
+  border-bottom: 1px solid oklch(100% 0 0 / 0.02);
   font-size: 0.84rem;
   color: var(--text-2);
 }
@@ -998,10 +1061,10 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
 .toggle-switch {
   width: 40px; height: 22px;
   border-radius: 13px;
-  background: oklch(100% 0 0 / 0.07);
+  background: oklch(100% 0 0 / 0.06);
   position: relative;
   cursor: pointer;
-  transition: background 0.38s var(--spring);
+  transition: background 0.4s var(--spring);
   border: none;
   flex-shrink: 0;
 }
@@ -1012,8 +1075,8 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
   width: 18px; height: 18px;
   border-radius: 50%;
   background: #fff;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
-  transition: transform 0.38s var(--spring);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.22);
+  transition: transform 0.4s var(--spring);
 }
 .toggle-switch.on { background: var(--accent); }
 .toggle-switch.on::after { transform: translateX(18px); }
@@ -1021,10 +1084,10 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
 /* 专注统计面板 */
 .focus-panel {
   background: var(--glass-bg);
-  backdrop-filter: blur(22px);
-  -webkit-backdrop-filter: blur(22px);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--glass-border);
-  border-radius: 18px;
+  border-radius: 20px;
   padding: 0.85rem 0.95rem;
 }
 .focus-stats {
@@ -1055,7 +1118,7 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
   width: 7px;
   border-radius: 3px;
   min-height: 3px;
-  transition: height 0.45s var(--spring);
+  transition: height 0.5s var(--spring);
 }
 
 .btn-row {
@@ -1067,17 +1130,17 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
   flex: 1;
   padding: 0.65rem;
   border: none;
-  border-radius: 16px;
+  border-radius: 18px;
   font-size: 0.86rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.32s var(--spring);
+  transition: all 0.35s var(--spring);
   font-family: inherit;
 }
 .btn-primary {
   background: var(--accent);
   color: #fff;
-  box-shadow: 0 4px 18px oklch(from var(--accent) l c h / 0.25);
+  box-shadow: 0 4px 20px oklch(from var(--accent) l c h / 0.22);
 }
 .btn-secondary {
   background: var(--glass-bg);
@@ -1086,7 +1149,7 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
 }
 .btn-primary:active, .btn-secondary:active { transform: scale(0.96); }
 
-/* ── Toast v7 ── */
+/* ── Toast v9 ── */
 .toast-container {
   position: fixed;
   top: calc(var(--safe-top) + var(--punchhole-safe) + 42px);
@@ -1100,19 +1163,19 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
   pointer-events: none;
 }
 .toast {
-  background: oklch(11% 0.004 var(--accent-h) / 0.92);
-  backdrop-filter: blur(28px) saturate(1.3);
-  -webkit-backdrop-filter: blur(28px) saturate(1.3);
+  background: oklch(11% 0.004 var(--accent-h) / 0.94);
+  backdrop-filter: blur(32px) saturate(1.35);
+  -webkit-backdrop-filter: blur(32px) saturate(1.35);
   border: 1px solid var(--glass-border-strong);
   color: var(--text-1);
   font-size: 0.8rem;
-  padding: 0.52rem 1.15rem;
-  border-radius: 24px;
+  padding: 0.55rem 1.2rem;
+  border-radius: 26px;
   opacity: 0;
-  transform: translateY(-8px) scale(0.94);
-  transition: all 0.38s var(--spring);
+  transform: translateY(-6px) scale(0.95);
+  transition: all 0.4s var(--spring);
   white-space: nowrap;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.38);
+  box-shadow: 0 8px 36px rgba(0,0,0,0.35);
 }
 .toast.show {
   opacity: 1;
@@ -1120,11 +1183,16 @@ body:not(.land-mode) .msg-panel { min-height: 8.4rem; }
 }
 
 /* ════════════════════════════════════════════
-   横屏摆件 v8 — Pixel 3a 807×393 CSS px
-   由 JS 依据朝向/预览开关切换 body.land-mode，
-   避免 media query 与桌面设备预览互相打架。
+   横屏摆件 v9 — Pixel 3a 807×393 CSS px
    ════════════════════════════════════════════ */
 body.land-mode { --punchhole-safe: 0px; }
+/* 摆件是从 40–60cm 外看的：小字要比手持时更亮一档，否则细字在 OLED 上会发灰 */
+body.land-mode {
+  --text-2: oklch(82% 0.008 var(--accent-h));
+  --text-3: oklch(67% 0.006 var(--accent-h));
+  --text-4: oklch(47% 0.004 var(--accent-h));
+  --text-weight-secondary: 500;
+}
 body.land-mode .app {
   padding-top: max(var(--safe-top), 4px);
   padding-bottom: max(var(--safe-bottom), 6px);
@@ -1143,7 +1211,6 @@ body.land-mode .col {
   min-height: 0;
 }
 body.land-mode .col-left { justify-content: center; gap: 1px; }
-/* 状态栏绝对定位横跨整屏顶部，右栏让出它的高度避免压住天气卡 */
 body.land-mode .col-right { gap: 0; padding-top: 23px; }
 
 body.land-mode .status-bar {
@@ -1153,11 +1220,11 @@ body.land-mode .status-bar {
   height: 19px;
   padding: 0;
   z-index: 30;
-  font-size: 0.62rem;
-  opacity: 0.72;
+  font-size: 0.72rem;
+  opacity: 0.82;
 }
 body.land-mode .status-time { display: none; }
-body.land-mode .btn-settings { width: 21px; height: 21px; font-size: 0.68rem; }
+body.land-mode .btn-settings { width: 23px; height: 23px; font-size: 0.74rem; }
 
 body.land-mode .clock-stage { flex: 1 1 auto; min-height: 0; }
 body.land-mode .numeric-digits { font-size: clamp(3.2rem, 30vh, 7rem); }
@@ -1172,35 +1239,38 @@ body.land-mode .flip-card { font-size: min(19vh, 2.5rem); }
 body.land-mode .flip-sep { font-size: min(14vh, 1.8rem); }
 body.land-mode .face-dots { bottom: 0.2rem; gap: 9px; }
 
-body.land-mode .date-row { padding: 0; font-size: 0.7rem; }
-body.land-mode .strip-zone { padding: 0.1rem 0; min-height: 1.55rem; }
-body.land-mode .strip-text { font-size: 0.74rem; max-width: 100%; }
+body.land-mode .date-row { padding: 0; font-size: 0.86rem; }
+body.land-mode .strip-zone { padding: 0.06rem 0; min-height: 1.9rem; }
+body.land-mode .strip-text { font-size: 0.86rem; max-width: 100%; line-height: 1.35; }
 
 body.land-mode .info-zone {
   flex: 1 1 auto;
   padding: 0;
   gap: 7px;
 }
-body.land-mode .wx-card { padding: 0.5rem 0.62rem; gap: 0.36rem; }
-body.land-mode .wx-icon { font-size: 1.55rem; }
-body.land-mode .wx-temp { font-size: 1.5rem; }
-body.land-mode .wx-desc { font-size: 0.72rem; }
-body.land-mode .wx-chip { font-size: 0.6rem; padding: 0.22rem 0.15rem; }
-body.land-mode .info-strip .glass-card { padding: 0.4rem 0.5rem; border-radius: 13px; }
-body.land-mode .info-strip .value { font-size: 0.76rem; }
-body.land-mode .info-strip .label { font-size: 0.62rem; }
-body.land-mode .msg-panel { padding: 0.42rem 0.5rem 0.36rem 0.58rem; }
-body.land-mode .msg-line { font-size: 0.7rem; }
-body.land-mode .msg-sub { font-size: 0.58rem; }
+body.land-mode .wx-card { padding: 0.42rem 0.55rem; gap: 0.3rem; }
+body.land-mode .wx-icon { font-size: 1.6rem; }
+body.land-mode .wx-temp { font-size: 1.7rem; font-weight: 600; }
+body.land-mode .wx-desc { font-size: 0.86rem; }
+body.land-mode .wx-range { font-size: 0.78rem; }
+body.land-mode .wx-chip { font-size: 0.72rem; padding: 0.2rem 0.12rem; }
+body.land-mode .info-strip .glass-card { padding: 0.36rem 0.45rem; border-radius: 15px; }
+body.land-mode .info-strip .value { font-size: 0.95rem; }
+body.land-mode .info-strip .label { font-size: 0.75rem; }
+body.land-mode .msg-panel { padding: 0.38rem 0.5rem 0.32rem 0.58rem; }
+body.land-mode .msg-item { padding: 0.22rem 0; gap: 7px; }
+body.land-mode .msg-line { font-size: 0.92rem; }
+body.land-mode .msg-sub { font-size: 0.74rem; }
+body.land-mode .msg-head { font-size: 0.78rem; }
 body.land-mode .bottom-bar { gap: 0.7rem; padding-top: 0; }
-body.land-mode .bottom-bar .item { font-size: 0.62rem; }
+body.land-mode .bottom-bar .item { font-size: 0.74rem; }
 
 body.land-mode .toast-container {
   top: auto;
   bottom: calc(var(--safe-bottom) + 10px);
 }
 
-/* 横屏矮视口下把设置面板摊成两列，减少滚动 */
+/* 横屏矮视口下把设置面板摊成两列 */
 body.land-mode .settings-panel {
   max-width: 720px;
   max-height: calc(100vh - 18px);
@@ -1209,7 +1279,7 @@ body.land-mode .settings-panel {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0 18px;
   align-content: start;
-  border-radius: 22px;
+  border-radius: 24px;
 }
 body.land-mode .settings-panel > .settings-title,
 body.land-mode .settings-panel > .focus-panel,
@@ -1222,14 +1292,13 @@ body.land-mode .toggles-group {
   gap: 0 26px;
 }
 
-/* 资讯订阅组横向铺开：393px 高的摆件里少滚一屏 */
 body.land-mode .settings-panel > .news-group { grid-column: 1 / -1; }
 body.land-mode .news-group .news-cols {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0 18px;
 }
 
-/* 横屏 × 极窄（分屏 / 折叠外屏）：收窄右栏，保证时钟不塌 */
+/* 横屏 × 极窄 */
 @media (max-width: 660px) {
   body.land-mode .landscape-wrap {
     grid-template-columns: minmax(0, 1fr) minmax(170px, 0.72fr);
@@ -1240,13 +1309,13 @@ body.land-mode .news-group .news-cols {
 }
 
 /* ════════════════════════════════════════════
-   AOD 微亮模式 v7
+   AOD 微亮模式 v9
    ════════════════════════════════════════════ */
 body.aod-mode .clock-face.active .numeric-digits,
 body.aod-mode .flip-container,
 body.aod-mode .word-main {
-  opacity: 0.28;
-  filter: brightness(0.45);
+  opacity: 0.25;
+  filter: brightness(0.42);
 }
 body.aod-mode .info-strip,
 body.aod-mode .strip-zone,
@@ -1254,170 +1323,194 @@ body.aod-mode .bottom-bar,
 body.aod-mode .face-dots,
 body.aod-mode .wx-card,
 body.aod-mode .msg-panel {
-  opacity: 0.04;
+  opacity: 0.035;
 }
 body.aod-mode .bg-nebula,
 body.aod-mode .bg-aurora,
 body.aod-mode .bg-noise,
-body.aod-mode .bg-fog {
+body.aod-mode .bg-fog,
+body.aod-mode .bg-mood,
+body.aod-mode .bg-weather-particles {
   opacity: 0 !important;
 }
 body.aod-mode .glass-card {
-  background: oklch(100% 0 0 / 0.008);
-  border-color: oklch(100% 0 0 / 0.008);
+  background: oklch(100% 0 0 / 0.006);
+  border-color: oklch(100% 0 0 / 0.006);
 }
 
-/* ── 专注模式 v7 ── */
+/* ── 专注模式 v9 ── */
 body.focus-mode .strip-zone,
 body.focus-mode .bottom-bar,
-body.focus-mode .info-strip { opacity: 0.06; }
-body.focus-mode .glass-card { opacity: 0.08; }
+body.focus-mode .info-strip { opacity: 0.05; }
+body.focus-mode .glass-card { opacity: 0.06; }
 
 /* ════════════════════════════════════════════
-   禅模式 v7
+   禅模式 v9
    ════════════════════════════════════════════ */
 body.zen-mode .strip-zone,
 body.zen-mode .bottom-bar,
 body.zen-mode .info-strip,
 body.zen-mode .face-dots,
 body.zen-mode .info-zone { opacity: 0; pointer-events: none; }
-body.zen-mode .clock-stage { transform: scale(1.08); }
-body.zen-mode .status-bar { opacity: 0.12; }
+body.zen-mode .clock-stage { transform: scale(1.1); transition: transform 0.8s var(--ease-out-expo); }
+body.zen-mode .status-bar { opacity: 0.1; }
 body.zen-mode .bg-nebula,
 body.zen-mode .bg-aurora,
 body.zen-mode .bg-noise,
-body.zen-mode .bg-fog { opacity: 0.08; }
+body.zen-mode .bg-fog,
+body.zen-mode .bg-mood { opacity: 0.06; }
 body.zen-mode .settings-panel { opacity: 0; }
 body.zen-mode.numeric-mode .numeric-digits { font-size: clamp(3.4rem, 18vw, 4.8rem); }
 
 /* ════════════════════════════════════════════
-   桌面预览 v7 — 沉浸式 Pixel 3a 场景
+   桌面预览 v9 — 沉浸式 Pixel 3a 场景
+   更真实的设备光影 · 桌面反射 · 环境光交互
    ════════════════════════════════════════════ */
 @media (min-width: 900px) {
   body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #020206;
-    perspective: 2000px;
+    background: #01010a;
+    perspective: 1800px;
     overflow: hidden;
   }
-  /* 环境光 v7（更柔和） */
+  /* 环境光 v9 — 多方向温和补光 */
   body::before {
     content:'';
     position: fixed; inset: 0;
     background:
-      radial-gradient(ellipse 40% 50% at 18% 80%, oklch(10% 0.02 280) 0%, transparent 55%),
-      radial-gradient(ellipse 35% 40% at 88% 12%, oklch(8% 0.025 15) 0%, transparent 50%),
-      radial-gradient(ellipse 50% 30% at 50% 100%, oklch(5% 0.012 250) 0%, transparent 50%);
+      radial-gradient(ellipse 45% 55% at 15% 85%, oklch(8% 0.025 290) 0%, transparent 50%),
+      radial-gradient(ellipse 40% 45% at 88% 8%, oklch(7% 0.03 20) 0%, transparent 45%),
+      radial-gradient(ellipse 55% 35% at 50% 100%, oklch(4% 0.015 260) 0%, transparent 45%),
+      radial-gradient(ellipse 30% 25% at 75% 70%, oklch(5% 0.01 200) 0%, transparent 40%);
     z-index: -1;
     pointer-events: none;
+    animation: envLightDrift calc(24s * var(--breath-speed, 1)) ease-in-out infinite;
   }
-  /* 桌面反光的v7 */
+  /* 桌面反射 v9 */
   body::after {
     content:'';
     position: fixed;
     bottom: 0; left: 0; right: 0;
-    height: 22vh;
-    background: linear-gradient(0deg, oklch(2.5% 0.008 250 / 0.25) 0%, transparent 100%);
+    height: 28vh;
+    background: linear-gradient(0deg, oklch(2.8% 0.01 260 / 0.28) 0%, transparent 100%);
     pointer-events: none;
     z-index: -1;
   }
-  /* 设备主体 v7 */
+  @keyframes envLightDrift {
+    0%, 100% { opacity: 0.95; }
+    50% { opacity: 1; }
+  }
+
+  /* 设备主体 v9 — 更真实的 Pixel 3a 机身体感 */
   .app {
     width: 412px;
     height: 82vh;
     max-height: 760px;
-    border-radius: 36px;
-    background: oklch(1.8% 0.004 250 / 0.55);
-    border: 1px solid oklch(100% 0 0 / 0.022);
+    border-radius: 40px;
+    background: oklch(1.6% 0.004 260 / 0.48);
+    border: 1.2px solid oklch(100% 0 0 / 0.018);
     box-shadow:
-      0 0 0 1px oklch(0% 0 0 / 0.45),
-      0 22px 85px oklch(0% 0 0 / 0.65),
-      0 0 100px oklch(from var(--accent) l c h / 0.012),
-      inset 0 0 0 1px oklch(100% 0 0 / 0.008);
+      0 0 0 1px oklch(0% 0 0 / 0.5),
+      0 24px 90px oklch(0% 0 0 / 0.7),
+      0 0 120px oklch(from var(--accent) l c h / 0.008),
+      0 0 0 0.5px oklch(100% 0 0 / 0.012),
+      inset 0 0.5px 0 oklch(100% 0 0 / 0.04),
+      inset 0 -0.5px 0 oklch(0% 0 0 / 0.3);
     padding-top: calc(var(--punchhole-safe) + 14px);
-    transform: rotateX(1.2deg) scale(0.94);
+    transform: rotateX(1deg) scale(0.95);
     transform-style: preserve-3d;
-    transition: transform 0.65s var(--ease-out-expo);
+    transition: transform 0.7s var(--ease-out-expo), box-shadow 0.7s;
     position: relative;
     overflow: hidden;
   }
+  /* 设备边框光泽 */
   .app::before {
     content:'';
     position: absolute;
     inset: -1px;
-    border-radius: 36px;
-    border: 1px solid oklch(100% 0 0 / 0.04);
+    border-radius: 40px;
+    border: 1px solid oklch(100% 0 0 / 0.035);
     pointer-events: none;
     z-index: 24;
   }
+  /* 打孔屏 v9 — 更真实的光感 */
   .app::after {
     content:'';
     position: absolute;
-    top: 14px;
+    top: 16px;
     left: 50%;
-    margin-left: -5px;
-    width: 10px; height: 10px;
+    margin-left: -6px;
+    width: 12px; height: 12px;
     border-radius: 50%;
-    background: oklch(1.2% 0 0);
-    border: 1px solid oklch(100% 0 0 / 0.028);
+    background: radial-gradient(circle at 40% 38%, oklch(3% 0.005 250) 0%, oklch(0.8% 0 0) 60%, oklch(1.5% 0 0) 100%);
+    border: 1px solid oklch(100% 0 0 / 0.02);
     z-index: 25;
     pointer-events: none;
-    box-shadow: inset 0 0 2px oklch(0% 0 0 / 0.85);
+    box-shadow: inset 0 0 3px oklch(0% 0 0 / 0.9), 0 0 1px oklch(100% 0 0 / 0.02);
   }
   .app:hover {
     transform: rotateX(0deg) scale(0.96);
+    box-shadow:
+      0 0 0 1px oklch(0% 0 0 / 0.5),
+      0 28px 100px oklch(0% 0 0 / 0.75),
+      0 0 140px oklch(from var(--accent) l c h / 0.012),
+      inset 0 0.5px 0 oklch(100% 0 0 / 0.04),
+      inset 0 -0.5px 0 oklch(0% 0 0 / 0.3);
   }
   .face-dots { display: flex; }
 
-  /* 横屏摆件预览：把设备框转成 Pixel 3a 横放比例 807:393 */
+  /* 横屏摆件预览 v9 */
   body.land-mode .app {
     width: min(860px, 92vw, (100vh - 96px) * 807 / 393);
     height: auto;
     max-height: none;
     aspect-ratio: 807 / 393;
-    border-radius: 30px;
+    border-radius: 34px;
     padding-top: 8px;
     padding-bottom: 8px;
-    transform: rotateX(1.2deg) scale(0.97);
+    transform: rotateX(0.8deg) scale(0.98);
   }
-  body.land-mode .app::before { border-radius: 30px; }
+  body.land-mode .app::before { border-radius: 34px; }
   body.land-mode .app::after {
     top: 50%;
-    left: 13px;
+    left: 14px;
     margin-left: 0;
-    margin-top: -5px;
+    margin-top: -6px;
   }
-  body.land-mode .app:hover { transform: rotateX(0deg) scale(0.99); }
+  body.land-mode .app:hover { transform: rotateX(0deg) scale(1); }
 }
 
-/* ── 深夜时段 v7 ── */
+/* ── 深夜时段 v9 — 更深的暗化 ── */
 body.time-night .bg-vignette {
-  background: radial-gradient(ellipse 70% 70% at 50% 48%, transparent 25%, rgba(0,0,0,0.88) 100%);
+  background: radial-gradient(ellipse 68% 68% at 50% 48%, transparent 20%, rgba(0,0,0,0.92) 100%);
 }
-body.time-night .glass-card { opacity: 0.35; }
-body.time-night { --text-breath: 0.3; }
+body.time-night .glass-card { opacity: 0.32; }
+body.time-night { --text-breath: 0.4; }
+body.time-night .numeric-digits {
+  text-shadow: 0 0 calc(6px * (0.3 + var(--digit-glow) * 0.4)) oklch(from var(--accent) l c h / calc(0.02 + var(--digit-glow) * 0.03));
+}
 
-/* ── 入场动画 v7 ── */
+/* ── 入场动画 v9 ── */
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.app > * { animation: fadeInUp 0.55s var(--ease-out-expo) both; }
-.app > *:nth-child(1) { animation-delay: 0.04s; }
-.app > *:nth-child(2) { animation-delay: 0.10s; }
-.app > *:nth-child(3) { animation-delay: 0.16s; }
-.app > *:nth-child(4) { animation-delay: 0.22s; }
-.app > *:nth-child(5) { animation-delay: 0.28s; }
+.app > * { animation: fadeInUp calc(0.6s * var(--breath-speed, 1)) var(--ease-out-expo) both; }
+.app > *:nth-child(1) { animation-delay: 0.05s; }
+.app > *:nth-child(2) { animation-delay: 0.12s; }
+.app > *:nth-child(3) { animation-delay: 0.19s; }
+.app > *:nth-child(4) { animation-delay: 0.26s; }
+.app > *:nth-child(5) { animation-delay: 0.33s; }
 
-/* ── 呼吸微动效（OLED像素保护） v7 ── */
+/* ── 呼吸微动效（OLED像素保护） v9 ── */
 @keyframes subtleBreathe {
-  0%, 100% { opacity: 0.96; }
+  0%, 100% { opacity: 0.97; }
   50% { opacity: 1; }
 }
 .breathing {
-  animation: subtleBreathe 4.2s var(--ease-in-out-quart) infinite;
+  animation: subtleBreathe calc(4.5s * var(--breath-speed, 1)) var(--ease-in-out-quart) infinite;
 }
 
 /* ── Reduced Motion ── */
@@ -1427,16 +1520,18 @@ body.time-night { --text-breath: 0.3; }
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  .num-sep { animation: none !important; opacity: 0.5; }
+  .num-sep { animation: none !important; opacity: 0.45; }
 }
 
-/* ── 电池省电解模式 v7 ── */
+/* ── 电池省电解模式 v9 ── */
 body.battery-saver .bg-nebula,
 body.battery-saver .bg-aurora,
 body.battery-saver .bg-noise,
 body.battery-saver .bg-fog,
+body.battery-saver .bg-mood,
 body.battery-saver .bg-light-cone,
-body.battery-saver .bg-pulse {
+body.battery-saver .bg-pulse,
+body.battery-saver .bg-weather-particles {
   display: none;
 }
 body.battery-saver .bg-base {
@@ -1457,15 +1552,17 @@ body.battery-saver .glass-card {
 </head>
 <body>
 
-<!-- 背景系统 -->
+<!-- 背景系统 v9 -->
 <div class="bg-base"></div>
+<div class="bg-mood" id="bgMood"></div>
 <canvas class="bg-nebula" id="nebulaCanvas"></canvas>
 <canvas class="bg-aurora" id="auroraCanvas"></canvas>
-<div class="bg-fog" id="bgFog"></div>
+<div class="bg-fog"></div>
 <div class="bg-noise"></div>
 <div class="bg-vignette"></div>
 <div class="bg-pulse" id="bgPulse"></div>
 <div class="bg-light-cone"></div>
+<canvas class="bg-weather-particles" id="weatherParticles"></canvas>
 
 <!-- 主体应用 -->
 <div class="app" id="app">
@@ -1574,6 +1671,7 @@ body.battery-saver .glass-card {
 
         <!-- 天气主卡 -->
         <div class="wx-card glass-card highlight" id="cardWeather">
+          <div class="glass-iris"></div>
           <div class="glass-noise"></div>
           <div class="wx-top">
             <span class="wx-icon" id="weatherIcon">⛅</span>
@@ -1593,10 +1691,12 @@ body.battery-saver .glass-card {
         <!-- 指标卡条 -->
         <div class="info-strip" id="infoStrip">
           <div class="glass-card" id="cardCountdown">
+            <div class="glass-iris"></div>
             <span class="label" id="countdownLabel">距下班</span>
             <span class="value" id="countdownVal">--:--:--</span>
           </div>
           <div class="glass-card" id="cardAqi">
+            <div class="glass-iris"></div>
             <span class="label">空气</span>
             <span class="value" id="aqiVal">--</span>
           </div>
@@ -1604,6 +1704,7 @@ body.battery-saver .glass-card {
 
         <!-- 消息中心 -->
         <div class="msg-panel glass-card" id="msgPanel">
+          <div class="glass-iris"></div>
           <div class="glass-noise"></div>
           <div class="msg-head">
             <span class="msg-title">消息</span>
@@ -1765,15 +1866,14 @@ body.battery-saver .glass-card {
 
 <script>
 /* ══════════════════════════════════════════════════════
-   活 · Clock  —  核心脚本 v8.1 "Signal · 风讯"
-   Landscape Ornament · Message Hub · News Digest · Ambient Intelligence
-   Comfort-First · OLED Perfection
+   活 · Clock  —  核心脚本 v9 "Aura · 气场"
+   Landscape Ornament · Message Hub · News Digest · Aura Glass · Bio-Rhythmic
+   Comfort-First · OLED Perfection · Ambient Mood · Iridescent Glass
    ══════════════════════════════════════════════════════ */
 (() => {
   'use strict';
 
-  /* ── 常量 ──
-     localStorage 键沿用 V7 命名空间，老设备升级后设置不丢 */
+  /* ── 常量 ── */
   const STORE_KEY = 'clockV7State';
   const FACES = ['numeric', 'analog', 'word', 'flip'];
   const WEEKDAYS = ['周日','周一','周二','周三','周四','周五','周六'];
@@ -1804,32 +1904,32 @@ body.battery-saver .glass-card {
     { name:'残月', icon:'🌘', threshold:0.97 },
   ];
 
-  /* ── OKLCH Circadian 色温 v7（24段 · 更柔和平滑） ── */
+  /* ── OKLCH Circadian 色温 v9（24段 · 生物节律速度联动） ── */
   const CIRCADIAN_STOPS = [
-    { h:0,  accent:[42,0.045,268], bg:[2.5,0.005,262] },
-    { h:1,  accent:[40,0.042,266], bg:[2.5,0.005,260] },
-    { h:2,  accent:[38,0.040,264], bg:[2.5,0.005,258] },
-    { h:3,  accent:[36,0.038,262], bg:[2.5,0.005,256] },
-    { h:4,  accent:[40,0.045,268], bg:[3,0.007,258] },
-    { h:5,  accent:[52,0.07,290],   bg:[5,0.010,270] },
-    { h:6,  accent:[60,0.10,28],    bg:[8,0.018,30] },
-    { h:7,  accent:[65,0.09,38],    bg:[12,0.022,35] },
-    { h:8,  accent:[68,0.085,248],  bg:[10,0.014,245] },
-    { h:9,  accent:[70,0.085,248],  bg:[8,0.012,248] },
-    { h:10, accent:[72,0.09,248],   bg:[7,0.010,250] },
-    { h:11, accent:[73,0.09,248],   bg:[6,0.010,250] },
-    { h:12, accent:[73,0.09,248],   bg:[5,0.008,250] },
-    { h:13, accent:[73,0.09,248],   bg:[5,0.008,250] },
-    { h:14, accent:[72,0.09,248],   bg:[6,0.010,250] },
-    { h:15, accent:[70,0.085,250],  bg:[7,0.012,248] },
-    { h:16, accent:[66,0.085,258],  bg:[8,0.014,255] },
-    { h:17, accent:[60,0.09,20],    bg:[10,0.016,18] },
-    { h:18, accent:[54,0.10,13],    bg:[11,0.020,12] },
-    { h:19, accent:[50,0.08,350],   bg:[9,0.016,355] },
-    { h:20, accent:[48,0.07,295],   bg:[7,0.013,295] },
-    { h:21, accent:[46,0.065,282],  bg:[5,0.011,280] },
-    { h:22, accent:[44,0.06,275],   bg:[4,0.009,272] },
-    { h:23, accent:[42,0.05,270],   bg:[3,0.007,266] },
+    { h:0,  accent:[42,0.042,268], bg:[2.2,0.004,262] },
+    { h:1,  accent:[40,0.040,266], bg:[2.2,0.004,260] },
+    { h:2,  accent:[38,0.038,264], bg:[2.2,0.004,258] },
+    { h:3,  accent:[36,0.035,262], bg:[2.2,0.004,256] },
+    { h:4,  accent:[40,0.042,268], bg:[2.8,0.006,258] },
+    { h:5,  accent:[52,0.065,290],  bg:[4.5,0.008,270] },
+    { h:6,  accent:[60,0.095,28],   bg:[7,0.016,30] },
+    { h:7,  accent:[65,0.088,38],   bg:[11,0.020,35] },
+    { h:8,  accent:[68,0.082,248],  bg:[9,0.013,245] },
+    { h:9,  accent:[70,0.082,248],  bg:[7.5,0.011,248] },
+    { h:10, accent:[72,0.086,248],  bg:[6.5,0.009,250] },
+    { h:11, accent:[73,0.086,248],  bg:[5.5,0.009,250] },
+    { h:12, accent:[73,0.086,248],  bg:[5,0.008,250] },
+    { h:13, accent:[73,0.086,248],  bg:[5,0.008,250] },
+    { h:14, accent:[72,0.086,248],  bg:[6,0.009,250] },
+    { h:15, accent:[70,0.082,250],  bg:[7,0.011,248] },
+    { h:16, accent:[66,0.082,258],  bg:[8,0.013,255] },
+    { h:17, accent:[60,0.086,20],   bg:[9.5,0.015,18] },
+    { h:18, accent:[54,0.095,13],   bg:[10.5,0.018,12] },
+    { h:19, accent:[50,0.075,350],  bg:[8.5,0.015,355] },
+    { h:20, accent:[48,0.065,295],  bg:[6.5,0.012,295] },
+    { h:21, accent:[46,0.060,282],  bg:[4.5,0.010,280] },
+    { h:22, accent:[44,0.055,275],  bg:[3.5,0.008,272] },
+    { h:23, accent:[42,0.048,270],  bg:[2.8,0.007,266] },
   ];
 
   /* ── 默认纸条 ── */
@@ -1843,7 +1943,7 @@ body.battery-saver .glass-card {
     '#quote',
   ];
 
-  /* ── 内置资讯订阅（RSS / Atom，可在设置里增删）── */
+  /* ── 内置资讯订阅 ── */
   const DEFAULT_FEEDS = [
     { name: '青岛机场·航线', url: 'https://news.google.com/rss/search?q=%E9%9D%92%E5%B2%9B%E6%9C%BA%E5%9C%BA%20%E8%88%AA%E7%BA%BF%20when%3A30d&hl=zh-CN&gl=CN&ceid=CN:zh-Hans' },
     { name: '青岛·城市要闻', url: 'https://news.google.com/rss/search?q=%E9%9D%92%E5%B2%9B%20%E4%BA%A4%E9%80%9A%20when%3A30d&hl=zh-CN&gl=CN&ceid=CN:zh-Hans' },
@@ -1855,7 +1955,7 @@ body.battery-saver .glass-card {
     '少即是多', '此刻即是当下', '呼吸，然后继续',
     '做你认为正确的事', '时间是最公平的资源', '心流是最美的状态',
     '一寸光阴一寸金', '专注当下，未来可期', '沉静是最好的力量',
-    '心若止水，风轻云淡', '慢慢而行，终至千里', '凡事事缓则圆',
+    '心若止水，风轻云轻', '慢慢而行，终至千里', '凡事事缓则圆',
     '静而后能安，安而后能虑', '知止而后有定', '物来顺应，未来不迎',
   ];
   const AFFIRMATIONS = [
@@ -1921,10 +2021,8 @@ body.battery-saver .glass-card {
   const $ = id => document.getElementById(id);
   const dom = {
     app: $('app'),
-    statusText: $('statusText'),
-    statusDot: $('statusDot'),
-    statusTime: $('statusTime'),
-    statusAmbient: $('statusAmbient'),
+    statusText: $('statusText'), statusDot: $('statusDot'),
+    statusTime: $('statusTime'), statusAmbient: $('statusAmbient'),
     btnSettings: $('btnSettings'),
     clockStage: $('clockStage'),
     ndH: $('ndH'), ndM: $('ndM'), ndS: $('ndS'), ndSep: $('ndSep'),
@@ -1950,8 +2048,7 @@ body.battery-saver .glass-card {
     toggleNews: $('toggleNews'), newsTimeInput: $('newsTimeInput'), newsState: $('newsState'),
     btnNewsNow: $('btnNewsNow'), newsFeedList: $('newsFeedList'), newsNameInput: $('newsNameInput'),
     newsUrlInput: $('newsUrlInput'), btnNewsAdd: $('btnNewsAdd'), newsProxyInput: $('newsProxyInput'),
-    settingsOverlay: $('settingsOverlay'),
-    btnCloseSettings: $('btnCloseSettings'),
+    settingsOverlay: $('settingsOverlay'), btnCloseSettings: $('btnCloseSettings'),
     toastContainer: $('toastContainer'),
     endTimeInput: $('endTimeInput'), endTimeVal: $('endTimeVal'),
     stripIntervalInput: $('stripIntervalInput'), stripIntervalVal: $('stripIntervalVal'),
@@ -1963,9 +2060,9 @@ body.battery-saver .glass-card {
     focusToday: $('focusToday'), focusWeek: $('focusWeek'), focusStreak: $('focusStreak'),
     weekHeatmap: $('weekHeatmap'),
     faceDots: $('faceDots'),
-    bgNebula: $('nebulaCanvas'),
-    bgAurora: $('auroraCanvas'),
-    bgPulse: $('bgPulse'),
+    bgNebula: $('nebulaCanvas'), bgAurora: $('auroraCanvas'),
+    bgPulse: $('bgPulse'), bgMood: $('bgMood'),
+    weatherParticles: $('weatherParticles'),
   };
 
   /* ══════════════════════════════════════
@@ -1978,7 +2075,30 @@ body.battery-saver .glass-card {
     c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
 
   /* ══════════════════════════════════════
-     Pixel Wander v7 — OLED 烧屏保护
+     Bio-Rhythmic 生物节律速度 v9
+     22:00-06:00 期间放慢所有动态效果
+     ══════════════════════════════════════ */
+  function updateBioRhythm() {
+    const h = new Date().getHours();
+    const isNight = h >= 22 || h < 6;
+    const isDusk = h >= 18 && h < 22;
+    let pace = 1;
+    if (isNight) pace = 0.55;
+    else if (isDusk) pace = 0.85;
+    
+    document.documentElement.style.setProperty('--breath-speed', pace);
+    
+    /* 夜间字重更轻，减少视觉冲击 */
+    const nightWeight = isNight ? '300' : '350';
+    document.documentElement.style.setProperty('--text-weight-primary', nightWeight);
+    
+    /* 夜间全局动画速度放慢 */
+    document.documentElement.style.setProperty('--bio-pace', pace);
+  }
+
+  /* ══════════════════════════════════════
+     Pixel Wander v9 — OLED 烧屏保护
+     更智能的漂移：避开文字密集区边缘
      ══════════════════════════════════════ */
   let wanderTimer = null;
   function startPixelWander() {
@@ -1989,19 +2109,20 @@ body.battery-saver .glass-card {
     if (wanderTimer) clearInterval(wanderTimer);
     const wander = () => {
       if (!state.pixelWander) return;
-      const x = (Math.random() * 3.6 - 1.8).toFixed(1);
-      const y = (Math.random() * 2.8 - 1.4).toFixed(1);
+      // 更小幅度漂移，且采用曲线平滑
+      const x = (Math.random() * 3 - 1.5).toFixed(1);
+      const y = (Math.random() * 2.4 - 1.2).toFixed(1);
       document.documentElement.style.setProperty('--wander-x', x + 'px');
       document.documentElement.style.setProperty('--wander-y', y + 'px');
-      document.documentElement.style.setProperty('--wander-t', '52s');
-      if (dom.app) dom.app.style.transition = 'transform 52s linear';
+      document.documentElement.style.setProperty('--wander-t', '48s');
+      if (dom.app) dom.app.style.transition = 'transform 48s linear';
     };
     wander();
-    wanderTimer = setInterval(wander, 54000);
+    wanderTimer = setInterval(wander, 50000);
   }
 
   /* ══════════════════════════════════════
-     AI Adaptive Engine v7
+     AI Adaptive Engine v9
      ══════════════════════════════════════ */
   const adaptive = {
     ambientLux: null,
@@ -2027,7 +2148,7 @@ body.battery-saver .glass-card {
       }
       if ('AmbientLightSensor' in window) {
         try {
-          const sensor = new AmbientLightSensor({ frequency: 0.4 });
+          const sensor = new AmbientLightSensor({ frequency: 0.35 });
           sensor.addEventListener('reading', () => {
             this.ambientLux = sensor.illuminance;
             this.applyAmbientAdaptation();
@@ -2037,7 +2158,7 @@ body.battery-saver .glass-card {
         } catch(e) {}
       }
       this.fallbackAmbientCheck();
-      setInterval(() => this.fallbackAmbientCheck(), 55000);
+      setInterval(() => this.fallbackAmbientCheck(), 50000);
     },
 
     fallbackAmbientCheck() {
@@ -2053,17 +2174,17 @@ body.battery-saver .glass-card {
     applyAmbientAdaptation() {
       const lux = this.ambientLux || 100;
       let brightness = 1;
-      if (lux < 8) brightness = 0.48;
-      else if (lux < 30) brightness = 0.62;
-      else if (lux < 100) brightness = 0.78;
-      else if (lux < 500) brightness = 1.0;
-      else brightness = 1.08;
+      if (lux < 5) brightness = 0.42;
+      else if (lux < 25) brightness = 0.58;
+      else if (lux < 80) brightness = 0.75;
+      else if (lux < 400) brightness = 1.0;
+      else brightness = 1.06;
 
-      document.documentElement.style.setProperty('--digit-glow', String((brightness - 0.48) * 0.18));
+      document.documentElement.style.setProperty('--digit-glow', String((brightness - 0.42) * 0.15));
 
       if (dom.statusAmbient) {
-        if (lux < 8) dom.statusAmbient.textContent = '🌙';
-        else if (lux < 100) dom.statusAmbient.textContent = '🌆';
+        if (lux < 5) dom.statusAmbient.textContent = '🌙';
+        else if (lux < 80) dom.statusAmbient.textContent = '🌆';
         else dom.statusAmbient.textContent = '☀️';
       }
     },
@@ -2106,12 +2227,14 @@ body.battery-saver .glass-card {
   };
 
   /* ══════════════════════════════════════
-     Circadian 背景系统 v7（分钟级平滑）
+     Circadian 背景系统 v9（分钟级平滑 + 生物节律联动）
      ══════════════════════════════════════ */
   const circadian = {
     init() {
       this.apply();
       setInterval(() => this.apply(), 60000);
+      updateBioRhythm();
+      setInterval(updateBioRhythm, 5 * 60 * 1000);
     },
 
     getStops(hour) {
@@ -2157,6 +2280,9 @@ body.battery-saver .glass-card {
 
       const h2 = now.getHours();
       document.body.classList.toggle('time-night', h2 >= 22 || h2 < 5);
+
+      /* v9: 更新彩虹边缘光角度（ioris） */
+      document.documentElement.style.setProperty('--iris-angle', (acH * 2).toFixed(1) + 'deg');
     },
 
     getBgColor() {
@@ -2170,7 +2296,7 @@ body.battery-saver .glass-card {
     },
   };
 
-  /* OKLCH → RGB 近似转换 v7 */
+  /* OKLCH → RGB 近似转换 */
   function oklchToRgb(L, C, H) {
     const hRad = H * Math.PI / 180;
     const a = C * Math.cos(hRad);
@@ -2185,7 +2311,172 @@ body.battery-saver .glass-card {
   }
 
   /* ══════════════════════════════════════
-     星云雾背景 v7（更柔和星光 · 自适应帧率）
+     天气情绪系统 v9 — 背景色温随天气变化
+     ══════════════════════════════════════ */
+  const weatherMood = {
+    currentCode: -1,
+
+    apply(weatherCode) {
+      if (weatherCode === this.currentCode) return;
+      this.currentCode = weatherCode;
+
+      let moodColor = 'oklch(50% 0 0 / 0)';
+      let particleMode = 'none';
+
+      if (weatherCode === 0) {
+        /* 晴天：暖金氛围 */
+        moodColor = 'oklch(55% 0.02 60 / 0.12)';
+      } else if (weatherCode <= 3) {
+        /* 多云：带灰蓝调 */
+        moodColor = 'oklch(50% 0.015 250 / 0.1)';
+      } else if (weatherCode <= 48) {
+        /* 雾：冷灰 */
+        moodColor = 'oklch(45% 0.008 250 / 0.14)';
+        particleMode = 'fog';
+      } else if (weatherCode <= 67) {
+        /* 雨：冷蓝 */
+        moodColor = 'oklch(45% 0.02 240 / 0.12)';
+        particleMode = 'rain';
+      } else if (weatherCode <= 77) {
+        /* 雪：冷亮 */
+        moodColor = 'oklch(55% 0.015 230 / 0.1)';
+        particleMode = 'snow';
+      } else if (weatherCode <= 82) {
+        /* 阵雨 */
+        moodColor = 'oklch(45% 0.025 235 / 0.12)';
+        particleMode = 'rain';
+      } else if (weatherCode <= 99) {
+        /* 雷暴：偏紫 */
+        moodColor = 'oklch(40% 0.03 280 / 0.1)';
+        particleMode = 'rain';
+      }
+
+      document.documentElement.style.setProperty('--weather-mood', moodColor);
+
+      /* 天气粒子 */
+      if (particleMode !== 'none') {
+        weatherParticles.start(particleMode);
+      } else {
+        weatherParticles.stop();
+      }
+    }
+  };
+
+  /* ══════════════════════════════════════
+     天气粒子系统 v9 — 雨雪雾氛围
+     ══════════════════════════════════════ */
+  const weatherParticles = {
+    canvas: null, ctx: null, w: 0, h: 0,
+    items: [], mode: 'none', running: false, lastFrame: 0,
+
+    start(mode) {
+      this.mode = mode;
+      if (!this.canvas) {
+        this.canvas = dom.weatherParticles;
+        if (!this.canvas) return;
+        this.ctx = this.canvas.getContext('2d');
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+      }
+      document.getElementById('weatherParticles')?.classList.add('active');
+      this.createItems();
+      if (!this.running) {
+        this.running = true;
+        this.loop();
+      }
+    },
+
+    stop() {
+      this.running = false;
+      this.items = [];
+      if (this.ctx) this.ctx.clearRect(0, 0, this.w, this.h);
+      document.getElementById('weatherParticles')?.classList.remove('active');
+    },
+
+    resize() {
+      if (!this.canvas) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      this.w = window.innerWidth; this.h = window.innerHeight;
+      this.canvas.width = this.w * dpr; this.canvas.height = this.h * dpr;
+      this.canvas.style.width = this.w + 'px'; this.canvas.style.height = this.h + 'px';
+      this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    },
+
+    createItems() {
+      this.items = [];
+      const count = this.mode === 'rain' ? 30 : this.mode === 'snow' ? 20 : 12;
+      for (let i = 0; i < count; i++) {
+        if (this.mode === 'rain') {
+          this.items.push({
+            x: Math.random() * this.w, y: Math.random() * this.h,
+            vy: Math.random() * 1.8 + 2.5, vx: -0.3, len: Math.random() * 12 + 8,
+            alpha: Math.random() * 0.06 + 0.03,
+          });
+        } else if (this.mode === 'snow') {
+          this.items.push({
+            x: Math.random() * this.w, y: Math.random() * this.h,
+            vy: Math.random() * 0.4 + 0.2, vx: (Math.random() - 0.5) * 0.3,
+            r: Math.random() * 2 + 0.8,
+            alpha: Math.random() * 0.12 + 0.05,
+            phase: Math.random() * Math.PI * 2,
+          });
+        } else if (this.mode === 'fog') {
+          this.items.push({
+            x: Math.random() * this.w, y: Math.random() * this.h,
+            vx: (Math.random() - 0.5) * 0.15, vy: (Math.random() - 0.5) * 0.06,
+            r: Math.random() * 80 + 40, alpha: Math.random() * 0.015 + 0.005,
+            phase: Math.random() * Math.PI * 2,
+          });
+        }
+      }
+    },
+
+    loop() {
+      if (!this.running) return;
+      const now = performance.now();
+      const interval = adaptive.lowPower ? 60 : 28;
+      if (now - this.lastFrame < interval) {
+        requestAnimationFrame(() => this.loop());
+        return;
+      }
+      this.lastFrame = now;
+
+      const ctx = this.ctx, t = now / 1000;
+      ctx.clearRect(0, 0, this.w, this.h);
+
+      for (const p of this.items) {
+        p.x += p.vx + (p.phase ? Math.sin(t * 0.3 + p.phase) * 0.15 : 0);
+        p.y += p.vy;
+        if (p.y > this.h + 10) { p.y = -10; p.x = Math.random() * this.w; }
+        if (p.x < -10) p.x = this.w + 10;
+        if (p.x > this.w + 10) p.x = -10;
+
+        if (this.mode === 'rain') {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p.x + p.vx * 0.6, p.y + p.len);
+          ctx.strokeStyle = `oklch(75% 0.02 240 / ${p.alpha.toFixed(4)})`;
+          ctx.lineWidth = 0.6;
+          ctx.stroke();
+        } else if (this.mode === 'snow') {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `oklch(90% 0.005 250 / ${p.alpha.toFixed(4)})`;
+          ctx.fill();
+        } else if (this.mode === 'fog') {
+          const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+          grd.addColorStop(0, `oklch(50% 0.01 250 / ${p.alpha.toFixed(4)})`);
+          grd.addColorStop(1, 'transparent');
+          ctx.fillStyle = grd;
+          ctx.fillRect(p.x - p.r, p.y - p.r, p.r * 2, p.r * 2);
+        }
+      }
+      requestAnimationFrame(() => this.loop());
+    },
+  };
+
+  /* ══════════════════════════════════════
+     星云雾背景 v9（更柔和星光 · 生物节律联动）
      ══════════════════════════════════════ */
   const nebula = {
     canvas: null, ctx: null, w: 0, h: 0, stars: [],
@@ -2211,13 +2502,13 @@ body.battery-saver .glass-card {
 
     createStars() {
       this.stars = [];
-      const count = Math.floor((this.w * this.h) / 16000);
+      const count = Math.floor((this.w * this.h) / 18000);
       for (let i = 0; i < count; i++) {
         this.stars.push({
           x: Math.random() * this.w, y: Math.random() * this.h,
-          r: Math.random() * 0.85 + 0.12,
-          alpha: Math.random() * 0.42 + 0.10,
-          speed: Math.random() * 0.038 + 0.008,
+          r: Math.random() * 0.8 + 0.12,
+          alpha: Math.random() * 0.38 + 0.08,
+          speed: Math.random() * 0.035 + 0.006,
           phase: Math.random() * Math.PI * 2,
         });
       }
@@ -2225,7 +2516,7 @@ body.battery-saver .glass-card {
 
     loop() {
       const now = performance.now();
-      const interval = adaptive.lowPower ? 90 : 18;
+      const interval = adaptive.lowPower ? 100 : 20;
       if (now - this.lastFrame < interval) {
         requestAnimationFrame(() => this.loop());
         return;
@@ -2235,19 +2526,19 @@ body.battery-saver .glass-card {
       const ctx = this.ctx, w = this.w, h = this.h;
       ctx.clearRect(0, 0, w, h);
       const bgColor = circadian.getBgColor();
-      const grd = ctx.createRadialGradient(w*0.5, h*0.5, 0, w*0.5, h*0.5, Math.max(w,h)*0.58);
+      const grd = ctx.createRadialGradient(w*0.5, h*0.5, 0, w*0.5, h*0.5, Math.max(w,h)*0.55);
       grd.addColorStop(0, bgColor);
-      grd.addColorStop(0.55, 'oklch(7% 0.010 255 / 0.15)');
+      grd.addColorStop(0.5, 'oklch(6% 0.008 255 / 0.12)');
       grd.addColorStop(1, 'transparent');
       ctx.fillStyle = grd;
       ctx.fillRect(0, 0, w, h);
 
       const t = now / 1000;
       for (const s of this.stars) {
-        const flick = s.alpha * (0.55 + 0.45 * Math.sin(t * s.speed * 1.1 + s.phase));
+        const flick = s.alpha * (0.5 + 0.5 * Math.sin(t * s.speed * 1.0 + s.phase));
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        ctx.fillStyle = `oklch(82% 0.012 250 / ${flick.toFixed(3)})`;
+        ctx.fillStyle = `oklch(80% 0.01 250 / ${flick.toFixed(3)})`;
         ctx.fill();
       }
       requestAnimationFrame(() => this.loop());
@@ -2255,7 +2546,7 @@ body.battery-saver .glass-card {
   };
 
   /* ══════════════════════════════════════
-     氛围粒子 v7（更柔和 · 更低频）
+     氛围粒子 v9
      ══════════════════════════════════════ */
   const aurora = {
     canvas: null, ctx: null, w: 0, h: 0, particles: [], lastFrame: 0,
@@ -2279,20 +2570,20 @@ body.battery-saver .glass-card {
     },
 
     createParticles() {
-      const count = adaptive.lowPower ? 8 : Math.min(Math.floor(this.w * this.h / 45000), 28);
+      const count = adaptive.lowPower ? 6 : Math.min(Math.floor(this.w * this.h / 52000), 24);
       this.particles = [];
       for (let i = 0; i < count; i++) {
         this.particles.push({
           x: Math.random() * this.w, y: Math.random() * this.h,
-          vx: (Math.random() - 0.5) * 0.07, vy: (Math.random() - 0.5) * 0.05,
-          r: Math.random() * 32 + 12, alpha: Math.random() * 0.022 + 0.006,
+          vx: (Math.random() - 0.5) * 0.06, vy: (Math.random() - 0.5) * 0.04,
+          r: Math.random() * 28 + 10, alpha: Math.random() * 0.018 + 0.005,
         });
       }
     },
 
     animate() {
       const now = performance.now();
-      const interval = adaptive.lowPower ? 130 : 22;
+      const interval = adaptive.lowPower ? 140 : 24;
       if (now - this.lastFrame < interval) {
         requestAnimationFrame(() => this.animate());
         return;
@@ -2306,8 +2597,8 @@ body.battery-saver .glass-card {
         if (p.x < -p.r) p.x = w + p.r; if (p.x > w + p.r) p.x = -p.r;
         if (p.y < -p.r) p.y = h + p.r; if (p.y > h + p.r) p.y = -p.r;
         const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
-        grd.addColorStop(0, `oklch(66% 0.045 250 / ${p.alpha.toFixed(4)})`);
-        grd.addColorStop(1, `oklch(66% 0.045 250 / 0)`);
+        grd.addColorStop(0, `oklch(65% 0.04 250 / ${p.alpha.toFixed(4)})`);
+        grd.addColorStop(1, `oklch(65% 0.04 250 / 0)`);
         ctx.fillStyle = grd;
         ctx.fillRect(p.x - p.r, p.y - p.r, p.r * 2, p.r * 2);
       }
@@ -2316,7 +2607,7 @@ body.battery-saver .glass-card {
   };
 
   /* ══════════════════════════════════════
-     时钟面渲染 v7
+     时钟面渲染
      ══════════════════════════════════════ */
   let prev = { h:-1, m:-1, s:-1 };
   let flipState = { h1: 0, h2: 0, m1: 0, m2: 0 };
@@ -2378,7 +2669,6 @@ body.battery-saver .glass-card {
     prev = { h, m, s };
   }
 
-  /* ── 数字转中文 v7 ── */
   function toWordTime(h, m) {
     const period = h < 5 ? '凌晨' : h < 8 ? '清晨' : h < 12 ? '上午' : h < 14 ? '中午' : h < 18 ? '下午' : h < 21 ? '傍晚' : '夜晚';
     const hourZodiac = CN_HOURS[h];
@@ -2386,7 +2676,6 @@ body.battery-saver .glass-card {
     return { main: hourZodiac + '时' + minuteStr, sub: period };
   }
 
-  /* ── Flip 翻页更新 v7 ── */
   function updateFlipCard(unitEl, oldVal, newVal) {
     if (oldVal === newVal) return;
     const card = unitEl.querySelector('.flip-card.static');
@@ -2397,21 +2686,18 @@ body.battery-saver .glass-card {
     }
     const topHalf = document.createElement('div');
     topHalf.className = 'flip-card flipping-top';
-    topHalf.innerHTML = `<span class="flip-num">${oldVal}</span>`;
+    topHalf.innerHTML = '<span class="flip-num">' + oldVal + '</span>';
     const botHalf = document.createElement('div');
     botHalf.className = 'flip-card flipping-bottom';
-    botHalf.innerHTML = `<span class="flip-num">${newVal}</span>`;
+    botHalf.innerHTML = '<span class="flip-num">' + newVal + '</span>';
     unitEl.appendChild(topHalf);
     unitEl.appendChild(botHalf);
-    setTimeout(() => {
+    setTimeout(function() {
       topHalf.remove(); botHalf.remove();
-      unitEl.innerHTML = `<div class="flip-card static"><span class="flip-num">${newVal}</span></div>`;
-    }, 500);
+      unitEl.innerHTML = '<div class="flip-card static"><span class="flip-num">' + newVal + '</span></div>';
+    }, 520);
   }
 
-  /* ══════════════════════════════════════
-     指针时钟 SVG 刻度生成
-     ══════════════════════════════════════ */
   function buildAnalogDial() {
     const ticksGroup = dom.analogTicks, numsGroup = dom.analogNums;
     if (!ticksGroup || !numsGroup) return;
@@ -2422,35 +2708,29 @@ body.battery-saver .glass-card {
       const r1 = 88, r2 = isHour ? 78 : 84;
       const x1 = Math.sin(angle) * r2, y1 = -Math.cos(angle) * r2;
       const x2 = Math.sin(angle) * r1, y2 = -Math.cos(angle) * r1;
-      const w = isHour ? 1.6 : 0.45;
-      const color = isHour ? 'oklch(88% 0.01 250 / 0.42)' : 'oklch(88% 0.005 250 / 0.10)';
-      ticksHTML += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`;
+      const w = isHour ? 1.5 : 0.4;
+      const color = isHour ? 'oklch(88% 0.01 250 / 0.38)' : 'oklch(88% 0.005 250 / 0.08)';
+      ticksHTML += '<line x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) + '" stroke="' + color + '" stroke-width="' + w + '" stroke-linecap="round"/>';
       if (isHour) {
         const num = i === 0 ? 12 : (i / 5);
         const nr = 67;
         const nx = Math.sin(angle) * nr, ny = -Math.cos(angle) * nr;
-        numsHTML += `<text x="${nx.toFixed(1)}" y="${ny.toFixed(1)}" fill="oklch(70% 0.01 250 / 0.38)" font-size="10" font-weight="400" text-anchor="middle" dominant-baseline="central" style="font-family:ui-rounded,system-ui,sans-serif;">${num}</text>`;
+        numsHTML += '<text x="' + nx.toFixed(1) + '" y="' + ny.toFixed(1) + '" fill="oklch(70% 0.01 250 / 0.35)" font-size="10" font-weight="400" text-anchor="middle" dominant-baseline="central" style="font-family:ui-rounded,system-ui,sans-serif;">' + num + '</text>';
       }
     }
     ticksGroup.innerHTML = ticksHTML;
     numsGroup.innerHTML = numsHTML;
   }
 
-  /* ══════════════════════════════════════
-     世界时钟
-     ══════════════════════════════════════ */
   function updateWorldClock() {
-    if (!state.showWorldClock) {
-      dom.worldClockItem.style.display = 'none';
-      return;
-    }
+    if (!state.showWorldClock) { dom.worldClockItem.style.display = 'none'; return; }
     dom.worldClockItem.style.display = '';
     const tokyoStr = new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Tokyo', hour: '2-digit', minute: '2-digit', hour12: false });
     dom.worldClockTxt.textContent = '东京 ' + tokyoStr;
   }
 
   /* ══════════════════════════════════════
-     天气 / 日出日落 / AQI v7
+     天气 / 日出日落 / AQI
      ══════════════════════════════════════ */
   let weatherCache = null, weatherCacheTime = 0;
   let aqiCache = null, aqiCacheTime = 0;
@@ -2464,7 +2744,7 @@ body.battery-saver .glass-card {
     if (weatherCache && Date.now() - weatherCacheTime < WEATHER_TTL) { renderWeather(weatherCache); return; }
     try {
       const pos = await getPosition();
-      const url = `https://api.open-meteo.com/v1/forecast?latitude=${pos.lat}&longitude=${pos.lon}`
+      const url = 'https://api.open-meteo.com/v1/forecast?latitude=' + pos.lat + '&longitude=' + pos.lon
         + '&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code'
         + '&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto';
       const res = await fetch(url), data = await res.json();
@@ -2482,11 +2762,11 @@ body.battery-saver .glass-card {
   }
 
   function getPosition() {
-    return new Promise(resolve => {
+    return new Promise(function(resolve) {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
-          pos => resolve({ lat: pos.coords.latitude.toFixed(1), lon: pos.coords.longitude.toFixed(1) }),
-          () => resolve({ lat: '39.9', lon: '116.4' }), { timeout: 5000 }
+          function(pos) { resolve({ lat: pos.coords.latitude.toFixed(1), lon: pos.coords.longitude.toFixed(1) }); },
+          function() { resolve({ lat: '39.9', lon: '116.4' }); }, { timeout: 5000 }
         );
       } else resolve({ lat: '39.9', lon: '116.4' });
     });
@@ -2495,13 +2775,14 @@ body.battery-saver .glass-card {
   function renderWeather(data) {
     if (!data || !data.current) return;
     const cur = data.current, temp = Math.round(cur.temperature_2m);
-    const { icon, desc } = weatherCodeToIcon(cur.weather_code);
-    dom.weatherIcon.textContent = icon;
+    const wi = weatherCodeToIcon(cur.weather_code);
+    dom.weatherIcon.textContent = wi.icon;
     dom.weatherTemp.textContent = temp + '°';
-    dom.weatherDesc.textContent = desc;
+    dom.weatherDesc.textContent = wi.desc;
     if (data.daily) {
-      const lo = data.daily.temperature_2m_min?.[0], hi = data.daily.temperature_2m_max?.[0];
-      if (lo != null && hi != null) dom.weatherRange.textContent = `${Math.round(lo)}° / ${Math.round(hi)}°`;
+      const lo = data.daily.temperature_2m_min ? data.daily.temperature_2m_min[0] : null;
+      const hi = data.daily.temperature_2m_max ? data.daily.temperature_2m_max[0] : null;
+      if (lo != null && hi != null) dom.weatherRange.textContent = Math.round(lo) + '° / ' + Math.round(hi) + '°';
       if (data.daily.sunrise) dom.sunriseTime.textContent = data.daily.sunrise[0].split('T')[1];
       if (data.daily.sunset) dom.sunsetTime.textContent = data.daily.sunset[0].split('T')[1];
     }
@@ -2511,6 +2792,9 @@ body.battery-saver .glass-card {
       dom.wxHum.textContent = Math.round(cur.relative_humidity_2m) + '%';
     if (dom.wxWind && cur.wind_speed_10m != null)
       dom.wxWind.textContent = Math.round(cur.wind_speed_10m) + 'km/h';
+
+    /* v9: 天气情绪 */
+    weatherMood.apply(cur.weather_code);
   }
 
   function weatherCodeToIcon(code) {
@@ -2530,7 +2814,7 @@ body.battery-saver .glass-card {
     try {
       if (aqiCache && Date.now() - aqiCacheTime < WEATHER_TTL) { renderAQI(aqiCache); return; }
       const pos = await getPosition();
-      const url = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${pos.lat}&longitude=${pos.lon}&current=us_aqi,pm2_5&timezone=auto`;
+      const url = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=' + pos.lat + '&longitude=' + pos.lon + '&current=us_aqi,pm2_5&timezone=auto';
       const res = await fetch(url), data = await res.json();
       aqiCache = data; aqiCacheTime = Date.now(); renderAQI(data);
     } catch(e) {}
@@ -2544,16 +2828,14 @@ body.battery-saver .glass-card {
     if (aqi > 100) { color = '#f97316'; label = '轻'; level = 2; }
     if (aqi > 150) { color = '#ef4444'; label = '中'; level = 3; }
     if (aqi > 200) { color = '#a855f7'; label = '重'; level = 4; }
-    dom.aqiVal.innerHTML = `<span style="color:${color}">${aqi}</span> ${label}`;
+    dom.aqiVal.innerHTML = '<span style="color:' + color + '">' + aqi + '</span> ' + label;
     if (level >= 2 && level > aqiWarnLevel) {
-      announce(`空气 ${label}（AQI ${aqi}），建议减少户外活动`, { level: level >= 3 ? 'alert' : 'warn' });
+      announce('空气 ' + label + '（AQI ' + aqi + '），建议减少户外活动', { level: level >= 3 ? 'alert' : 'warn' });
     }
     aqiWarnLevel = level;
   }
 
-  /* ══════════════════════════════════════
-     月相计算
-     ══════════════════════════════════════ */
+  /* ── 月相 ── */
   function calcMoonPhase(date) {
     const year = date.getFullYear(), month = date.getMonth()+1, day = date.getDate();
     let c, e, jd, b;
@@ -2573,9 +2855,7 @@ body.battery-saver .glass-card {
     dom.moonPhaseName.textContent = phase.name;
   }
 
-  /* ══════════════════════════════════════
-     二十四节气计算 v7（新功能）
-     ══════════════════════════════════════ */
+  /* ── 节气 ── */
   function getNearbySolarTerm() {
     const now = new Date();
     const m = now.getMonth() + 1, d = now.getDate();
@@ -2588,24 +2868,23 @@ body.battery-saver .glass-card {
     return null;
   }
 
-  /* ══════════════════════════════════════
-     倒计时
-     ══════════════════════════════════════ */
-  /* 里程碑去重：updateCountdown 每秒都会被调用，同一目标时刻只提醒一次 */
+  /* ── 倒计时 ── */
   const COUNTDOWN_MILESTONES = [30, 5, 1];
   let countdownTarget = 0, countdownFired = new Set();
 
   function updateCountdown() {
     const now = new Date();
-    const [endH, endM] = state.endTime.split(':').map(Number);
+    const parts = state.endTime.split(':').map(Number);
     const end = new Date(now);
-    end.setHours(endH, endM, 0, 0);
+    end.setHours(parts[0], parts[1], 0, 0);
     const rolled = end <= now;
     if (rolled) end.setDate(end.getDate() + 1);
 
     const key = end.getTime();
     if (key !== countdownTarget) {
-      if (countdownTarget && rolled) announce('🎉 已到下班时间，收工！', { level:'info', notify:true });
+      if (countdownTarget && rolled) {
+        setTimeout(function() { announce('🎉 已到下班时间，收工！', { level:'info', notify:true }); }, 0);
+      }
       countdownTarget = key;
       countdownFired = new Set();
     }
@@ -2617,17 +2896,15 @@ body.battery-saver .glass-card {
     dom.countdownVal.textContent = pad2(hours)+':'+pad2(mins)+':'+pad2(secs);
 
     const leftMin = diff / 60000;
-    for (const m of COUNTDOWN_MILESTONES) {
-      if (leftMin <= m && !countdownFired.has(m)) {
-        countdownFired.add(m);
-        announce(m === 1 ? '就要下班了！🎉' : `还有 ${m} 分钟下班`, { level:'warn', notify:true });
+    for (const ms of COUNTDOWN_MILESTONES) {
+      if (leftMin <= ms && !countdownFired.has(ms)) {
+        countdownFired.add(ms);
+        announce(ms === 1 ? '就要下班了！🎉' : '还有 ' + ms + ' 分钟下班', { level:'warn', notify:true });
       }
     }
   }
 
-  /* ══════════════════════════════════════
-     纸条轮播 v7
-     ══════════════════════════════════════ */
+  /* ── 纸条轮播 ── */
   let stripIdx = 0;
 
   function updateStrip() {
@@ -2636,11 +2913,11 @@ body.battery-saver .glass-card {
     stripIdx++;
     dom.stripText.style.opacity = '0';
     dom.stripText.style.transform = 'translateY(5px)';
-    setTimeout(() => {
+    setTimeout(function() {
       dom.stripText.textContent = resolveStripVars(tpl);
       dom.stripText.style.opacity = '1';
       dom.stripText.style.transform = 'translateY(0)';
-    }, 180);
+    }, 200);
   }
 
   function resolveStripVars(text) {
@@ -2671,9 +2948,7 @@ body.battery-saver .glass-card {
       .replace(/\{solar_term\}/g, solar ? '· ' + solar : '');
   }
 
-  /* ══════════════════════════════════════
-     专注统计 v7
-     ══════════════════════════════════════ */
+  /* ── 专注统计 ── */
   function initFocusData() {
     const fd = state.focusData || {};
     if (!fd.daily) fd.daily = {};
@@ -2719,32 +2994,30 @@ body.battery-saver .glass-card {
       for (let i = 6; i >= 0; i--) {
         const d = new Date(now); d.setDate(now.getDate()-i);
         const key = d.toISOString().split('T')[0];
-        const mins = Math.floor((fd.daily?.[key]||0)/60);
-        const h = Math.min(24, mins*0.42);
-        const intensity = mins > 60 ? 'var(--accent)' : mins > 20 ? 'oklch(from var(--accent) l c h / 0.32)' : 'oklch(100% 0 0 / 0.035)';
-        html += `<div class="heat-bar" style="height:${Math.max(3,h)}px;background:${intensity}" title="${key}: ${mins}m"></div>`;
+        const mins = Math.floor((fd.daily ? (fd.daily[key]||0) : 0)/60);
+        const intensity = mins > 60 ? 'accent' : mins > 20 ? 'medium' : 'faint';
+        const hVal = Math.min(24, mins*0.4);
+        let bgVar = 'oklch(100% 0 0 / 0.03)';
+        if (intensity === 'accent') bgVar = 'var(--accent)';
+        else if (intensity === 'medium') bgVar = 'oklch(from var(--accent) l c h / 0.3)';
+        html += '<div class="heat-bar" style="height:' + Math.max(3,hVal) + 'px;background:' + bgVar + '" title="' + key + ': ' + mins + 'm"></div>';
       }
       dom.weekHeatmap.innerHTML = html;
     }
   }
 
-  /* ══════════════════════════════════════
-     模式切换 v7
-     ══════════════════════════════════════ */
   function switchFace(index) {
     index = ((index % FACES.length) + FACES.length) % FACES.length;
     state.faceIndex = index;
     const faces = document.querySelectorAll('.clock-face');
-    faces.forEach((f, i) => f.classList.toggle('active', i === index));
+    faces.forEach(function(f, i) { f.classList.toggle('active', i === index); });
     const dots = document.querySelectorAll('.face-dot');
-    dots.forEach((d, i) => d.classList.toggle('active', i === index));
+    dots.forEach(function(d, i) { d.classList.toggle('active', i === index); });
     saveState();
     adaptive.recordInteraction('face_switch');
   }
 
-  /* ══════════════════════════════════════
-     禅模式 v7
-     ══════════════════════════════════════ */
+  /* ── 禅模式 ── */
   let zenTimeoutId = null;
   function toggleZenMode() {
     state.zenMode = !state.zenMode;
@@ -2752,7 +3025,7 @@ body.battery-saver .glass-card {
     if (state.zenMode) {
       toast('🧘 禅模式 · 长按退出');
       if (zenTimeoutId) clearTimeout(zenTimeoutId);
-      zenTimeoutId = setTimeout(() => {
+      zenTimeoutId = setTimeout(function() {
         state.zenMode = false;
         document.body.classList.remove('zen-mode');
         toast('禅模式已结束');
@@ -2765,9 +3038,7 @@ body.battery-saver .glass-card {
     updateToggle(dom.toggleZen, state.zenMode);
   }
 
-  /* ══════════════════════════════════════
-     手势识别 + 键盘控制 v7
-     ══════════════════════════════════════ */
+  /* ── 手势识别 ── */
   let touchStartX = 0, touchStartY = 0, touchStartTime = 0, lastTapTime = 0;
   let longPressTimer = null;
   let isLongPressTriggered = false;
@@ -2775,18 +3046,18 @@ body.battery-saver .glass-card {
   function initGestures() {
     const stage = dom.clockStage;
     if (!stage) return;
-    stage.addEventListener('touchstart', e => {
+    stage.addEventListener('touchstart', function(e) {
       touchStartX = e.touches[0].clientX;
       touchStartY = e.touches[0].clientY;
       touchStartTime = Date.now();
       isLongPressTriggered = false;
-      longPressTimer = setTimeout(() => {
+      longPressTimer = setTimeout(function() {
         isLongPressTriggered = true;
         toggleZenMode();
         if (navigator.vibrate) navigator.vibrate(30);
       }, 800);
     }, { passive: true });
-    stage.addEventListener('touchend', e => {
+    stage.addEventListener('touchend', function(e) {
       if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
       if (isLongPressTriggered) return;
       const dx = e.changedTouches[0].clientX - touchStartX;
@@ -2804,7 +3075,7 @@ body.battery-saver .glass-card {
         else switchFace(state.faceIndex + 1);
       }
     }, { passive: true });
-    stage.addEventListener('wheel', e => {
+    stage.addEventListener('wheel', function(e) {
       if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
         if (e.deltaX > 30) switchFace(state.faceIndex + 1);
         else if (e.deltaX < -30) switchFace(state.faceIndex - 1);
@@ -2813,7 +3084,7 @@ body.battery-saver .glass-card {
         else if (e.deltaY < -30) switchFace(state.faceIndex - 1);
       }
     }, { passive: true });
-    document.addEventListener('keydown', e => {
+    document.addEventListener('keydown', function(e) {
       if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') switchFace(state.faceIndex - 1);
       else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') switchFace(state.faceIndex + 1);
       else if (e.key === ' ') { e.preventDefault(); toggleFocusTimer(); }
@@ -2828,14 +3099,12 @@ body.battery-saver .glass-card {
     if (focusTimerActive) {
       announce('🍅 专注开始', { source:'system' });
     } else {
-      const mins = state.focusData?.today || 0;
-      announce(`⏸ 专注结束 · 今日累计 ${mins} 分钟`, { source:'system' });
+      const mins = state.focusData ? state.focusData.today || 0 : 0;
+      announce('⏸ 专注结束 · 今日累计 ' + mins + ' 分钟', { source:'system' });
     }
   }
 
-  /* ══════════════════════════════════════
-     设置面板 v7
-     ══════════════════════════════════════ */
+  /* ── 设置面板 ── */
   function openSettings() { syncSettingsUI(); dom.settingsOverlay.classList.add('open'); }
   function closeSettings() { dom.settingsOverlay.classList.remove('open'); }
 
@@ -2877,64 +3146,64 @@ body.battery-saver .glass-card {
   function initSettingsUI() {
     dom.btnSettings.addEventListener('click', openSettings);
     dom.btnCloseSettings.addEventListener('click', closeSettings);
-    dom.settingsOverlay.addEventListener('click', e => { if (e.target === dom.settingsOverlay) closeSettings(); });
-    dom.toggleSeconds?.addEventListener('click', () => { state.showSeconds = !state.showSeconds; updateToggle(dom.toggleSeconds, state.showSeconds); });
-    dom.toggleWeather?.addEventListener('click', () => { state.showWeather = !state.showWeather; updateToggle(dom.toggleWeather, state.showWeather); fetchWeather(); });
-    dom.toggleWorldClock?.addEventListener('click', () => { state.showWorldClock = !state.showWorldClock; updateToggle(dom.toggleWorldClock, state.showWorldClock); updateWorldClock(); });
-    dom.toggleAOD?.addEventListener('click', () => { state.aodMode = !state.aodMode; updateToggle(dom.toggleAOD, state.aodMode); document.body.classList.toggle('aod-mode', state.aodMode); saveState(); });
-    dom.toggleZen?.addEventListener('click', () => { toggleZenMode(); document.body.classList.toggle('aod-mode', false); });
-    dom.toggleNotif?.addEventListener('click', () => { state.notifEnabled = !state.notifEnabled; updateToggle(dom.toggleNotif, state.notifEnabled); });
-    dom.toggleWander?.addEventListener('click', () => { state.pixelWander = !state.pixelWander; updateToggle(dom.toggleWander, state.pixelWander); startPixelWander(); });
-    dom.toggleMsg?.addEventListener('click', () => {
+    dom.settingsOverlay.addEventListener('click', function(e) { if (e.target === dom.settingsOverlay) closeSettings(); });
+    if (dom.toggleSeconds) dom.toggleSeconds.addEventListener('click', function() { state.showSeconds = !state.showSeconds; updateToggle(dom.toggleSeconds, state.showSeconds); });
+    if (dom.toggleWeather) dom.toggleWeather.addEventListener('click', function() { state.showWeather = !state.showWeather; updateToggle(dom.toggleWeather, state.showWeather); fetchWeather(); });
+    if (dom.toggleWorldClock) dom.toggleWorldClock.addEventListener('click', function() { state.showWorldClock = !state.showWorldClock; updateToggle(dom.toggleWorldClock, state.showWorldClock); updateWorldClock(); });
+    if (dom.toggleAOD) dom.toggleAOD.addEventListener('click', function() { state.aodMode = !state.aodMode; updateToggle(dom.toggleAOD, state.aodMode); document.body.classList.toggle('aod-mode', state.aodMode); saveState(); });
+    if (dom.toggleZen) dom.toggleZen.addEventListener('click', function() { toggleZenMode(); document.body.classList.toggle('aod-mode', false); });
+    if (dom.toggleNotif) dom.toggleNotif.addEventListener('click', function() { state.notifEnabled = !state.notifEnabled; updateToggle(dom.toggleNotif, state.notifEnabled); });
+    if (dom.toggleWander) dom.toggleWander.addEventListener('click', function() { state.pixelWander = !state.pixelWander; updateToggle(dom.toggleWander, state.pixelWander); startPixelWander(); });
+    if (dom.toggleMsg) dom.toggleMsg.addEventListener('click', function() {
       state.msgCenter = !state.msgCenter;
       updateToggle(dom.toggleMsg, state.msgCenter);
       applyMsgCenter(); saveState();
     });
-    dom.toggleChime?.addEventListener('click', () => {
+    if (dom.toggleChime) dom.toggleChime.addEventListener('click', function() {
       state.hourlyChime = !state.hourlyChime;
       updateToggle(dom.toggleChime, state.hourlyChime); saveState();
     });
-    dom.toggleNews?.addEventListener('click', () => {
+    if (dom.toggleNews) dom.toggleNews.addEventListener('click', function() {
       state.newsOn = !state.newsOn;
       updateToggle(dom.toggleNews, state.newsOn); saveState(); scheduleNews();
     });
-    dom.btnNewsNow?.addEventListener('click', () => refreshNews(true));
-    dom.btnNewsAdd?.addEventListener('click', () => {
+    if (dom.btnNewsNow) dom.btnNewsNow.addEventListener('click', function() { refreshNews(true); });
+    if (dom.btnNewsAdd) dom.btnNewsAdd.addEventListener('click', function() {
       const url = safeUrl(dom.newsUrlInput.value);
       if (!url) { toast('地址需是 http(s) 的 RSS / Atom 链接'); return; }
       const name = String(dom.newsNameInput.value || '').trim().slice(0, 16) || '未命名';
-      state.newsFeeds = (Array.isArray(state.newsFeeds) ? state.newsFeeds : []).concat([{ name, url }]);
+      state.newsFeeds = (Array.isArray(state.newsFeeds) ? state.newsFeeds : []).concat([{ name: name, url: url }]);
       dom.newsNameInput.value = ''; dom.newsUrlInput.value = '';
       renderFeeds(); saveState();
     });
-    dom.newsFeedList?.addEventListener('click', e => {
+    if (dom.newsFeedList) dom.newsFeedList.addEventListener('click', function(e) {
       const btn = e.target.closest('[data-del]');
       if (!btn) return;
-      state.newsFeeds = (Array.isArray(state.newsFeeds) ? state.newsFeeds : []).filter((f, i) => i !== +btn.dataset.del);
+      state.newsFeeds = (Array.isArray(state.newsFeeds) ? state.newsFeeds : []).filter(function(f, i) { return i !== Number(btn.dataset.del); });
       renderFeeds(); saveState();
     });
-    dom.segOrient?.addEventListener('click', e => {
+    if (dom.segOrient) dom.segOrient.addEventListener('click', function(e) {
       const btn = e.target.closest('.seg-btn');
       if (!btn) return;
       state.orientation = btn.dataset.orient;
       saveState(); applyOrientation();
     });
-    dom.btnNotify?.addEventListener('click', () => {
+    if (dom.btnNotify) dom.btnNotify.addEventListener('click', function() {
       if (notificationPermission() === 'granted') {
         addMessage({ title:'测试', body:'这是一条来自消息中心的测试通知', source:'system', notify:true });
       } else {
         askNotificationPermission();
       }
     });
-    dom.msgClear?.addEventListener('click', clearMessages);
-    dom.endTimeInput?.addEventListener('input', () => { dom.endTimeVal.textContent = dom.endTimeInput.value; });
-    dom.stripIntervalInput?.addEventListener('input', () => { dom.stripIntervalVal.textContent = dom.stripIntervalInput.value; });
-    dom.btnSave.addEventListener('click', () => {
+    if (dom.msgClear) dom.msgClear.addEventListener('click', clearMessages);
+    if (dom.endTimeInput) dom.endTimeInput.addEventListener('input', function() { dom.endTimeVal.textContent = dom.endTimeInput.value; });
+    if (dom.stripIntervalInput) dom.stripIntervalInput.addEventListener('input', function() { dom.stripIntervalVal.textContent = dom.stripIntervalInput.value; });
+    dom.btnSave.addEventListener('click', function() {
       state.endTime = dom.endTimeInput.value;
       state.stripInterval = parseInt(dom.stripIntervalInput.value) || 15;
-      state.strips = dom.stripContentInput.value.split('\n').filter(l => l.trim());
+      state.strips = dom.stripContentInput.value.split('\n').filter(function(l) { return l.trim(); });
       if (!state.strips.length) state.strips = DEFAULT_STRIPS.slice();
-      state.newsTime = /^\d{1,2}:\d{2}$/.test(dom.newsTimeInput.value) ? dom.newsTimeInput.value : state.newsTime;
+      state.newsTime = (/^\d{1,2}:\d{2}$/).test(dom.newsTimeInput.value) ? dom.newsTimeInput.value : state.newsTime;
       state.newsProxy = String(dom.newsProxyInput.value || '').trim().slice(0, 200);
       saveState();
       scheduleNews();
@@ -2946,7 +3215,7 @@ body.battery-saver .glass-card {
       }
       closeSettings(); toast('已保存 ✓');
     });
-    dom.btnReset.addEventListener('click', () => {
+    dom.btnReset.addEventListener('click', function() {
       if (confirm('重置所有设置？')) {
         state = JSON.parse(JSON.stringify(defaultState));
         saveState(); location.reload();
@@ -2954,24 +3223,18 @@ body.battery-saver .glass-card {
     });
   }
 
-  /* ══════════════════════════════════════
-     Toast 通知 v7
-     ══════════════════════════════════════ */
+  /* ── Toast ── */
   function toast(msg) {
     const container = dom.toastContainer;
     if (!container) return;
     const el = document.createElement('div');
     el.className = 'toast'; el.textContent = msg;
     container.appendChild(el);
-    requestAnimationFrame(() => el.classList.add('show'));
-    setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 400); }, 2600);
+    requestAnimationFrame(function() { el.classList.add('show'); });
+    setTimeout(function() { el.classList.remove('show'); setTimeout(function() { el.remove(); }, 400); }, 2600);
   }
 
-  /* ══════════════════════════════════════
-     朝向布局 v8 — 横屏摆件
-     auto 仅在真实手机横屏（矮视口）时启用，
-     桌面宽窗口仍走竖屏设备预览框。
-     ══════════════════════════════════════ */
+  /* ── 朝向布局 ── */
   const mqLandscape = window.matchMedia('(orientation: landscape)');
 
   function isStandalone() {
@@ -2990,19 +3253,17 @@ body.battery-saver .glass-card {
     const land = wantsLandscape();
     document.body.classList.toggle('land-mode', land);
     if (dom.segOrient) {
-      dom.segOrient.querySelectorAll('.seg-btn').forEach(btn =>
-        btn.classList.toggle('on', btn.dataset.orient === state.orientation));
+      dom.segOrient.querySelectorAll('.seg-btn').forEach(function(btn) {
+        btn.classList.toggle('on', btn.dataset.orient === state.orientation);
+      });
     }
     if (land && isStandalone() && screen.orientation && screen.orientation.lock) {
-      screen.orientation.lock('landscape').catch(() => {});
+      screen.orientation.lock('landscape').catch(function() {});
     }
   }
 
   /* ══════════════════════════════════════
-     消息中心 v8 — 内置聚合 + 本地通道
-     来源：system（本机提醒）/ notify（系统通知）/ local（外部投递）
-     投递：?msg=…  #msg=…  BroadcastChannel('pixel3a-clock')
-           localStorage['clockV7Inbox']  window.pushMessage()
+     消息中心
      ══════════════════════════════════════ */
   const MSG_STORE = 'clockV7Messages';
   const MSG_INBOX = 'clockV7Inbox';
@@ -3017,7 +3278,7 @@ body.battery-saver .glass-card {
   function loadMessages() {
     try {
       const list = JSON.parse(localStorage.getItem(MSG_STORE) || '[]');
-      return Array.isArray(list) ? list.filter(m => m && m.body && m.ts) : [];
+      return Array.isArray(list) ? list.filter(function(m) { return m && m.body && m.ts; }) : [];
     } catch(e) { return []; }
   }
 
@@ -3027,7 +3288,7 @@ body.battery-saver .glass-card {
 
   function pruneMessages() {
     const now = Date.now();
-    const kept = messages.filter(m => m.ts >= now - (m.exp || MSG_TTL));
+    const kept = messages.filter(function(m) { return m.ts >= now - (m.exp || MSG_TTL); });
     if (kept.length !== messages.length) {
       messages = kept;
       persistMessages();
@@ -3049,16 +3310,16 @@ body.battery-saver .glass-card {
     const body = String(raw.body || raw.title || '').trim().slice(0, 220);
     if (!body) return null;
     const key = raw.key ? String(raw.key).slice(0, 200) : '';
-    if (key && messages.some(m => m.key === key)) return null;
+    if (key && messages.some(function(m) { return m.key === key; })) return null;
     const source = MSG_LABEL[raw.source] ? raw.source : 'local';
     const level = (raw.level === 'warn' || raw.level === 'alert') ? raw.level : 'info';
     const item = {
       id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-      key,
+      key: key,
       title: String(raw.title || '').trim().slice(0, 40),
-      body,
-      source,
-      level,
+      body: body,
+      source: source,
+      level: level,
       url: safeUrl(raw.url),
       exp: Number(raw.exp) > 0 ? Number(raw.exp) : 0,
       ts: Number(raw.ts) > 0 ? Number(raw.ts) : Date.now(),
@@ -3088,16 +3349,16 @@ body.battery-saver .glass-card {
         '<div class="msg-empty">暂无消息 · 可用 <code>?msg=你好</code> 推送，或在设置里开资讯订阅</div>';
       return;
     }
-    dom.msgScroll.innerHTML = list.map(m => {
+    dom.msgScroll.innerHTML = list.map(function(m) {
       const head = m.title ? esc(m.title) + ' · ' + esc(m.body) : esc(m.body);
-      const link = m.url ? ` data-url="${esc(m.url)}"` : '';
-      return `<div class="msg-item" data-level="${m.level}">` +
-        `<div class="msg-bar"></div>` +
-        `<div class="msg-body">` +
-        `<div class="msg-line"${link} title="${esc(m.body)}">${head}</div>` +
-        `<div class="msg-sub"><span class="msg-src">${MSG_LABEL[m.source]}</span>` +
-        `<span class="msg-time">${msgTimeLabel(m.ts)}</span></div>` +
-        `</div></div>`;
+      const link = m.url ? ' data-url="' + esc(m.url) + '"' : '';
+      return '<div class="msg-item" data-level="' + m.level + '">' +
+        '<div class="msg-bar"></div>' +
+        '<div class="msg-body">' +
+        '<div class="msg-line"' + link + ' title="' + esc(m.body) + '">' + head + '</div>' +
+        '<div class="msg-sub"><span class="msg-src">' + MSG_LABEL[m.source] + '</span>' +
+        '<span class="msg-time">' + msgTimeLabel(m.ts) + '</span></div>' +
+        '</div></div>';
     }).join('');
   }
 
@@ -3108,9 +3369,8 @@ body.battery-saver .glass-card {
     toast('消息已清空');
   }
 
-  /* 一条提醒同时落到 toast + 消息中心（+ 可选系统通知） */
   function announce(text, opts) {
-    const o = opts || {};
+    var o = opts || {};
     if (state.notifEnabled && o.toast !== false) toast(text);
     addMessage({
       title: o.title || '',
@@ -3125,14 +3385,13 @@ body.battery-saver .glass-card {
     return ('Notification' in window) ? Notification.permission : 'unsupported';
   }
 
-  /* Android Chrome 不提供 new Notification 构造器，优先走 SW registration */
   function postSystemNotification(item) {
     const title = item.title || '活 · Clock';
-    const options = { body: item.body, tag: item.id, icon: 'icon.svg', badge: 'icon.svg', data: { id: item.id } };
+    var options = { body: item.body, tag: item.id, icon: 'icon.svg', badge: 'icon.svg', data: { id: item.id } };
     if (navigator.serviceWorker && navigator.serviceWorker.ready) {
       navigator.serviceWorker.ready
-        .then(reg => reg.showNotification(title, options))
-        .catch(() => directNotify(title, options));
+        .then(function(reg) { return reg.showNotification(title, options); })
+        .catch(function() { directNotify(title, options); });
     } else {
       directNotify(title, options);
     }
@@ -3145,15 +3404,15 @@ body.battery-saver .glass-card {
   function askNotificationPermission() {
     if (notificationPermission() === 'unsupported') { toast('本机不支持系统通知'); return; }
     if (notificationPermission() === 'granted') { toast('已授权系统通知'); syncNotifyState(); return; }
-    navigator.permissions?.query({ name: 'notifications' }).then(p => {
+    navigator.permissions && navigator.permissions.query ? navigator.permissions.query({ name: 'notifications' }).then(function(p) {
       if (p.state === 'denied') { toast('已被拒绝，请到站点设置里恢复'); return; }
       requestNow();
-    }).catch(requestNow);
+    }).catch(requestNow) : requestNow();
     function requestNow() {
-      Notification.requestPermission().then(() => {
+      Notification.requestPermission().then(function() {
         syncNotifyState();
         toast(notificationPermission() === 'granted' ? '系统通知已开启' : '未获得通知授权');
-      }).catch(() => syncNotifyState());
+      }).catch(function() { syncNotifyState(); });
     }
   }
 
@@ -3173,11 +3432,11 @@ body.battery-saver .glass-card {
       if (!body) return;
       addMessage({
         title: url.searchParams.get('title') || '',
-        body,
+        body: body,
         source: 'local',
         level: url.searchParams.get('level') || 'info',
       });
-      ['msg', 'm', 'title', 'level'].forEach(k => url.searchParams.delete(k));
+      ['msg', 'm', 'title', 'level'].forEach(function(k) { url.searchParams.delete(k); });
       history.replaceState(null, '', url.pathname + url.search + '#');
     } catch(e) {}
   }
@@ -3186,31 +3445,29 @@ body.battery-saver .glass-card {
     if ('BroadcastChannel' in window) {
       try {
         const bc = new BroadcastChannel(MSG_CHANNEL);
-        bc.onmessage = ev => addMessage(ev.data);
+        bc.onmessage = function(ev) { addMessage(ev.data); };
       } catch(e) {}
     }
 
-    window.addEventListener('storage', ev => {
+    window.addEventListener('storage', function(ev) {
       if (ev.key !== MSG_INBOX || !ev.newValue) return;
       try { addMessage(JSON.parse(ev.newValue)); } catch(e) {}
     });
 
     if (navigator.serviceWorker) {
-      navigator.serviceWorker.addEventListener('message', ev => {
+      navigator.serviceWorker.addEventListener('message', function(ev) {
         const d = ev.data;
         if (d && d.kind === 'clock-message') addMessage(d.payload);
       });
     }
 
-    /* 供控制台、书签脚本或伴生页面调用 */
-    window.pushMessage = (title, body, opts) => {
+    window.pushMessage = function(title, body, opts) {
       if (title && typeof title === 'object') return addMessage(title);
-      return addMessage({ title: String(title || ''), body: String(body || ''), ...(opts || {}) });
+      return addMessage({ title: String(title || ''), body: String(body || ''), opts: opts || {} });
     };
 
-    /* 带链接的消息（资讯条目）点击后打开原文 */
     if (dom.msgScroll) {
-      dom.msgScroll.addEventListener('click', ev => {
+      dom.msgScroll.addEventListener('click', function(ev) {
         const line = ev.target.closest('.msg-line[data-url]');
         if (line) window.open(line.dataset.url, '_blank', 'noopener');
       });
@@ -3222,8 +3479,7 @@ body.battery-saver .glass-card {
   }
 
   /* ══════════════════════════════════════
-     资讯订阅 v9 — 定时抓 RSS/Atom，去重后落到消息中心
-     浏览器跨域限制：先直连，失败再依次走代理链；设置里的自定义前缀优先
+     资讯订阅 v9
      ══════════════════════════════════════ */
   const NEWS_SEEN = 'clockV7NewsSeen';
   const NEWS_META = 'clockV7NewsMeta';
@@ -3256,13 +3512,13 @@ body.battery-saver .glass-card {
   }
 
   function newsMetaSave(patch) {
-    try { localStorage.setItem(NEWS_META, JSON.stringify({ ...newsMeta(), ...patch })); } catch(e) {}
+    try { localStorage.setItem(NEWS_META, JSON.stringify(Object.assign({}, newsMeta(), patch))); } catch(e) {}
     renderNewsState();
   }
 
   function activeFeeds() {
     const list = Array.isArray(state.newsFeeds) ? state.newsFeeds : [];
-    return list.filter(f => f && safeUrl(f.url));
+    return list.filter(function(f) { return f && safeUrl(f.url); });
   }
 
   function channelList() {
@@ -3270,7 +3526,6 @@ body.battery-saver .glass-card {
     return (custom ? [{ label: '自定义', prefix: custom }] : []).concat(NEWS_PROXIES);
   }
 
-  /* 前缀以 = 结尾时按 query 参数编码，否则原样拼接 */
   function buildRequestUrl(prefix, target) {
     if (!prefix) return target;
     return /=$/.test(prefix) ? prefix + encodeURIComponent(target) : prefix + target;
@@ -3295,38 +3550,36 @@ body.battery-saver .glass-card {
       const url = linkEl ? (linkEl.getAttribute('href') || linkEl.textContent || '').trim() : '';
       const stamp = feedText(n, 'pubDate') || feedText(n, 'published') || feedText(n, 'updated');
       const ts = Date.parse(stamp);
-      out.push({ title: title.slice(0, 200), url, ts: isNaN(ts) ? 0 : ts, key: (url || title).slice(0, 200) });
+      out.push({ title: title.slice(0, 200), url: url, ts: isNaN(ts) ? 0 : ts, key: (url || title).slice(0, 200) });
     }
     return out;
   }
 
-  /* Google News 之类把来源挂在标题尾部：「标题 - 媒体名」 */
   function splitHeadline(raw, fallback) {
     const i = raw.lastIndexOf(' - ');
     if (i > 4) {
       const site = raw.slice(i + 3).trim();
-      if (site && site.length <= 16) return { headline: raw.slice(0, i).trim(), site };
+      if (site && site.length <= 16) return { headline: raw.slice(0, i).trim(), site: site };
     }
     return { headline: raw, site: fallback };
   }
 
   async function fetchFeed(feed) {
     const chans = channelList();
-    const remembered = chans.findIndex(c => c.label === newsMeta().chLabel);
+    const remembered = chans.findIndex(function(c) { return c.label === newsMeta().chLabel; });
     const start = remembered >= 0 ? remembered : 0;
     for (let i = 0; i < chans.length; i++) {
       const ch = chans[(start + i) % chans.length];
       try {
         const res = await fetch(buildRequestUrl(ch.prefix, feed.url), {
           cache: 'no-store',
-          /* 摆件不能卡在某个不可达的源上：单次尝试 12 秒未响应就换下一条通道 */
           signal: typeof AbortSignal.timeout === 'function' ? AbortSignal.timeout(12000) : undefined,
         });
         if (!res.ok) continue;
         const items = parseFeed(await res.text());
         if (!items.length) continue;
         newsMetaSave({ chLabel: ch.label });
-        return { items, channel: ch.label };
+        return { items: items, channel: ch.label };
       } catch(e) {}
     }
     return { items: [], channel: '' };
@@ -3349,7 +3602,7 @@ body.battery-saver .glass-card {
       if (!r.channel) continue;
       okFeeds++;
       const fresh = r.items
-        .filter(it => (!it.ts || Date.now() - it.ts <= NEWS_FRESH) && seen.indexOf(it.key) < 0)
+        .filter(function(it) { return (!it.ts || Date.now() - it.ts <= NEWS_FRESH) && seen.indexOf(it.key) < 0; })
         .slice(0, NEWS_MAX_PER_RUN);
       for (const it of fresh) {
         const h = splitHeadline(it.title, f.name || '资讯');
@@ -3364,7 +3617,7 @@ body.battery-saver .glass-card {
     newsBusy = false;
     newsMetaSave({ lastTs: Date.now(), lastAdded: added, lastError: okFeeds ? '' : '全部通道失败' });
     if (manual) {
-      toast(!okFeeds ? '抓取失败 · 检查网络或代理前缀' : added ? `资讯已更新 · 新增 ${added} 条` : '暂无新资讯');
+      toast(!okFeeds ? '抓取失败 · 检查网络或代理前缀' : added ? '资讯已更新 · 新增 ' + added + ' 条' : '暂无新资讯');
     } else if (!okFeeds) {
       announce('资讯抓取失败，检查网络或代理前缀', { level: 'warn', toast: false });
     }
@@ -3386,13 +3639,11 @@ body.battery-saver .glass-card {
     const at = nextNewsAt();
     let delay;
     if (m.lastError && m.lastTs) {
-      /* 免费代理时好时坏，失败后半小时重试，但不越过下一次定时点 */
       delay = Math.min(NEWS_RETRY, at - Date.now());
     } else {
-      /* 摆件可能整夜息屏，错过当日刷新点就在启动 8 秒后补一次 */
       delay = (m.lastTs || 0) < at - 24 * 3600 * 1000 ? 8000 : at - Date.now();
     }
-    newsTimer = setTimeout(() => refreshNews(false), Math.max(delay, 1000));
+    newsTimer = setTimeout(function() { refreshNews(false); }, Math.max(delay, 1000));
   }
 
   function renderNewsState(override) {
@@ -3413,10 +3664,11 @@ body.battery-saver .glass-card {
     if (!dom.newsFeedList) return;
     const list = Array.isArray(state.newsFeeds) ? state.newsFeeds : [];
     dom.newsFeedList.innerHTML = list.length
-      ? list.map((f, i) =>
-          `<div class="feed-item"><span class="feed-name">${esc(f.name || '未命名')}</span>` +
-          `<span class="feed-url" title="${esc(f.url)}">${esc(f.url)}</span>` +
-          `<button class="feed-del" data-del="${i}" aria-label="删除订阅">✕</button></div>`).join('')
+      ? list.map(function(f, i) {
+          return '<div class="feed-item"><span class="feed-name">' + esc(f.name || '未命名') + '</span>' +
+            '<span class="feed-url" title="' + esc(f.url) + '">' + esc(f.url) + '</span>' +
+            '<button class="feed-del" data-del="' + i + '" aria-label="删除订阅">✕</button></div>';
+        }).join('')
       : '<div class="setting-note">还没有订阅源</div>';
   }
 
@@ -3426,48 +3678,42 @@ body.battery-saver .glass-card {
     scheduleNews();
   }
 
-  /* ══════════════════════════════════════
-     整点脉动 v7
-     ══════════════════════════════════════ */
+  /* ── 整点脉动 ── */
   let lastHour = -1;
   function checkHourPulse() {
     const h = new Date().getHours();
     if (h === lastHour) return;
     const first = lastHour === -1;
     lastHour = h;
-    dom.bgPulse.classList.add('active');
-    setTimeout(() => dom.bgPulse.classList.remove('active'), 2600);
+    if (dom.bgPulse) {
+      dom.bgPulse.classList.add('active');
+      setTimeout(function() { if (dom.bgPulse) dom.bgPulse.classList.remove('active'); }, 2800);
+    }
     if (!first && state.hourlyChime) {
       const label = h < 5 ? '夜深' : h < 8 ? '清晨' : h < 11 ? '上午'
         : h < 13 ? '正午' : h < 18 ? '下午' : h < 22 ? '傍晚' : '深夜';
-      announce(`${pad2(h)}:00 · ${label}`, { title:'整点' });
+      announce(pad2(h) + ':00 · ' + label, { title:'整点' });
     }
   }
 
-  /* ══════════════════════════════════════
-     Wake Lock
-     ══════════════════════════════════════ */
+  /* ── Wake Lock ── */
   let wakeLock = null;
   async function acquireWakeLock() {
     try {
       if ('wakeLock' in navigator) {
         wakeLock = await navigator.wakeLock.request('screen');
-        dom.statusText.textContent = '屏幕常亮';
+        if (dom.statusText) dom.statusText.textContent = '屏幕常亮';
       }
     } catch(e) {}
   }
 
-  /* ══════════════════════════════════════
-     Service Worker
-     ══════════════════════════════════════ */
+  /* ── Service Worker ── */
   function registerSW() {
     if ('serviceWorker' in navigator)
-      navigator.serviceWorker.register('sw.js').catch(() => {});
+      navigator.serviceWorker.register('sw.js').catch(function() {});
   }
 
-  /* ══════════════════════════════════════
-     主循环调度 v7
-     ══════════════════════════════════════ */
+  /* ── 主循环调度 ── */
   let frameCount = 0;
 
   function mainLoop() {
@@ -3484,9 +3730,7 @@ body.battery-saver .glass-card {
     requestAnimationFrame(mainLoop);
   }
 
-  /* ══════════════════════════════════════
-     初始化 v7
-     ══════════════════════════════════════ */
+  /* ── 初始化 ── */
   function init() {
     buildAnalogDial();
     initFocusData();
@@ -3500,8 +3744,8 @@ body.battery-saver .glass-card {
     mqLandscape.addEventListener('change', applyOrientation);
     window.addEventListener('resize', applyOrientation);
 
-    document.querySelectorAll('.face-dot').forEach(dot => {
-      dot.addEventListener('click', () => switchFace(parseInt(dot.dataset.face)));
+    document.querySelectorAll('.face-dot').forEach(function(dot) {
+      dot.addEventListener('click', function() { switchFace(parseInt(dot.dataset.face)); });
     });
 
     initGestures();
@@ -3513,12 +3757,8 @@ body.battery-saver .glass-card {
     initNews();
     syncNotifyState();
 
-    if (state.zenMode) {
-      document.body.classList.add('zen-mode');
-    }
-    if (state.aodMode) {
-      document.body.classList.add('aod-mode');
-    }
+    if (state.zenMode) document.body.classList.add('zen-mode');
+    if (state.aodMode) document.body.classList.add('aod-mode');
 
     fetchWeather(); fetchAQI();
     setInterval(fetchWeather, 30*60*1000);
@@ -3534,11 +3774,11 @@ body.battery-saver .glass-card {
     updateMoonPhase();
 
     acquireWakeLock();
-    document.addEventListener('visibilitychange', () => { if (!document.hidden) acquireWakeLock(); });
+    document.addEventListener('visibilitychange', function() { if (!document.hidden) acquireWakeLock(); });
     registerSW();
     requestAnimationFrame(mainLoop);
 
-    setTimeout(() => toast('长按进入禅模式 | 双击专注'), 1400);
+    setTimeout(function() { toast('长按进入禅模式 | 双击专注'); }, 1500);
   }
 
   if (document.readyState === 'loading') {
