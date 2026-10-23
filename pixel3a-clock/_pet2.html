@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>pet drift probe v3</title>
+<style>body{margin:0;background:#222;font:12px monospace;color:#ddd}iframe{border:0;display:block;background:#000}</style>
+</head>
+<body>
+<iframe id="land" width="807" height="393"></iframe>
+<iframe id="port" width="393" height="807"></iframe>
+<pre id="out"></pre>
+<script>
+const lines = [];
+const L = s => { lines.push(s); document.getElementById('out').textContent = lines.join('\n'); };
+localStorage.clockV7State = JSON.stringify({ newsOn: false, pixelWander: false });
+const clash = (a, b) => !(a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top);
+
+/* 只跟"看得见的读数"比：四个钟面是叠放的绝对层，非活动面 opacity:0 不算遮挡 */
+function visibleBlockers(d) {
+  const out = [];
+  const face = d.querySelector('.clock-face.active');
+  ['.numeric-digits', '.analog-dial', '.flip-container', '.word-display'].forEach(sel => {
+    const el = face && face.querySelector(sel);
+    if (el) out.push([sel, el.getBoundingClientRect()]);
+  });
+  ['.face-dots', '.status-bar'].forEach(sel => {
+    const el = d.querySelector(sel);
+    if (el) out.push([sel, el.getBoundingClientRect()]);
+  });
+  return out;
+}
+
+function sample(f, tag, n, switchFaces) {
+  const d = f.contentDocument;
+  d.head.insertAdjacentHTML('beforeend', '<style>.pet{transition:none!important}</style>');
+  const pet = d.getElementById('pet');
+  const stage = d.querySelector('.clock-stage').getBoundingClientRect();
+  const seen = [], bad = [];
+  return new Promise(res => {
+    let i = 0;
+    const t = setInterval(() => {
+      i++;
+      const p = pet.getBoundingClientRect();
+      const dots = d.querySelectorAll('.face-dot');
+      if (switchFaces && i % 9 === 1 && dots.length) dots[(i / 9 | 0) % dots.length].click();
+      const key = Math.round(p.left) + ',' + Math.round(p.top);
+      const settled = seen.length && seen[seen.length - 1][3] === key;
+      seen.push([Math.round(p.left), Math.round(p.top), pet.dataset.mood, key]);
+      const hits = [];
+      visibleBlockers(d).forEach(pair => {
+        if (clash(p, pair[1])) {
+          hits.push('t=' + i + ' ' + (settled ? 'SETTLED' : 'transit') + ' ' + pair[0] + ' pet=[' + Math.round(p.left) + ',' + Math.round(p.top) +
+            ',' + Math.round(p.width) + 'x' + Math.round(p.height) + '] blk=[' +
+            Math.round(pair[1].left) + ',' + Math.round(pair[1].top) + ',' +
+            Math.round(pair[1].width) + 'x' + Math.round(pair[1].height) + ']');
+        }
+      });
+      hits.forEach(h => bad.push(h));
+      const inside = p.left >= stage.left - 1 && p.right <= stage.right + 1 &&
+                     p.bottom <= stage.bottom + 1 && p.top >= stage.top - 1;
+      if (!inside) bad.push('t=' + i + ' OUTSIDE-STAGE pet=' + Math.round(p.left) + ',' + Math.round(p.top));
+      if (i >= n) {
+        clearInterval(t);
+        const uniq = new Set(seen.map(s => s[0] + ',' + s[1]));
+        const moods = new Set(seen.map(s => s[2]));
+        const st = bad.filter(s => /SETTLED/.test(s)).length;
+        L('=== ' + tag + ' samples=' + n + ' distinct=' + uniq.size +
+          ' collisions=' + bad.length + ' (settled=' + st + ', transit=' + (bad.length - st) + ')' +
+          ' moods=' + [...moods].join('/'));
+        L('  x=' + Math.min(...seen.map(s => s[0])) + '-' + Math.max(...seen.map(s => s[0])) +
+          ' y=' + Math.min(...seen.map(s => s[1])) + '-' + Math.max(...seen.map(s => s[1])));
+        if (bad.length) L('  ' + bad.slice(0, 8).join('\n  '));
+        res();
+      }
+    }, 400);
+  });
+}
+
+function run(id, tag, n, sf) {
+  const f = document.getElementById(id);
+  const p = new Promise(res => { f.onload = () => setTimeout(() => sample(f, tag, n, sf).then(res), 2000); });
+  f.src = 'index.html?r=' + (++run.seq);
+  return p;
+}
+run.seq = 0;
+
+run('land', 'LANDSCAPE idle 807x393', 60, false)
+  .then(() => run('port', 'PORTRAIT idle 393x807', 60, false))
+  .then(() => run('land', 'LANDSCAPE face-switch 807x393', 60, true))
+  .then(() => run('port', 'PORTRAIT face-switch 393x807', 60, true))
+  .then(() => L('PROBE-DONE'));
+</script>
+</body>
+</html>

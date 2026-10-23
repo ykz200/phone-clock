@@ -16,7 +16,7 @@
 <title>活 · Clock</title>
 <style>
 /* ════════════════════════════════════════════════════════════
-   活 · v9 "Aura · 气场"  for Pixel 3a
+   活 · v9.1 "Aura · 气场"  for Pixel 3a
    Landscape Ornament · Message Hub · News Digest · Aura Glass · Bio-Rhythmic
    Comfort-First · Pixel-Perfect OLED · Ambient Mood · Iridescent Glass
    ════════════════════════════════════════════════════════════ */
@@ -547,6 +547,200 @@ body {
   width: 20px;
   background: var(--accent);
   box-shadow: 0 0 8px oklch(from var(--accent) l c h / 0.3);
+}
+
+/* ════════════════════════════════════════════
+   小水母「泡」v9.1 — 时间 / 天气驱动的桌面宠物
+   动画全部交给合成器（transform / opacity），JS 只改状态与巡游坐标
+   ════════════════════════════════════════════ */
+.pet {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 52px;
+  height: 64px;
+  z-index: 14;
+  cursor: pointer;
+  opacity: 0.92;
+  transform: translate3d(var(--pet-x, 20px), var(--pet-y, -10px), 0);
+  transition: transform 1.2s linear, opacity 1.4s var(--ease-smooth);
+  -webkit-tap-highlight-color: transparent;
+}
+.pet.off { opacity: 0; pointer-events: none; }
+.pet-body {
+  position: absolute;
+  inset: 0;
+  scale: var(--pet-scale, 1);
+  transform-origin: 50% 78%;
+  animation: petFloat calc(4.6s * var(--pet-pace, 1)) var(--ease-smooth) infinite;
+}
+.pet.poke .pet-body { animation: petPoke 0.62s var(--spring); }
+.pet.cheer .pet-body { animation: petCheer 1.5s var(--ease-out-expo); }
+
+.pet-bell {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 44px;
+  height: 33px;
+  margin-left: -22px;
+  border-radius: 50% 50% 44% 44% / 64% 64% 32% 32%;
+  background:
+    radial-gradient(115% 85% at 30% 20%, oklch(100% 0 0 / 0.46), transparent 58%),
+    radial-gradient(100% 100% at 50% 100%,
+      oklch(from var(--accent) 0.84 0.13 h / 0.6),
+      oklch(from var(--accent) 0.6 0.15 h / 0.22));
+  box-shadow:
+    0 0 15px oklch(from var(--accent) l c h / 0.2),
+    inset 0 -6px 10px oklch(0% 0 0 / 0.28);
+  transform-origin: 50% 100%;
+  animation: petSquish calc(4.6s * var(--pet-pace, 1)) var(--ease-smooth) infinite;
+}
+.pet-eye {
+  position: absolute;
+  top: 18px;
+  width: 4px;
+  height: 5px;
+  border-radius: 50%;
+  background: oklch(20% 0.02 var(--accent-h));
+  animation: petBlink 6.4s steps(1, end) infinite;
+}
+.pet-eye.l { left: 13px; }
+.pet-eye.r { right: 13px; animation-delay: 0.12s; }
+.pet-blush {
+  position: absolute;
+  top: 23px;
+  width: 6px;
+  height: 3px;
+  border-radius: 50%;
+  background: oklch(0.78 0.15 25 / 0.34);
+  filter: blur(0.6px);
+  opacity: 0;
+  transition: opacity 1.2s;
+}
+.pet-blush.l { left: 7px; }
+.pet-blush.r { right: 7px; }
+.pet[data-mood="sunny"] .pet-blush,
+.pet.poke .pet-blush,
+.pet.cheer .pet-blush { opacity: 1; }
+
+.pet-tent {
+  position: absolute;
+  left: 50%;
+  top: 29px;
+  width: 34px;
+  height: 30px;
+  margin-left: -17px;
+}
+.pet-tent i {
+  position: absolute;
+  top: 0;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(oklch(from var(--accent) 0.82 0.12 h / 0.5), transparent);
+  transform-origin: 50% 0;
+  animation: petTent calc(3.1s * var(--pet-pace, 1)) var(--ease-smooth) infinite;
+}
+.pet-tent i:nth-child(1) { left: 1px;  height: 17px; animation-delay: -0.1s; }
+.pet-tent i:nth-child(2) { left: 9px;  height: 24px; animation-delay: -0.5s; }
+.pet-tent i:nth-child(3) { left: 16px; height: 28px; animation-delay: -0.9s; }
+.pet-tent i:nth-child(4) { left: 23px; height: 23px; animation-delay: -1.3s; }
+.pet-tent i:nth-child(5) { left: 31px; height: 16px; animation-delay: -1.7s; }
+
+.pet-z {
+  position: absolute;
+  left: 40px;
+  top: -6px;
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: var(--text-3);
+  opacity: 0;
+}
+.pet[data-mood="sleepy"] .pet-z { animation: petZ 3.4s var(--ease-smooth) infinite; }
+
+.pet-say {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  transform: translate(-50%, 5px) scale(0.92);
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 13px 13px 13px 4px;
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--text-2);
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1.35;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.32s var(--ease-smooth), transform 0.32s var(--spring);
+}
+.pet.say .pet-say { opacity: 1; transform: translate(-50%, -4px) scale(1); }
+
+/* 心情：由时段 + 天气码推导，只改节奏与滤镜，不加新节点 */
+.pet[data-mood="sunny"]  { --pet-pace: 0.7; }
+.pet[data-mood="calm"]   { --pet-pace: 1; }
+.pet[data-mood="rain"]   { --pet-pace: 1.3; }
+.pet[data-mood="fog"]    { --pet-pace: 1.45; }
+.pet[data-mood="sleepy"] { --pet-pace: 1.8; }
+.pet[data-mood="storm"]  { --pet-pace: 0.48; }
+.pet[data-mood="rain"] .pet-tent i,
+.pet[data-mood="fog"] .pet-tent i { filter: brightness(0.82); }
+.pet[data-mood="snow"] .pet-bell { filter: saturate(0.32) brightness(1.1); }
+.pet[data-mood="fog"] .pet-bell { filter: saturate(0.5) brightness(0.92); }
+.pet[data-mood="sleepy"] .pet-eye { animation: none; transform: scaleY(0.22); }
+.pet[data-mood="sleepy"] .pet-bell { filter: brightness(0.7) saturate(0.72); }
+.pet[data-mood="storm"] .pet-bell { animation: petSquish 0.9s linear infinite, petShiver 0.26s linear infinite; }
+
+@keyframes petFloat {
+  0%, 100% { transform: translateY(0) rotate(-1.4deg); }
+  50%      { transform: translateY(-7px) rotate(1.4deg); }
+}
+@keyframes petSquish {
+  0%, 100% { transform: scale(1, 1); }
+  35%      { transform: scale(1.07, 0.9); }
+  62%      { transform: scale(0.95, 1.06); }
+}
+@keyframes petTent {
+  0%, 100% { transform: rotate(-9deg) scaleY(0.94); }
+  50%      { transform: rotate(9deg) scaleY(1.06); }
+}
+@keyframes petBlink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  94%, 97%      { transform: scaleY(0.14); }
+}
+@keyframes petPoke {
+  0%   { transform: scale(1, 1); }
+  28%  { transform: scale(1.3, 0.68); }
+  56%  { transform: scale(0.84, 1.18); }
+  100% { transform: scale(1, 1); }
+}
+@keyframes petCheer {
+  0%   { transform: translateY(0) rotate(0); }
+  22%  { transform: translateY(-17px) rotate(-9deg) scale(1.06); }
+  46%  { transform: translateY(2px) rotate(7deg) scale(0.95); }
+  68%  { transform: translateY(-9px) rotate(-4deg); }
+  100% { transform: translateY(0) rotate(0); }
+}
+@keyframes petShiver {
+  0%, 100% { margin-left: -22px; }
+  50%      { margin-left: -20px; }
+}
+@keyframes petZ {
+  0%   { opacity: 0; transform: translate(0, 0) scale(0.7); }
+  30%  { opacity: 0.8; }
+  100% { opacity: 0; transform: translate(11px, -20px) scale(1.25); }
+}
+
+body.land-mode .pet { --pet-scale: 0.8; }
+body.zen-mode .pet,
+body.aod-mode .pet { opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) {
+  .pet, .pet-body, .pet-bell, .pet-tent i, .pet-eye, .pet-z { animation: none; }
+  .pet { transition: none; }
 }
 
 /* ════════════════════════════════════════════
@@ -1649,6 +1843,21 @@ body.battery-saver .glass-card {
           <button class="face-dot" data-face="3" aria-label="翻页钟"></button>
         </div>
 
+        <!-- 桌面小宠物 · 水母「泡」 -->
+        <div class="pet" id="pet" data-mood="calm">
+          <div class="pet-body">
+            <div class="pet-bell">
+              <span class="pet-eye l"></span>
+              <span class="pet-eye r"></span>
+              <span class="pet-blush l"></span>
+              <span class="pet-blush r"></span>
+            </div>
+            <div class="pet-tent"><i></i><i></i><i></i><i></i><i></i></div>
+            <span class="pet-z">z</span>
+            <div class="pet-say" id="petSay"></div>
+          </div>
+        </div>
+
       </div>
 
       <!-- 日期行 -->
@@ -1786,6 +1995,10 @@ body.battery-saver .glass-card {
         <span>整点报时消息</span>
         <button class="toggle-switch" id="toggleChime" role="switch" aria-checked="false"></button>
       </div>
+      <div class="setting-toggle">
+        <span>桌面小水母</span>
+        <button class="toggle-switch on" id="togglePet" role="switch" aria-checked="true"></button>
+      </div>
     </div>
 
     <div class="setting-group">
@@ -1866,7 +2079,7 @@ body.battery-saver .glass-card {
 
 <script>
 /* ══════════════════════════════════════════════════════
-   活 · Clock  —  核心脚本 v9 "Aura · 气场"
+   活 · Clock  —  核心脚本 v9.1 "Aura · 气场"
    Landscape Ornament · Message Hub · News Digest · Aura Glass · Bio-Rhythmic
    Comfort-First · OLED Perfection · Ambient Mood · Iridescent Glass
    ══════════════════════════════════════════════════════ */
@@ -1987,6 +2200,7 @@ body.battery-saver .glass-card {
     orientation: 'auto',
     msgCenter: true,
     hourlyChime: false,
+    petOn: true,
     newsOn: true,
     newsTime: '07:30',
     newsProxy: '',
@@ -2056,6 +2270,7 @@ body.battery-saver .glass-card {
     toggleSeconds: $('toggleSeconds'), toggleWeather: $('toggleWeather'),
     toggleWorldClock: $('toggleWorldClock'), toggleAOD: $('toggleAOD'), toggleNotif: $('toggleNotif'),
     toggleWander: $('toggleWander'), toggleZen: $('toggleZen'),
+    pet: $('pet'), petSay: $('petSay'), togglePet: $('togglePet'),
     btnSave: $('btnSave'), btnReset: $('btnReset'),
     focusToday: $('focusToday'), focusWeek: $('focusWeek'), focusStreak: $('focusStreak'),
     weekHeatmap: $('weekHeatmap'),
@@ -2795,6 +3010,7 @@ body.battery-saver .glass-card {
 
     /* v9: 天气情绪 */
     weatherMood.apply(cur.weather_code);
+    renderPet();
   }
 
   function weatherCodeToIcon(code) {
@@ -3128,6 +3344,7 @@ body.battery-saver .glass-card {
     updateToggle(dom.toggleMsg, state.msgCenter);
     updateToggle(dom.toggleChime, state.hourlyChime);
     updateToggle(dom.toggleNews, state.newsOn);
+    updateToggle(dom.togglePet, state.petOn);
     if (dom.newsTimeInput) dom.newsTimeInput.value = state.newsTime || '07:30';
     if (dom.newsProxyInput) dom.newsProxyInput.value = state.newsProxy || '';
     renderFeeds();
@@ -3162,6 +3379,12 @@ body.battery-saver .glass-card {
     if (dom.toggleChime) dom.toggleChime.addEventListener('click', function() {
       state.hourlyChime = !state.hourlyChime;
       updateToggle(dom.toggleChime, state.hourlyChime); saveState();
+    });
+    if (dom.togglePet) dom.togglePet.addEventListener('click', function() {
+      state.petOn = !state.petOn;
+      updateToggle(dom.togglePet, state.petOn); saveState();
+      petLastMood = '';
+      renderPet();
     });
     if (dom.toggleNews) dom.toggleNews.addEventListener('click', function() {
       state.newsOn = !state.newsOn;
@@ -3678,6 +3901,193 @@ body.battery-saver .glass-card {
     scheduleNews();
   }
 
+  /* ══════════════════════════════════════
+     小水母「泡」— 时段 + 天气推导心情，自己在左栏巡游
+     摆件常年静止会烧屏，巡游同时充当第二个防烧屏位移
+     ══════════════════════════════════════ */
+  const PET_STATS = 'clockV7Pet';
+  const PET_LINES = {
+    poke: ['咿——', '别戳啦', '再戳要收费了', '泡泡炸了', '我又不是抱枕', '今天也要温柔一点'],
+    tired: ['戳这么多次，我麻了'],
+    hour: ['整点啦，伸个懒腰', '又过了一小时', '该起来走两步了', '我在替你数下班'],
+    sunny: ['今天光很好', '想出去晒太阳'],
+    rain: ['下雨了，我没带伞', '听雨也挺好的'],
+    snow: ['下雪了？！', '冷到发光'],
+    storm: ['打雷了，抱紧自己'],
+    fog: ['雾好大，我迷路了'],
+    sleepy: ['zzz…', '你也还不睡吗'],
+  };
+  let petX = 20, petY = 0, petTX = 20, petTY = 0, petPrimed = false;
+  let petLoopTimer = null, petSayTimer = null, petCheerTimer = null, petBeat = 0;
+  let petPokes = 0, petLastMood = '';
+
+  function petVisible() {
+    return state.petOn && !state.aodMode && !state.zenMode;
+  }
+
+  function petMood() {
+    const h = new Date().getHours();
+    if (h >= 22 || h < 6) return 'sleepy';
+    const code = weatherMood.currentCode;
+    if (code == null || code < 0) return 'calm';
+    if (code >= 95) return 'storm';
+    if ((code >= 71 && code <= 77) || (code >= 85 && code <= 86)) return 'snow';
+    if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return 'rain';
+    if (code >= 45 && code <= 48) return 'fog';
+    if (code <= 0) return 'sunny';
+    return 'calm';
+  }
+
+  function renderPet() {
+    if (!dom.pet) return;
+    dom.pet.classList.toggle('off', !petVisible());
+    const mood = petMood();
+    if (mood === petLastMood) return;
+    petLastMood = mood;
+    dom.pet.dataset.mood = mood;
+    if (petVisible() && PET_LINES[mood]) petSpeak(mood);
+  }
+
+  function petSpeak(kind) {
+    if (!dom.pet || !dom.petSay) return;
+    const pool = PET_LINES[kind] || PET_LINES.poke;
+    dom.petSay.textContent = pool[Math.floor(Math.random() * pool.length)];
+    dom.pet.classList.add('say');
+    clearTimeout(petSayTimer);
+    petSayTimer = setTimeout(function() { if (dom.pet) dom.pet.classList.remove('say'); }, 2800);
+  }
+
+  /* 巡游点靠实时矩形挑：钟面有四种、横竖屏尺寸差很多，
+     写死坐标一定会压到读数，所以先采样再拒绝与钟面/状态栏重叠的点 */
+  function petRects() {
+    const stage = dom.clockStage;
+    if (!stage) return null;
+    const s = stage.getBoundingClientRect();
+    const blockers = [];
+    const pad = 6;
+    function add(el) {
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      if (r.width < 1 || r.height < 1) return;
+      blockers.push({ left: r.left - pad, top: r.top - pad, right: r.right + pad, bottom: r.bottom + pad });
+    }
+    /* 四个钟面是叠在同一位置的绝对层，没选中的只是 opacity:0，
+       把它们都当遮挡物会占满舞台、无处可去，所以只认当前活动面 */
+    const face = stage.querySelector('.clock-face.active') || stage;
+    ['.numeric-digits', '.analog-dial', '.flip-container', '.word-display'].forEach(function(sel) { add(face.querySelector(sel)); });
+    add(stage.querySelector('.face-dots'));
+    add(document.querySelector('.status-bar'));
+    return { s: s, blockers: blockers };
+  }
+
+  function petOverlap(a, b) {
+    return Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left)) *
+           Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
+  }
+
+  function petRectAt(box, x, y, w, h) {
+    return { left: box.s.left + x, right: box.s.left + x + w, top: box.s.top + y, bottom: box.s.top + y + h };
+  }
+
+  /* 走直线去目标点，所以沿途也得扫一遍：光保证落点干净，路过钟面照样糊字 */
+  function petPathClear(box, from, to, w, h) {
+    for (let k = 1; k <= 6; k++) {
+      const t = k / 6;
+      const r = petRectAt(box, lerp(from.x, to.x, t), lerp(from.y, to.y, t), w, h);
+      if (box.blockers.some(function(b) { return petOverlap(r, b) > 0; })) return false;
+    }
+    return true;
+  }
+
+  /* 舞台内坐标统一用「相对舞台左上角」，换算 CSS 位移只在写入时做一次，
+     两套空间混用会让路径检测变成摆设 */
+  function petGo(x, y) { petTX = x; petTY = y; }
+
+  function petPickTarget(box, stuck) {
+    box = box || petRects();
+    if (!box || !dom.pet) return;
+    const s = box.s, w = dom.pet.offsetWidth || 52, h = dom.pet.offsetHeight || 64;
+    const maxX = Math.max(4, s.width - w - 6), maxY = Math.max(4, s.height - h - 4);
+    const from = { x: petX, y: petY };
+    let least = null, leastArea = Infinity, blind = null;
+    for (let i = 0; i < 20; i++) {
+      const x = lerp(6, maxX, Math.random());
+      const y = lerp(4, maxY, Math.random());
+      const area = box.blockers.reduce(function(a, b) { return a + petOverlap(petRectAt(box, x, y, w, h), b); }, 0);
+      if (area > 0) {
+        if (area < leastArea) { leastArea = area; least = { x: x, y: y }; }
+        continue;
+      }
+      /* 已经压在读数上时先脱身要紧，脱身的路上再糊一下总比赖着不动好 */
+      if (stuck || petPathClear(box, from, { x: x, y: y }, w, h)) { petGo(x, y); return; }
+      if (!blind) blind = { x: x, y: y };
+    }
+    if (blind) { petGo(blind.x, blind.y); return; }
+    /* 20 次都没找到空位（极窄布局），才退而求其次挑压得最少的点脱身 */
+    if (stuck && least && leastArea < w * h * 0.4) petGo(least.x, least.y);
+  }
+
+  function petTick() {
+    if (!dom.pet || !petVisible() || document.hidden) return;
+    const box = petRects();
+    if (!box) return;
+    const h = dom.pet.offsetHeight || 64;
+    if (!petPrimed) {   // 首拍从实际渲染位置接管，别和 CSS 默认值对不上号
+      const r0 = dom.pet.getBoundingClientRect();
+      petX = r0.left - box.s.left;
+      petY = r0.top - box.s.top;
+      petTX = petX; petTY = petY;
+      petPrimed = true;
+    }
+    /* 换钟面、转屏、资讯条变高都可能把读数挪到宠物身上，
+       所以每一拍都实测当前位置，压住了就立刻重新选点 */
+    const cur = dom.pet.getBoundingClientRect();
+    const stuck = box.blockers.some(function(b) { return petOverlap(cur, b) > 0; });
+    if (stuck || petBeat % 8 === 0) {
+      petPickTarget(box, stuck);
+      petBeat = 1;
+    } else {
+      petBeat++;
+    }
+    petX = lerp(petX, petTX, 0.5);
+    petY = lerp(petY, petTY, 0.5);
+    dom.pet.style.setProperty('--pet-x', petX.toFixed(1) + 'px');
+    /* .pet 贴在舞台底边，top-space 坐标换算成向上位移 */
+    dom.pet.style.setProperty('--pet-y', (petY - box.s.height + h).toFixed(1) + 'px');
+  }
+
+  function petCelebrate() {
+    if (!dom.pet || !petVisible()) return;
+    dom.pet.classList.remove('cheer');
+    void dom.pet.offsetWidth;
+    dom.pet.classList.add('cheer');
+    clearTimeout(petCheerTimer);
+    petCheerTimer = setTimeout(function() { if (dom.pet) dom.pet.classList.remove('cheer'); }, 1600);
+    petSpeak('hour');
+  }
+
+  function initPet() {
+    if (!dom.pet) return;
+    try {
+      const saved = JSON.parse(localStorage.getItem(PET_STATS) || '{}');
+      petPokes = Number(saved.pokes) > 0 ? Number(saved.pokes) : 0;
+    } catch(e) {}
+    dom.pet.addEventListener('pointerdown', function() {
+      if (!petVisible()) return;
+      petPokes++;
+      try { localStorage.setItem(PET_STATS, JSON.stringify({ pokes: petPokes })); } catch(e) {}
+      dom.pet.classList.remove('poke');
+      void dom.pet.offsetWidth;
+      dom.pet.classList.add('poke');
+      setTimeout(function() { if (dom.pet) dom.pet.classList.remove('poke'); }, 660);
+      petSpeak(petPokes >= 30 && petPokes % 10 === 0 ? 'tired' : 'poke');
+    });
+    petPickTarget();
+    renderPet();
+    petLoopTimer = setInterval(petTick, 1200);
+    setInterval(renderPet, 20000);
+  }
+
   /* ── 整点脉动 ── */
   let lastHour = -1;
   function checkHourPulse() {
@@ -3689,6 +4099,7 @@ body.battery-saver .glass-card {
       dom.bgPulse.classList.add('active');
       setTimeout(function() { if (dom.bgPulse) dom.bgPulse.classList.remove('active'); }, 2800);
     }
+    if (!first) petCelebrate();
     if (!first && state.hourlyChime) {
       const label = h < 5 ? '夜深' : h < 8 ? '清晨' : h < 11 ? '上午'
         : h < 13 ? '正午' : h < 18 ? '下午' : h < 22 ? '傍晚' : '深夜';
@@ -3755,6 +4166,7 @@ body.battery-saver .glass-card {
     applyMsgCenter();
     initMessageChannels();
     initNews();
+    initPet();
     syncNotifyState();
 
     if (state.zenMode) document.body.classList.add('zen-mode');
