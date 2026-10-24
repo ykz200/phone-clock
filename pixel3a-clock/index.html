@@ -16,8 +16,8 @@
 <title>活 · Clock</title>
 <style>
 /* ════════════════════════════════════════════════════════════
-   活 · v9.1 "Aura · 气场"  for Pixel 3a
-   Landscape Ornament · Message Hub · News Digest · Aura Glass · Bio-Rhythmic
+   活 · v9.2 "Drift · 浮游"  for Pixel 3a
+   Landscape Ornament · Message Hub · News Digest · Aura Glass · Bio-Rhythmic · Desk Jellyfish
    Comfort-First · Pixel-Perfect OLED · Ambient Mood · Iridescent Glass
    ════════════════════════════════════════════════════════════ */
 
@@ -550,7 +550,7 @@ body {
 }
 
 /* ════════════════════════════════════════════
-   小水母「泡」v9.1 — 时间 / 天气驱动的桌面宠物
+   小水母「泡」v9.2 — 时间 / 天气驱动的桌面宠物
    动画全部交给合成器（transform / opacity），JS 只改状态与巡游坐标
    ════════════════════════════════════════════ */
 .pet {
@@ -586,34 +586,36 @@ body {
   margin-left: -22px;
   border-radius: 50% 50% 44% 44% / 64% 64% 32% 32%;
   background:
-    radial-gradient(115% 85% at 30% 20%, oklch(100% 0 0 / 0.46), transparent 58%),
-    radial-gradient(100% 100% at 50% 100%,
-      oklch(from var(--accent) 0.84 0.13 h / 0.6),
-      oklch(from var(--accent) 0.6 0.15 h / 0.22));
+    radial-gradient(115% 90% at 30% 18%, oklch(100% 0 0 / 0.6), transparent 60%),
+    radial-gradient(100% 120% at 50% 100%,
+      oklch(from var(--accent) 0.92 0.11 h / 0.82),
+      oklch(from var(--accent) 0.66 0.16 h / 0.4));
   box-shadow:
-    0 0 15px oklch(from var(--accent) l c h / 0.2),
-    inset 0 -6px 10px oklch(0% 0 0 / 0.28);
+    0 0 0 1px oklch(from var(--accent) 0.9 0.08 h / 0.32),
+    0 0 18px oklch(from var(--accent) l c h / 0.32),
+    inset 0 -5px 9px oklch(0% 0 0 / 0.2);
   transform-origin: 50% 100%;
   animation: petSquish calc(4.6s * var(--pet-pace, 1)) var(--ease-smooth) infinite;
 }
 .pet-eye {
   position: absolute;
-  top: 18px;
-  width: 4px;
-  height: 5px;
+  top: 17px;
+  width: 5px;
+  height: 6.5px;
   border-radius: 50%;
-  background: oklch(20% 0.02 var(--accent-h));
+  background: oklch(23% 0.035 var(--accent-h));
+  box-shadow: 0 1px 0 oklch(100% 0 0 / 0.35);
   animation: petBlink 6.4s steps(1, end) infinite;
 }
-.pet-eye.l { left: 13px; }
-.pet-eye.r { right: 13px; animation-delay: 0.12s; }
+.pet-eye.l { left: 12px; }
+.pet-eye.r { right: 12px; animation-delay: 0.12s; }
 .pet-blush {
   position: absolute;
   top: 23px;
-  width: 6px;
-  height: 3px;
+  width: 7px;
+  height: 3.5px;
   border-radius: 50%;
-  background: oklch(0.78 0.15 25 / 0.34);
+  background: oklch(0.78 0.16 25 / 0.5);
   filter: blur(0.6px);
   opacity: 0;
   transition: opacity 1.2s;
@@ -635,9 +637,9 @@ body {
 .pet-tent i {
   position: absolute;
   top: 0;
-  width: 2px;
+  width: 2.5px;
   border-radius: 2px;
-  background: linear-gradient(oklch(from var(--accent) 0.82 0.12 h / 0.5), transparent);
+  background: linear-gradient(oklch(from var(--accent) 0.9 0.12 h / 0.8), transparent);
   transform-origin: 50% 0;
   animation: petTent calc(3.1s * var(--pet-pace, 1)) var(--ease-smooth) infinite;
 }
@@ -651,9 +653,9 @@ body {
   position: absolute;
   left: 40px;
   top: -6px;
-  font-size: 0.62rem;
-  font-weight: 600;
-  color: var(--text-3);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-2);
   opacity: 0;
 }
 .pet[data-mood="sleepy"] .pet-z { animation: petZ 3.4s var(--ease-smooth) infinite; }
@@ -669,9 +671,9 @@ body {
   background: var(--glass-bg-strong);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  color: var(--text-2);
-  font-size: 0.72rem;
-  font-weight: 500;
+  color: var(--text-1);
+  font-size: 0.8rem;
+  font-weight: 600;
   line-height: 1.35;
   white-space: nowrap;
   opacity: 0;
@@ -679,6 +681,8 @@ body {
   transition: opacity 0.32s var(--ease-smooth), transform 0.32s var(--spring);
 }
 .pet.say .pet-say { opacity: 1; transform: translate(-50%, -4px) scale(1); }
+body.land-mode .pet { --pet-scale: 0.86; }
+body.land-mode .pet-say { font-size: 0.86rem; }
 
 /* 心情：由时段 + 天气码推导，只改节奏与滤镜，不加新节点 */
 .pet[data-mood="sunny"]  { --pet-pace: 0.7; }
@@ -735,7 +739,6 @@ body {
   100% { opacity: 0; transform: translate(11px, -20px) scale(1.25); }
 }
 
-body.land-mode .pet { --pet-scale: 0.8; }
 body.zen-mode .pet,
 body.aod-mode .pet { opacity: 0; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) {
@@ -2079,8 +2082,8 @@ body.battery-saver .glass-card {
 
 <script>
 /* ══════════════════════════════════════════════════════
-   活 · Clock  —  核心脚本 v9.1 "Aura · 气场"
-   Landscape Ornament · Message Hub · News Digest · Aura Glass · Bio-Rhythmic
+   活 · Clock  —  核心脚本 v9.2 "Drift · 浮游"
+   Landscape Ornament · Message Hub · News Digest · Aura Glass · Bio-Rhythmic · Desk Jellyfish
    Comfort-First · OLED Perfection · Ambient Mood · Iridescent Glass
    ══════════════════════════════════════════════════════ */
 (() => {
@@ -3917,7 +3920,7 @@ body.battery-saver .glass-card {
     fog: ['雾好大，我迷路了'],
     sleepy: ['zzz…', '你也还不睡吗'],
   };
-  let petX = 20, petY = 0, petTX = 20, petTY = 0, petPrimed = false;
+  let petX = 20, petY = 0, petTX = 20, petTY = 0, petPrimed = false, petSide = -1;
   let petLoopTimer = null, petSayTimer = null, petCheerTimer = null, petBeat = 0;
   let petPokes = 0, petLastMood = '';
 
@@ -3961,15 +3964,25 @@ body.battery-saver .glass-card {
      写死坐标一定会压到读数，所以先采样再拒绝与钟面/状态栏重叠的点 */
   function petRects() {
     const stage = dom.clockStage;
-    if (!stage) return null;
+    if (!stage || !dom.pet) return null;
     const s = stage.getBoundingClientRect();
-    const blockers = [];
-    const pad = 6;
+    /* 碰撞盒按水母身体的实际矩形算：横屏 --pet-scale 只有 0.86，
+       再拿 52x64 的外框去避让会白白吃掉半条巡游带 */
+    const body = dom.pet.querySelector('.pet-body') || dom.pet;
+    const pr = dom.pet.getBoundingClientRect();
+    const br = body.getBoundingClientRect();
+    const pad = 4;
+    const box = {
+      s: s,
+      hit: { l: br.left - pr.left, t: br.top - pr.top, w: br.width, h: br.height },
+      body: body,
+      blockers: []
+    };
     function add(el) {
       if (!el) return;
       const r = el.getBoundingClientRect();
       if (r.width < 1 || r.height < 1) return;
-      blockers.push({ left: r.left - pad, top: r.top - pad, right: r.right + pad, bottom: r.bottom + pad });
+      box.blockers.push({ left: r.left - pad, top: r.top - pad, right: r.right + pad, bottom: r.bottom + pad });
     }
     /* 四个钟面是叠在同一位置的绝对层，没选中的只是 opacity:0，
        把它们都当遮挡物会占满舞台、无处可去，所以只认当前活动面 */
@@ -3977,7 +3990,7 @@ body.battery-saver .glass-card {
     ['.numeric-digits', '.analog-dial', '.flip-container', '.word-display'].forEach(function(sel) { add(face.querySelector(sel)); });
     add(stage.querySelector('.face-dots'));
     add(document.querySelector('.status-bar'));
-    return { s: s, blockers: blockers };
+    return box;
   }
 
   function petOverlap(a, b) {
@@ -3985,15 +3998,16 @@ body.battery-saver .glass-card {
            Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
   }
 
-  function petRectAt(box, x, y, w, h) {
-    return { left: box.s.left + x, right: box.s.left + x + w, top: box.s.top + y, bottom: box.s.top + y + h };
+  function petRectAt(box, x, y) {
+    const p = box.hit, l = box.s.left + x + p.l, t = box.s.top + y + p.t;
+    return { left: l, right: l + p.w, top: t, bottom: t + p.h };
   }
 
   /* 走直线去目标点，所以沿途也得扫一遍：光保证落点干净，路过钟面照样糊字 */
-  function petPathClear(box, from, to, w, h) {
+  function petPathClear(box, from, to) {
     for (let k = 1; k <= 6; k++) {
       const t = k / 6;
-      const r = petRectAt(box, lerp(from.x, to.x, t), lerp(from.y, to.y, t), w, h);
+      const r = petRectAt(box, lerp(from.x, to.x, t), lerp(from.y, to.y, t));
       if (box.blockers.some(function(b) { return petOverlap(r, b) > 0; })) return false;
     }
     return true;
@@ -4003,35 +4017,48 @@ body.battery-saver .glass-card {
      两套空间混用会让路径检测变成摆设 */
   function petGo(x, y) { petTX = x; petTY = y; }
 
-  function petPickTarget(box, stuck) {
+  /* 读数永远居中，所以能稳定容身的只有舞台那一圈边框。
+     沿边框游走比满舞台随机挑点既不容易糊字，看起来也像绕着钟散步 */
+  function petRingPoint(box) {
+    const s = box.s, hit = box.hit;
+    const xMin = -hit.l, xMax = Math.max(xMin, s.width - hit.w - hit.l);
+    const yMin = -hit.t, yMax = Math.max(yMin, s.height - hit.h - hit.t);
+    const jitter = Math.random() * 10;
+    if (petSide < 0) petSide = Math.floor(Math.random() * 4);
+    else if (Math.random() > 0.55) petSide = (petSide + (Math.random() > 0.5 ? 1 : 3)) % 4;
+    if (petSide === 0) return { x: lerp(xMin, xMax, Math.random()), y: yMin + jitter };
+    if (petSide === 1) return { x: xMax - jitter, y: lerp(yMin, yMax, Math.random()) };
+    if (petSide === 2) return { x: lerp(xMin, xMax, Math.random()), y: yMax - jitter };
+    return { x: xMin + jitter, y: lerp(yMin, yMax, Math.random()) };
+  }
+
+  function petPickTarget(box, curArea) {
     box = box || petRects();
     if (!box || !dom.pet) return;
-    const s = box.s, w = dom.pet.offsetWidth || 52, h = dom.pet.offsetHeight || 64;
-    const maxX = Math.max(4, s.width - w - 6), maxY = Math.max(4, s.height - h - 4);
     const from = { x: petX, y: petY };
-    let least = null, leastArea = Infinity, blind = null;
-    for (let i = 0; i < 20; i++) {
-      const x = lerp(6, maxX, Math.random());
-      const y = lerp(4, maxY, Math.random());
-      const area = box.blockers.reduce(function(a, b) { return a + petOverlap(petRectAt(box, x, y, w, h), b); }, 0);
+    let least = null, leastArea = Infinity, blind = null, blindDist = Infinity;
+    for (let i = 0; i < (curArea > 0 ? 40 : 20); i++) {
+      const p = petRingPoint(box);
+      const area = box.blockers.reduce(function(a, b) { return a + petOverlap(petRectAt(box, p.x, p.y), b); }, 0);
       if (area > 0) {
-        if (area < leastArea) { leastArea = area; least = { x: x, y: y }; }
+        if (area < leastArea) { leastArea = area; least = p; }
         continue;
       }
       /* 已经压在读数上时先脱身要紧，脱身的路上再糊一下总比赖着不动好 */
-      if (stuck || petPathClear(box, from, { x: x, y: y }, w, h)) { petGo(x, y); return; }
-      if (!blind) blind = { x: x, y: y };
+      if (curArea > 0 || petPathClear(box, from, p)) { petGo(p.x, p.y); return; }
+      const dist = Math.abs(p.x - from.x) + Math.abs(p.y - from.y);
+      if (dist < blindDist) { blindDist = dist; blind = p; }
     }
+    /* 绕不开读数就挑最近的干净边位，宁可跨一次也要跨得短 */
     if (blind) { petGo(blind.x, blind.y); return; }
-    /* 20 次都没找到空位（极窄布局），才退而求其次挑压得最少的点脱身 */
-    if (stuck && least && leastArea < w * h * 0.4) petGo(least.x, least.y);
+    /* 40 次都碰不到空位（舞台太挤）：只要比现在压得少就挪，几拍之内自己爬出来 */
+    if (curArea > 0 && least && leastArea < curArea * 0.6) petGo(least.x, least.y);
   }
 
   function petTick() {
     if (!dom.pet || !petVisible() || document.hidden) return;
     const box = petRects();
     if (!box) return;
-    const h = dom.pet.offsetHeight || 64;
     if (!petPrimed) {   // 首拍从实际渲染位置接管，别和 CSS 默认值对不上号
       const r0 = dom.pet.getBoundingClientRect();
       petX = r0.left - box.s.left;
@@ -4041,10 +4068,10 @@ body.battery-saver .glass-card {
     }
     /* 换钟面、转屏、资讯条变高都可能把读数挪到宠物身上，
        所以每一拍都实测当前位置，压住了就立刻重新选点 */
-    const cur = dom.pet.getBoundingClientRect();
-    const stuck = box.blockers.some(function(b) { return petOverlap(cur, b) > 0; });
-    if (stuck || petBeat % 8 === 0) {
-      petPickTarget(box, stuck);
+    const cur = box.body.getBoundingClientRect();
+    const curArea = box.blockers.reduce(function(a, b) { return a + petOverlap(cur, b); }, 0);
+    if (curArea > 0 || petBeat % 8 === 0) {
+      petPickTarget(box, curArea);
       petBeat = 1;
     } else {
       petBeat++;
@@ -4053,7 +4080,7 @@ body.battery-saver .glass-card {
     petY = lerp(petY, petTY, 0.5);
     dom.pet.style.setProperty('--pet-x', petX.toFixed(1) + 'px');
     /* .pet 贴在舞台底边，top-space 坐标换算成向上位移 */
-    dom.pet.style.setProperty('--pet-y', (petY - box.s.height + h).toFixed(1) + 'px');
+    dom.pet.style.setProperty('--pet-y', (petY - box.s.height + (dom.pet.offsetHeight || 64)).toFixed(1) + 'px');
   }
 
   function petCelebrate() {
