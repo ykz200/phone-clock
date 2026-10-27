@@ -1,7 +1,7 @@
 {
-  "name": "活 · Clock",
+  "name": "活 · Clock v10 Solar Flare",
   "short_name": "活·Clock",
-  "description": "活 — 与光同频的 Pixel 3a 横屏时钟天气消息资讯摆件 · Aura Glass · Bio-Rhythmic · Weather Mood · 浮游小水母 · OLED-Perfect",
+  "description": "活 v10.0 Solar Flare — Pixel 3a 桌面摆件时钟 · Liquid Glass 6.0 · 日冕辉光 · 环境智能 · 极光增强",
   "start_url": "./index.html",
   "display": "fullscreen",
   "orientation": "any",

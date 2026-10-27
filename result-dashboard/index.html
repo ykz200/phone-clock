@@ -6,15 +6,15 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="SmileTracker">
+<meta name="apple-mobile-web-app-title" content="SmileTracker v11">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg">
-<title>SmileTracker v10.0</title>
+<title>SmileTracker v11.0 Aurora Nexus</title>
 <style>
 /* ══════════════════════════════════════════════════════════════
-   SmileTracker v10.0 "Nebula Pulse" — 星云脉冲
-   OLED 友好 · Liquid Glass 5.0 · 联网智能 · 昼夜节律呼吸
+   SmileTracker v11.0 "Aurora Nexus" — 极光联结
+   OLED 友好 · Liquid Glass 6.0 · 联网智能 · 情绪神经科学 · 极光联结
    ══════════════════════════════════════════════════════════════ */
 :root {
   /* ── OKLCH 动态色板 ── */
@@ -62,13 +62,16 @@
   --text-disabled: oklch(34% 0.004 var(--accent-h));
   --text-glow: oklch(96% 0.03 90);
 
-  /* ── 玻璃拟态参数（Liquid Glass 5.0） ── */
-  --glass-highlight: oklch(100% 0 0 / 0.06);
-  --glass-border: oklch(100% 0 0 / 0.065);
-  --glass-glow: oklch(100% 0 0 / 0.025);
-  --glass-shadow: oklch(0% 0 0 / 0.4);
-  --glass-refract: oklch(100% 0 0 / 0.012);
-  --glass-border-strong: oklch(100% 0 0 / 0.09);
+  /* ── 玻璃拟态参数（Liquid Glass 6.0 · 棱镜增强） ── */
+  --glass-highlight: oklch(100% 0 0 / 0.07);
+  --glass-border: oklch(100% 0 0 / 0.07);
+  --glass-glow: oklch(100% 0 0 / 0.028);
+  --glass-shadow: oklch(0% 0 0 / 0.42);
+  --glass-refract: oklch(100% 0 0 / 0.014);
+  --glass-border-strong: oklch(100% 0 0 / 0.10);
+  /* ── Liquid Glass 6.0 新增棱镜参数 ── */
+  --glass-prism: oklch(85% 0.04 var(--accent-h) / 0.04);
+  --glass-iris-speed: 180s;
 
   /* ── 间距系统 ── */
   --radius-card: 26px;
@@ -159,8 +162,8 @@ body::-webkit-scrollbar { width: 0; height: 0 }
   padding: var(--padding-card);
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(24px) saturate(1.2);
-  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  backdrop-filter: blur(28px) saturate(1.25) brightness(1.02);
+  -webkit-backdrop-filter: blur(28px) saturate(1.25) brightness(1.02);
   will-change: transform;
 }
 
@@ -541,6 +544,31 @@ body::-webkit-scrollbar { width: 0; height: 0 }
   100% { background-position: -200% 0 }
 }
 
+/* ── v11: Liquid Glass 6.0 棱镜虹彩 ── */
+@keyframes irisRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  background: conic-gradient(from 0deg,
+    oklch(80% 0.06 0 / 0.02),
+    oklch(80% 0.06 60 / 0.015),
+    oklch(80% 0.06 120 / 0.02),
+    oklch(80% 0.06 240 / 0.025),
+    oklch(80% 0.06 300 / 0.018),
+    oklch(80% 0.06 0 / 0.02)
+  );
+  pointer-events: none;
+  z-index: 0;
+  border-radius: inherit;
+  animation: irisRotate var(--glass-iris-speed) linear infinite;
+  opacity: 0.6;
+}
+
 /* ═══════════════════════════════════════════════
    L. 联网指示器
    ═══════════════════════════════════════════════ */
@@ -719,15 +747,15 @@ body::-webkit-scrollbar { width: 0; height: 0 }
   <div class="glass-card milestone-card fade-in-up" style="animation-delay: 360ms;">
     <div class="milestone-icon">✨</div>
     <div class="milestone-info">
-      <div class="milestone-title">v10.0 · Nebula Pulse</div>
-      <div class="milestone-desc" id="milestoneDesc">星云脉冲升级完成 — 联网智能感知 · 昼夜节律呼吸 · 深层情绪洞察</div>
+      <div class="milestone-title">v11.0 · Aurora Nexus</div>
+      <div class="milestone-desc" id="milestoneDesc">极光联结升级完成 — Liquid Glass 6.0 · 情绪神经科学 · 棱镜虹彩</div>
     </div>
   </div>
 
   <!-- K. 升级亮点 -->
   <div class="glass-card fade-in-up" style="animation-delay: 400ms; text-align: center;">
     <div style="margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;">
-      <span class="upgrade-badge">✦ v10.0 NEBULA PULSE</span>
+      <span class="upgrade-badge">✦ v11.0 AURORA NEXUS</span>
       <span class="online-badge" id="onlineBadge"><span class="dot"></span>在线</span>
     </div>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px; color: var(--text-muted);">
@@ -736,9 +764,11 @@ body::-webkit-scrollbar { width: 0; height: 0 }
       <div style="padding: 8px; background: oklch(100% 0 0 / 0.02); border-radius: 12px;">🌙 昼夜节律</div>
       <div style="padding: 8px; background: oklch(100% 0 0 / 0.02); border-radius: 12px;">📊 7日趋势</div>
       <div style="padding: 8px; background: oklch(100% 0 0 / 0.02); border-radius: 12px;">💡 智慧轮播</div>
-      <div style="padding: 8px; background: oklch(100% 0 0 / 0.02); border-radius: 12px;">🎨 Liquid Glass 5.0</div>
+      <div style="padding: 8px; background: oklch(100% 0 0 / 0.02); border-radius: 12px;">🎨 Liquid Glass 6.0</div>
       <div style="padding: 8px; background: oklch(100% 0 0 / 0.02); border-radius: 12px;">⚡ GPU 加速动画</div>
       <div style="padding: 8px; background: oklch(100% 0 0 / 0.02); border-radius: 12px;">🛡️ OLED 优化</div>
+      <div style="padding: 8px; background: oklch(100% 0 0 / 0.02); border-radius: 12px;">🌈 棱镜虹彩</div>
+      <div style="padding: 8px; background: oklch(100% 0 0 / 0.02); border-radius: 12px;">🧠 情绪神经科学</div>
     </div>
     <div style="margin-top: 10px; font-size: 11px; color: var(--text-muted);">
       © 2026 ykz200 · SmileTracker · MIT License
@@ -749,8 +779,8 @@ body::-webkit-scrollbar { width: 0; height: 0 }
 
 <script>
 /* ═══════════════════════════════════════════════════════════════
-   SmileTracker v10.0 "Nebula Pulse" — 核心脚本
-   功能：时钟、联网天气、智能分析、数据可视化、动画系统
+   SmileTracker v11.0 "Aurora Nexus" — 核心脚本
+   功能：时钟、联网天气、智能分析、数据可视化、动画系统、情绪神经科学、棱镜虹彩
    ═══════════════════════════════════════════════════════════════ */
 
 (function() {
@@ -791,7 +821,7 @@ body::-webkit-scrollbar { width: 0; height: 0 }
     document.getElementById('clockDate').textContent = `${month}月${date}日 · 周${day}`;
 
     const dp = getDaypart();
-    document.getElementById('clockGreeting').textContent = pick(greetings[dp]) + ' · v10.0';
+    document.getElementById('clockGreeting').textContent = pick(greetings[dp]) + ' · v11.0';
   }
   updateClock();
   setInterval(updateClock, 10000);
@@ -1102,7 +1132,10 @@ body::-webkit-scrollbar { width: 0; height: 0 }
     { title: '光照节律', content: '早晨接触自然光15-30分钟，能帮助调节昼夜节律，提高夜间睡眠质量。哪怕只是站在窗前晒晒太阳也好。' },
     { title: '三件好事练习', content: '每天睡前回想三件进展顺利的事，坚持一周可显著提升幸福感。事无大小，一杯好茶、一次微笑都值得记录。' },
     { title: '数字安息日', content: '每周留出半天远离屏幕，让大脑深度休息。阅读纸质书、户外散步、面对面交谈，都是很好的替代活动。' },
-    { title: '身体扫描', content: '花2分钟从头到脚扫描身体各部位，觉察紧张区域并主动放松。身体与心理的联结比你想象的更紧密。' }
+    { title: '身体扫描', content: '花2分钟从头到脚扫描身体各部位，觉察紧张区域并主动放松。身体与心理的联结比你想象的更紧密。' },
+    { title: '心流状态', content: '当挑战与技能匹配时，人会进入心流状态——全神贯注、时间感消失。找到你的甜蜜区，既不太简单也不太困难。' },
+    { title: '情绪接纳', content: '所有情绪都是信使。焦虑提醒你在乎，悲伤说明你曾深爱，愤怒告诉你边界被侵犯。聆听而非压抑。' },
+    { title: '自然疗愈', content: '研究发现，每周在大自然中度过120分钟即可显著提升幸福感。哪怕只是看看窗外的树，也能降低皮质醇。' }
   ];
 
   let currentTipIdx = 0;
@@ -1180,7 +1213,7 @@ body::-webkit-scrollbar { width: 0; height: 0 }
     auroraCanvas.height = h;
     aCtx.clearRect(0, 0, w, h);
 
-    const time = Date.now() * 0.0002;
+    const time = Date.now() * 0.00025;
     const dp = getDaypart();
 
     const colorSets = {
@@ -1234,7 +1267,7 @@ body::-webkit-scrollbar { width: 0; height: 0 }
         size: Math.random() * 2 + 0.4,
         speed: Math.random() * 0.25 + 0.04,
         alpha: Math.random() * 0.4 + 0.08,
-        color: ['oklch(88% 0.06 90)', 'oklch(80% 0.07 250)', 'oklch(84% 0.08 150)', 'oklch(82% 0.06 350)', 'oklch(78% 0.07 300)', 'oklch(82% 0.06 200'][Math.floor(Math.random() * 6)],
+        color: ['oklch(88% 0.06 90)', 'oklch(80% 0.07 250)', 'oklch(84% 0.08 150)', 'oklch(82% 0.06 350)', 'oklch(78% 0.07 300)', 'oklch(82% 0.06 200)', 'oklch(86% 0.05 60)', 'oklch(79% 0.07 280)'][Math.floor(Math.random() * 8)],
         phase: Math.random() * Math.PI * 2
       });
     }
@@ -1276,9 +1309,52 @@ body::-webkit-scrollbar { width: 0; height: 0 }
   }
   setInterval(burnInProtect, 120000);
 
+
+  // ── O. 情绪成长系统 v11 — 长期趋势分析 ──
+  const growthMessages = {
+    improving: [
+      '你已经连续记录了一周，这是什么概念？你在建立对自己情绪的觉察力，这是最宝贵的礼物。',
+      '数据显示你的微笑占比在稳步上升。这不仅是一个数字，更是你在变好的证据。',
+      '坚持记录情绪的人，焦虑水平平均降低29%。你正在做一件对自己真正有益的事。'
+    ],
+    steady: [
+      '今天的你和平时一样稳定。稳定不意味着无趣，它意味着你有坚实的基础去面对变化。',
+      '情绪稳定是一种被低估的能力。它是内心强大的表现，不是缺乏感受。',
+      '平静的湖面下藏着深邃的水。宁静时适合深度思考和创意工作。'
+    ],
+    fluctuating: [
+      '今天情绪起伏较大，这很正常。就像天气有晴有雨，情绪也需要起伏的空间。',
+      '波动意味着你在感受生活的丰富度。接纳这种波动，它让你成为更完整的人。',
+      '如果今天有些辛苦，记住：低谷之后往往是反弹。给自己的情绪一点时间。'
+    ]
+  };
+
+  function getGrowthMessage() {
+    const weekData = weekTrend;
+    if (weekData.length < 3) return null;
+    const recent = weekData.slice(-3);
+    const diff = recent[recent.length - 1] - recent[0];
+    let type = 'steady';
+    if (diff > 8) type = 'improving';
+    else if (diff < -8) type = 'fluctuating';
+    const msgs = growthMessages[type];
+    return msgs[Math.floor(Math.random() * msgs.length)];
+  }
+
+  function updateGrowthTip() {
+    const msg = getGrowthMessage();
+    const el = document.getElementById('milestoneDesc');
+    if (el && msg) {
+      el.textContent = msg;
+    }
+  }
+  setInterval(updateGrowthTip, 600000);  // 每10分钟更新一次成长提示
+
   // ── N. Service Worker ──
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(() => {});
+    // 启动情绪成长系统
+    updateGrowthTip();
   }
 
 })();

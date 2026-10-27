@@ -1,5 +1,5 @@
-/* SmileTracker v10.0 — Service Worker · Nebula Pulse */
-const CACHE_NAME = 'st-v10-nebula';
+/* SmileTracker v11.0 — Service Worker · Aurora Nexus */
+const CACHE_NAME = 'st-v11-aurora';
 const ASSETS = ['./', './index.html', './icon.svg', './manifest.webmanifest'];
 
 self.addEventListener('install', e => {
