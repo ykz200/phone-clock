@@ -1,7 +1,7 @@
 {
-  "name": "SmileTracker v11.0 Aurora Nexus · 情绪追踪 · 极光联结",
+  "name": "SmileTracker v12.0 Resonance Bloom · 情绪追踪 · 共鸣绽放",
   "short_name": "SmileTracker",
-  "description": "打工人桌面实时表情追踪 · OLED 友好 · Aurora Nexus v11.0 · Liquid Glass 6.0 · 棱镜虹彩 · 情绪神经科学",
+  "description": "打工人桌面实时表情追踪 · OLED 友好 · Resonance Bloom v12.0 · Liquid Glass 8.0 · 共鸣绽放 · 情绪神经科学",
   "start_url": "./index.html",
   "display": "fullscreen",
   "orientation": "any",

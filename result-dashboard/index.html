@@ -6,15 +6,15 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="SmileTracker v11">
+<meta name="apple-mobile-web-app-title" content="SmileTracker v12">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg">
-<title>SmileTracker v11.0 Aurora Nexus</title>
+<title>SmileTracker v12.0 Resonance Bloom</title>
 <style>
 /* ══════════════════════════════════════════════════════════════
-   SmileTracker v11.0 "Aurora Nexus" — 极光联结
-   OLED 友好 · Liquid Glass 6.0 · 联网智能 · 情绪神经科学 · 极光联结
+   SmileTracker v12.0 "Resonance Bloom" — 共鸣绽放
+   OLED 友好 · Liquid Glass 8.0 · 联网智能 · 情绪神经科学 · 共鸣绽放
    ══════════════════════════════════════════════════════════════ */
 :root {
   /* ── OKLCH 动态色板 ── */
@@ -72,6 +72,12 @@
   /* ── Liquid Glass 6.0 新增棱镜参数 ── */
   --glass-prism: oklch(85% 0.04 var(--accent-h) / 0.04);
   --glass-iris-speed: 180s;
+  /* ── Liquid Glass 8.0 新增 ── */
+  --glass-chromatic: oklch(85% 0.05 var(--accent-h) / 0.025);
+  --glass-thermal: oklch(90% 0.03 50 / 0.015);
+  --glass-edge-glow: 0;
+  --orb-pulse: 0;
+  --biolum-intensity: 0.5;
 
   /* ── 间距系统 ── */
   --radius-card: 26px;
@@ -125,6 +131,22 @@ body::-webkit-scrollbar { width: 0; height: 0 }
   background: radial-gradient(ellipse at 30% 20%, var(--surface-1) 0%, var(--deep-space) 50%, var(--oled-black) 100%);
   pointer-events: none;
 }
+.biolum-layer {
+  position: fixed; inset: 0; z-index: 1;
+  pointer-events: none;
+  opacity: var(--biolum-intensity, 0.5);
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 30%, oklch(70% 0.08 160 / 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 35% at 80% 70%, oklch(65% 0.07 320 / 0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 30% at 50% 50%, oklch(75% 0.06 200 / 0.04) 0%, transparent 60%);
+  animation: biolumDrift 30s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+@keyframes biolumDrift {
+  0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.4; }
+  33% { transform: scale(1.05) translate(3px, -2px); opacity: 0.6; }
+  66% { transform: scale(0.97) translate(-2px, 3px); opacity: 0.5; }
+}
 
 .aurora-layer {
   position: fixed; inset: 0; z-index: 1;
@@ -135,6 +157,27 @@ body::-webkit-scrollbar { width: 0; height: 0 }
 .particles-canvas {
   position: fixed; inset: 0; z-index: 2;
   pointer-events: none;
+}
+/* ── v12: 情绪共振球 ── */
+.emotion-orb {
+  position: fixed;
+  top: 50%; left: 50%;
+  width: 140px; height: 140px;
+  margin-left: -70px; margin-top: -70px;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%,
+    oklch(85% 0.1 160 / 0.25),
+    oklch(70% 0.08 200 / 0.12) 40%,
+    transparent 70%);
+  animation: orbPulse calc(4.5s) ease-in-out infinite;
+  opacity: 0.5;
+  filter: blur(10px);
+}
+@keyframes orbPulse {
+  0%, 100% { transform: scale(0.85); opacity: 0.35; }
+  50% { transform: scale(1.12); opacity: 0.6; }
 }
 
 /* ═══════════════════════════════════════════════
@@ -188,6 +231,22 @@ body::-webkit-scrollbar { width: 0; height: 0 }
   pointer-events: none;
   border-radius: 0 0 var(--radius-card) var(--radius-card);
   z-index: 0;
+}
+/* 8.0: 虹彩增强 */
+.glass-card::before {
+  background:
+    linear-gradient(165deg, var(--glass-highlight) 0%, transparent 25%, transparent 75%, oklch(100% 0 0 / 0.02) 100%),
+    conic-gradient(from var(--iris-angle, 0deg),
+      oklch(80% 0.06 0 / 0.012),
+      oklch(80% 0.06 120 / 0.008),
+      oklch(80% 0.06 240 / 0.015),
+      oklch(80% 0.06 0 / 0.012)
+    );
+}
+
+.glass-card:hover {
+  transform: translateY(-3px) scale(1.012);
+  box-shadow: 0 8px 36px oklch(0% 0 0 / 0.5), inset 0 0 0 1px var(--glass-border-strong);
 }
 
 .glass-card > * { position: relative; z-index: 1 }
@@ -572,6 +631,18 @@ body::-webkit-scrollbar { width: 0; height: 0 }
 /* ═══════════════════════════════════════════════
    L. 联网指示器
    ═══════════════════════════════════════════════ */
+.upgrade-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--c-green);
+  background: oklch(82% 0.07 150 / 0.08);
+  padding: 5px 12px;
+  border-radius: 12px;
+  border: 1px solid oklch(82% 0.07 150 / 0.15);
+}
+
 .online-badge {
   display: inline-flex;
   align-items: center;
@@ -618,6 +689,10 @@ body::-webkit-scrollbar { width: 0; height: 0 }
 <div class="bg-layer"></div>
 <canvas class="aurora-layer" id="auroraCanvas"></canvas>
 <canvas class="particles-canvas" id="particlesCanvas"></canvas>
+
+<!-- v12: 生物荧光层 + 情绪共振球 -->
+<div class="biolum-layer" id="biolumLayer"></div>
+<div class="emotion-orb" id="emotionOrb"></div>
 
 <!-- 主容器 -->
 <div class="app-container" id="appContainer">
@@ -747,15 +822,15 @@ body::-webkit-scrollbar { width: 0; height: 0 }
   <div class="glass-card milestone-card fade-in-up" style="animation-delay: 360ms;">
     <div class="milestone-icon">✨</div>
     <div class="milestone-info">
-      <div class="milestone-title">v11.0 · Aurora Nexus</div>
-      <div class="milestone-desc" id="milestoneDesc">极光联结升级完成 — Liquid Glass 6.0 · 情绪神经科学 · 棱镜虹彩</div>
+      <div class="milestone-title">v12.0 · Resonance Bloom</div>
+      <div class="milestone-desc" id="milestoneDesc">共鸣绽放 — Liquid Glass 8.0 · 生物荧光 · 情绪共振球 · 季节律动</div>
     </div>
   </div>
 
   <!-- K. 升级亮点 -->
   <div class="glass-card fade-in-up" style="animation-delay: 400ms; text-align: center;">
     <div style="margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;">
-      <span class="upgrade-badge">✦ v11.0 AURORA NEXUS</span>
+      <span class="upgrade-badge">✦ v12.0 RESONANCE BLOOM</span>
       <span class="online-badge" id="onlineBadge"><span class="dot"></span>在线</span>
     </div>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px; color: var(--text-muted);">
@@ -779,8 +854,8 @@ body::-webkit-scrollbar { width: 0; height: 0 }
 
 <script>
 /* ═══════════════════════════════════════════════════════════════
-   SmileTracker v11.0 "Aurora Nexus" — 核心脚本
-   功能：时钟、联网天气、智能分析、数据可视化、动画系统、情绪神经科学、棱镜虹彩
+   SmileTracker v12.0 "Resonance Bloom" — 核心脚本
+   功能：时钟、联网天气、智能分析、数据可视化、动画系统、情绪神经科学、共鸣绽放
    ═══════════════════════════════════════════════════════════════ */
 
 (function() {
