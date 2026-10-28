@@ -6,9 +6,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="活·Clock v10">
-<meta name="application-name" content="活·Clock v10">
-<meta name="description" content="活 v10.0 Solar Flare — Pixel 3a 桌面摆件时钟 · 液态玻璃 · 日冕辉光 · 环境智能">
+<meta name="apple-mobile-web-app-title" content="活·Clock v11">
+<meta name="application-name" content="活·Clock v11">
+<meta name="description" content="活 v11.0 Horizon — Pixel 3a 桌面摆件时钟 · 液态玻璃 7.0 · 地平线光 · 日冕辉光 · 环境智能 2.0">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#0a0a0f" media="(prefers-color-scheme: light)">
 <link rel="manifest" href="manifest.webmanifest">
@@ -16,9 +16,9 @@
 <title>活 · Clock</title>
 <style>
 /* ════════════════════════════════════════════════════════════
-   活 · v10.0 "Solar Flare"  for Pixel 3a
-   Landscape Ornament · Message Hub · News Digest · Aura Glass 6.0 · Corona Flare · Bio-Rhythmic · Desk Jellyfish
-   Comfort-First · Pixel-Perfect OLED · Ambient Mood · Iridescent Glass · Solar Wind · Neural Aurora
+   活 · v11.0 "Horizon"  for Pixel 3a
+   Landscape Ornament · Message Hub · News Digest · Liquid Glass 7.0 · Horizon Light · Corona Flare · Bio-Rhythmic · Desk Jellyfish
+   Comfort-First · Pixel-Perfect OLED · Ambient 2.0 · Depth Glass · Solar Wind · Neural Aurora
    ════════════════════════════════════════════════════════════ */
 
 :root {
@@ -29,36 +29,45 @@
   --accent-c: 0.10;
   --accent-h: 250;
 
-  /* ── Aura Glass 6.0（Liquid Glass · 棱镜折射 · 彩虹边缘光 · 深度感） ── */
-  --glass-bg: oklch(100% 0 0 / 0.026);
-  --glass-bg-strong: oklch(100% 0 0 / 0.048);
-  --glass-border: oklch(100% 0 0 / 0.042);
-  --glass-border-strong: oklch(100% 0 0 / 0.078);
-  --glass-highlight: oklch(100% 0 0 / 0.105);
-  --glass-reflect: oklch(100% 0 0 / 0.014);
-  --glass-noise-opacity: 0.005;
-  --glass-iridescence: oklch(80% 0.035 280 / 0.045);
-  --glass-depth-1: oklch(100% 0 0 / 0.009);
-  --glass-depth-2: oklch(100% 0 0 / 0.020);
-  /* ── Liquid Glass 6.0 新增 ── */
-  --glass-prism: oklch(85% 0.04 var(--accent-h) / 0.03);
-  --glass-frost: oklch(95% 0.01 var(--accent-h) / 0.035);
-  --glass-bend-x: 0.5px;
-  --glass-bend-y: 0.3px;
+  /* ── Liquid Glass 7.0（流体玻璃 · 深度折射 · 彩虹边缘光 · 曲面光感） ── */
+  --glass-bg: oklch(100% 0 0 / 0.028);
+  --glass-bg-strong: oklch(100% 0 0 / 0.052);
+  --glass-border: oklch(100% 0 0 / 0.045);
+  --glass-border-strong: oklch(100% 0 0 / 0.085);
+  --glass-highlight: oklch(100% 0 0 / 0.115);
+  --glass-reflect: oklch(100% 0 0 / 0.016);
+  --glass-noise-opacity: 0.006;
+  --glass-iridescence: oklch(80% 0.04 280 / 0.05);
+  --glass-depth-1: oklch(100% 0 0 / 0.01);
+  --glass-depth-2: oklch(100% 0 0 / 0.022);
+  --glass-depth-3: oklch(100% 0 0 / 0.035);
+  --glass-prism: oklch(85% 0.045 var(--accent-h) / 0.032);
+  --glass-frost: oklch(95% 0.012 var(--accent-h) / 0.038);
+  --glass-bend-x: 0.6px;
+  --glass-bend-y: 0.4px;
+  --glass-spread: 0px;
+  --glass-inner-glow: oklch(100% 0 0 / 0.04);
 
-  /* ── 文字 v9（节律可变字重 · 夜间更轻） ── */
-  --text-1: oklch(94% 0.004 var(--accent-h));
-  --text-2: oklch(72% 0.008 var(--accent-h));
-  --text-3: oklch(52% 0.006 var(--accent-h));
-  --text-4: oklch(34% 0.004 var(--accent-h));
+  /* ── 文字 v11（节律可变字重 · 夜间更轻 · 摆件优化） ── */
+  --text-1: oklch(95% 0.004 var(--accent-h));
+  --text-2: oklch(74% 0.008 var(--accent-h));
+  --text-3: oklch(54% 0.006 var(--accent-h));
+  --text-4: oklch(36% 0.004 var(--accent-h));
   --text-weight-primary: 350;
   --text-weight-secondary: 450;
 
-  /* ── 背景（OLED 纯黑优化） ── */
+  /* ── 背景（OLED 纯黑优化 · v11 层次化） ── */
   --bg-deep: #000000;
   --bg-base: oklch(3% 0.005 var(--accent-h));
   --bg-shift: oklch(5% 0.007 var(--accent-h));
   --bg-mood-tint: oklch(50% 0.02 var(--accent-h) / 0);
+
+  /* ── Horizon 地平线光 v11 ── */
+  --horizon-y: 60%;
+  --horizon-opacity: 0;
+  --horizon-width: 35%;
+  --horizon-hue-shift: 0deg;
+  --horizon-saturation: 1;
 
   /* ── 动态间距 ── */
   --safe-top: env(safe-area-inset-top, 0px);
@@ -70,13 +79,14 @@
   /* ── 生物节律速度（夜间更慢） ── */
   --breath-speed: 1;
 
-  /* ── 缓动系统 ── */
+  /* ── 缓动系统 v11（新增 horizon 渐变缓动） ── */
   --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-smooth: cubic-bezier(0.4, 0.0, 0.2, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-horizon: cubic-bezier(0.25, 0.1, 0.25, 1);
 
-  /* ── 像素漂移偏移 v9 ── */
+  /* ── 像素漂移偏移 v10（正弦曲线平滑 · OLED Care 2.0） ── */
   --wander-x: 0px;
   --wander-y: 0px;
   --wander-t: 0s;
@@ -120,7 +130,7 @@ body {
 }
 
 /* ════════════════════════════════════════════
-   背景系统 v9（六层氛围 + 天气情绪层）
+   背景系统 v11（Horizon 地平线光带 + 多层氛围）
    ════════════════════════════════════════════ */
 .bg-base {
   position: fixed; inset: 0;
@@ -135,6 +145,12 @@ body {
   mix-blend-mode: soft-light;
   transition: background 6s var(--ease-smooth);
   opacity: 0.6;
+}
+.bg-horizon {
+  position: fixed; inset: 0;
+  z-index: 1; pointer-events: none;
+  opacity: var(--horizon-opacity, 0);
+  transition: opacity 5s var(--ease-horizon);
 }
 .bg-nebula {
   position: fixed; inset: 0;
@@ -201,56 +217,66 @@ body {
   z-index: 2; pointer-events: none;
   opacity: 0.65;
 }
+/* v11: Horizon canvas for the horizon light band */
+.bg-horizon-canvas {
+  position: fixed; inset: 0;
+  z-index: 1; pointer-events: none;
+  opacity: var(--horizon-opacity, 0);
+  transition: opacity 5s var(--ease-horizon);
+  mix-blend-mode: screen;
+}
 
 /* ════════════════════════════════════════════
-   Aura Glass 6.0（Liquid Glass · 棱镜折射 · 深度感）
+   Liquid Glass 7.0（流体玻璃 · 深度折射 · 曲面光感 · 内部辉光）
    ════════════════════════════════════════════ */
 .glass-card {
-  background: linear-gradient(145deg, var(--glass-bg) 0%, var(--glass-depth-1) 50%, var(--glass-depth-2) 100%);
-  backdrop-filter: blur(42px) saturate(1.3) brightness(1.03) contrast(1.01);
-  -webkit-backdrop-filter: blur(42px) saturate(1.3) brightness(1.03) contrast(1.01);
+  background: linear-gradient(150deg, var(--glass-bg) 0%, var(--glass-depth-1) 40%, var(--glass-depth-2) 70%, var(--glass-depth-3) 100%);
+  backdrop-filter: blur(46px) saturate(1.35) brightness(1.04) contrast(1.02);
+  -webkit-backdrop-filter: blur(46px) saturate(1.35) brightness(1.04) contrast(1.02);
   border: 1px solid var(--glass-border);
   border-radius: 20px;
   position: relative;
   overflow: hidden;
-  transition: transform 0.42s var(--spring), background 0.42s var(--ease-smooth), border-color 0.42s;
+  transition: transform 0.42s var(--spring), background 0.42s var(--ease-smooth), border-color 0.42s, box-shadow 0.42s var(--ease-smooth);
 }
-/* 彩虹边缘光 — 用 conic-gradient 模拟棱镜散射 */
+/* 彩虹边缘光 — conic-gradient 模拟棱镜散射 · 7.0: 更宽频、更柔和 */
 .glass-card .glass-iris {
   position: absolute;
-  inset: -50%;
+  inset: -60%;
   background: conic-gradient(from var(--iris-angle, 0deg),
-    oklch(80% 0.06 0 / 0.03),
-    oklch(80% 0.06 60 / 0.02),
-    oklch(80% 0.06 120 / 0.025),
-    oklch(80% 0.06 240 / 0.03),
-    oklch(80% 0.06 300 / 0.02),
-    oklch(80% 0.06 0 / 0.03)
+    oklch(80% 0.065 0 / 0.032),
+    oklch(80% 0.065 50 / 0.022),
+    oklch(80% 0.065 110 / 0.028),
+    oklch(80% 0.065 180 / 0.02),
+    oklch(80% 0.065 240 / 0.032),
+    oklch(80% 0.065 300 / 0.022),
+    oklch(80% 0.065 350 / 0.03),
+    oklch(80% 0.065 0 / 0.032)
   );
   pointer-events: none;
   z-index: 0;
   border-radius: inherit;
-  animation: irisSpin calc(120s * var(--breath-speed, 1)) linear infinite;
-  opacity: 0.7;
+  animation: irisSpin calc(140s * var(--breath-speed, 1)) linear infinite;
+  opacity: 0.75;
 }
 .glass-card .glass-noise {
   position: absolute;
   inset: 0;
-  opacity: 0.005;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.006;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 120px 120px;
   pointer-events: none;
   border-radius: inherit;
   z-index: 0;
 }
-/* 顶边高光 */
+/* 顶边高光 · 7.0: 3层渐变模拟曲面折射 */
 .glass-card::before {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(168deg, var(--glass-highlight) 0%, transparent 25%, transparent 75%, oklch(100% 0 0 / 0.015) 100%);
+  background: linear-gradient(165deg, var(--glass-highlight) 0%, transparent 22%, transparent 78%, oklch(100% 0 0 / 0.018) 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
@@ -258,17 +284,27 @@ body {
   pointer-events: none;
   z-index: 2;
 }
-/* 底部曲面反光 */
+/* 底部曲面反光 · 7.0: 更宽更柔和 */
 .glass-card::after {
   content: '';
   position: absolute;
-  left: 10%; right: 10%; bottom: 0;
-  height: 35%;
+  left: 8%; right: 8%; bottom: 0;
+  height: 38%;
   background: linear-gradient(to top, var(--glass-reflect), transparent);
   border-radius: 50% 50% 0 0 / 100% 100% 0 0;
   pointer-events: none;
-  opacity: 0.35;
+  opacity: 0.4;
   z-index: 1;
+}
+/* 7.0: 内部辉光层 */
+.glass-card .glass-inner {
+  position: absolute;
+  inset: 2px;
+  border-radius: inherit;
+  background: radial-gradient(ellipse 70% 50% at 50% 0%, var(--glass-inner-glow) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.6;
 }
 @keyframes irisSpin {
   from { transform: rotate(0deg); }
@@ -292,6 +328,15 @@ body {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
+}
+/* ── v11: Horizon 地平线光动画 ── */
+@keyframes horizonBreath {
+  0%, 100% { transform: scaleX(1) scaleY(1); }
+  50% { transform: scaleX(1.03) scaleY(1.1); }
+}
+@keyframes horizonGlow {
+  0%, 100% { filter: blur(30px) brightness(1); }
+  50% { filter: blur(35px) brightness(1.15); }
 }
 
 /* ── 主体应用容器 ── */
@@ -1603,8 +1648,8 @@ body.zen-mode .settings-panel { opacity: 0; }
 body.zen-mode.numeric-mode .numeric-digits { font-size: clamp(3.4rem, 18vw, 4.8rem); }
 
 /* ════════════════════════════════════════════
-   桌面预览 v9 — 沉浸式 Pixel 3a 场景
-   更真实的设备光影 · 桌面反射 · 环境光交互
+   桌面预览 v11 — 沉浸式 Pixel 3a 场景
+   真实按键细节 · 摄像头位置修正 · 屏幕反射 · 环境光交互
    ════════════════════════════════════════════ */
 @media (min-width: 900px) {
   body {
@@ -1615,7 +1660,7 @@ body.zen-mode.numeric-mode .numeric-digits { font-size: clamp(3.4rem, 18vw, 4.8r
     perspective: 1800px;
     overflow: hidden;
   }
-  /* 环境光 v10 — 多方向动态光 · 色温随昼夜渐变 */
+  /* 环境光 v11 — 多方向动态光 · 色温随昼夜渐变 */
   body::before {
     content:'';
     position: fixed; inset: 0;
@@ -1627,101 +1672,163 @@ body.zen-mode.numeric-mode .numeric-digits { font-size: clamp(3.4rem, 18vw, 4.8r
       radial-gradient(ellipse 25% 35% at 50% 50%, oklch(from var(--accent) 6% 0.02 h / 0.15) 0%, transparent 50%);
     z-index: -1;
     pointer-events: none;
-    animation: envLightDrift calc(18s * var(--breath-speed, 1)) ease-in-out infinite;
+    animation: envLightDrift calc(22s * var(--breath-speed, 1)) var(--ease-in-out-quart) infinite;
   }
-  /* 桌面反射 v9 */
+  /* 桌面反射 v11 — 更真实的散射反射 */
   body::after {
     content:'';
     position: fixed;
     bottom: 0; left: 0; right: 0;
-    height: 28vh;
-    background: linear-gradient(0deg, oklch(2.8% 0.01 260 / 0.28) 0%, transparent 100%);
+    height: 30vh;
+    background:
+      radial-gradient(ellipse 40% 30% at 50% 100%, oklch(3.5% 0.012 260 / 0.25) 0%, transparent 60%),
+      linear-gradient(0deg, oklch(2.5% 0.008 260 / 0.22) 0%, transparent 80%);
     pointer-events: none;
     z-index: -1;
   }
   @keyframes envLightDrift {
     0%, 100% { opacity: 0.95; filter: brightness(1); }
-    50% { opacity: 1; filter: brightness(1.05); }
+    50% { opacity: 1; filter: brightness(1.06); }
   }
 
-  /* 设备主体 v10 — 更真实的 Pixel 3a 机身体感 · 动态光泽 */
+  /* 设备主体 v11 — 精准 Pixel 3a 机身 · 按键 · 传感器 */
   .app {
     width: 412px;
     height: 82vh;
     max-height: 760px;
-    border-radius: 40px;
-    background: oklch(1.6% 0.004 260 / 0.48);
-    border: 1.2px solid oklch(100% 0 0 / 0.018);
+    border-radius: 42px;
+    background:
+      linear-gradient(135deg, oklch(2.8% 0.005 260 / 0.9) 0%, oklch(1.2% 0.003 260 / 0.95) 50%, oklch(2% 0.004 260 / 0.9) 100%);
+    border: 1.4px solid oklch(100% 0 0 / 0.022);
     box-shadow:
-      0 0 0 1px oklch(0% 0 0 / 0.5),
-      0 24px 90px oklch(0% 0 0 / 0.7),
-      0 0 120px oklch(from var(--accent) l c h / 0.012),
-      0 0 0 0.5px oklch(100% 0 0 / 0.012),
-      inset 0 0.5px 0 oklch(100% 0 0 / 0.05),
-      inset 0 -0.5px 0 oklch(0% 0 0 / 0.3),
-      0 0 60px oklch(from var(--accent) 50% 0.03 h / 0.015);
+      0 0 0 0.8px oklch(0% 0 0 / 0.55),
+      0 28px 95px oklch(0% 0 0 / 0.75),
+      0 0 120px oklch(from var(--accent) l c h / 0.01),
+      0 0 0 0.4px oklch(100% 0 0 / 0.014),
+      inset 0 0.8px 0 oklch(100% 0 0 / 0.06),
+      inset 0 -0.8px 0 oklch(0% 0 0 / 0.35),
+      0 0 60px oklch(from var(--accent) 50% 0.03 h / 0.012),
+      inset 0 0 80px oklch(0% 0 0 / 0.08);
     padding-top: calc(var(--punchhole-safe) + 14px);
     transform: rotateX(1deg) scale(0.95);
     transform-style: preserve-3d;
-    transition: transform 0.7s var(--ease-out-expo), box-shadow 0.7s;
+    transition: transform 0.7s var(--ease-out-expo), box-shadow 0.7s, border-color 0.5s;
     position: relative;
     overflow: hidden;
   }
-  /* 设备边框光泽 */
+  /* 设备边框光泽 · v11: 更细致的金属中框 */
   .app::before {
     content:'';
     position: absolute;
     inset: -1px;
-    border-radius: 40px;
-    border: 1px solid oklch(100% 0 0 / 0.035);
+    border-radius: 42px;
+    border: 1px solid oklch(100% 0 0 / 0.04);
     pointer-events: none;
     z-index: 24;
   }
-  /* 打孔屏 v9 — 更真实的光感 */
+  /* 打孔屏 v11 — Pixel 3a 前置摄像头在左上角 */
   .app::after {
     content:'';
     position: absolute;
-    top: 16px;
-    left: 50%;
-    margin-left: -6px;
-    width: 12px; height: 12px;
+    top: 18px;
+    left: 22px;
+    width: 13px; height: 13px;
     border-radius: 50%;
-    background: radial-gradient(circle at 40% 38%, oklch(3% 0.005 250) 0%, oklch(0.8% 0 0) 60%, oklch(1.5% 0 0) 100%);
-    border: 1px solid oklch(100% 0 0 / 0.02);
+    background: radial-gradient(circle at 38% 36%, oklch(2.5% 0.004 250) 0%, oklch(0.6% 0 0) 55%, oklch(1.2% 0 0) 100%);
+    border: 1px solid oklch(100% 0 0 / 0.025);
     z-index: 25;
     pointer-events: none;
-    box-shadow: inset 0 0 3px oklch(0% 0 0 / 0.9), 0 0 1px oklch(100% 0 0 / 0.02);
+    box-shadow: inset 0 0 3px oklch(0% 0 0 / 0.85), 0 0 1.5px oklch(100% 0 0 / 0.03);
+  }
+  /* v11: 屏幕反射层 */
+  .app > .screen-reflection {
+    display: block;
+    position: absolute;
+    top: 0; right: 0;
+    width: 45%;
+    height: 100%;
+    background: linear-gradient(195deg, oklch(100% 0 0 / 0.03) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 23;
+    border-radius: 0 42px 42px 0;
+  }
+  /* v11: 右侧按键（音量/电源） */
+  .app .btn-power,
+  .app .btn-vol {
+    display: block;
+    position: absolute;
+    width: 3px;
+    border-radius: 2px;
+    background: oklch(1.8% 0.006 260 / 0.7);
+    z-index: -1;
+    box-shadow: 0 0 4px oklch(0% 0 0 / 0.4), inset 0 0.5px 0 oklch(100% 0 0 / 0.04);
+  }
+  .app .btn-vol {
+    top: 120px; right: -3px;
+    height: 52px;
+  }
+  .app .btn-vol::after {
+    content:'';
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 3px;
+    height: 38px;
+    border-radius: 2px;
+    background: oklch(1.8% 0.006 260 / 0.7);
+    box-shadow: 0 0 4px oklch(0% 0 0 / 0.4), inset 0 0.5px 0 oklch(100% 0 0 / 0.04);
+  }
+  .app .btn-power {
+    top: 210px; right: -3px;
+    height: 72px;
+  }
+  /* v11: 左侧 SIM 卡槽 */
+  .app .sim-tray {
+    display: block;
+    position: absolute;
+    top: 100px; left: -2px;
+    width: 2px; height: 30px;
+    border-radius: 1.5px;
+    background: oklch(1.5% 0.005 260 / 0.6);
+    z-index: -1;
+    box-shadow: 0 0 3px oklch(0% 0 0 / 0.3);
   }
   .app:hover {
     transform: rotateX(0deg) scale(0.96);
     box-shadow:
       0 0 0 1px oklch(0% 0 0 / 0.5),
-      0 28px 100px oklch(0% 0 0 / 0.75),
-      0 0 140px oklch(from var(--accent) l c h / 0.018),
-      inset 0 0.5px 0 oklch(100% 0 0 / 0.05),
-      inset 0 -0.5px 0 oklch(0% 0 0 / 0.3),
-      0 0 80px oklch(from var(--accent) 55% 0.04 h / 0.02);
+      0 30px 105px oklch(0% 0 0 / 0.78),
+      0 0 150px oklch(from var(--accent) l c h / 0.016),
+      inset 0 0.8px 0 oklch(100% 0 0 / 0.06),
+      inset 0 -0.8px 0 oklch(0% 0 0 / 0.35),
+      0 0 80px oklch(from var(--accent) 55% 0.04 h / 0.018);
   }
   .face-dots { display: flex; }
 
-  /* 横屏摆件预览 v9 */
+  /* 横屏摆件预览 v11 */
   body.land-mode .app {
     width: min(860px, 92vw, (100vh - 96px) * 807 / 393);
     height: auto;
     max-height: none;
     aspect-ratio: 807 / 393;
-    border-radius: 34px;
+    border-radius: 36px;
     padding-top: 8px;
     padding-bottom: 8px;
     transform: rotateX(0.8deg) scale(0.98);
   }
-  body.land-mode .app::before { border-radius: 34px; }
+  body.land-mode .app::before { border-radius: 36px; }
   body.land-mode .app::after {
     top: 50%;
-    left: 14px;
-    margin-left: 0;
-    margin-top: -6px;
+    left: 16px;
+    margin-top: -6.5px;
   }
+  body.land-mode .app .btn-power {
+    top: 50%; right: -3px;
+    margin-top: -36px;
+    height: 72px;
+  }
+  body.land-mode .app .btn-vol { display: none; }
+  body.land-mode .app .sim-tray { display: none; }
   body.land-mode .app:hover { transform: rotateX(0deg) scale(1); }
 }
 
@@ -1795,9 +1902,10 @@ body.battery-saver .glass-card {
 </head>
 <body>
 
-<!-- 背景系统 v9 -->
+<!-- 背景系统 v11 -->
 <div class="bg-base"></div>
 <div class="bg-mood" id="bgMood"></div>
+<canvas class="bg-horizon-canvas" id="horizonCanvas"></canvas>
 <canvas class="bg-nebula" id="nebulaCanvas"></canvas>
 <canvas class="bg-aurora" id="auroraCanvas"></canvas>
 <div class="bg-fog"></div>
@@ -1811,6 +1919,11 @@ body.battery-saver .glass-card {
 
 <!-- 主体应用 -->
 <div class="app" id="app">
+  <!-- v11: 桌面预览 — 设备细节 -->
+  <div class="screen-reflection"></div>
+  <div class="btn-vol"></div>
+  <div class="btn-power"></div>
+  <div class="sim-tray"></div>
 
   <div class="landscape-wrap" id="landWrap">
 
@@ -1932,6 +2045,7 @@ body.battery-saver .glass-card {
         <!-- 天气主卡 -->
         <div class="wx-card glass-card highlight" id="cardWeather">
           <div class="glass-iris"></div>
+          <div class="glass-inner"></div>
           <div class="glass-noise"></div>
           <div class="wx-top">
             <span class="wx-icon" id="weatherIcon">⛅</span>
@@ -1965,6 +2079,7 @@ body.battery-saver .glass-card {
         <!-- 消息中心 -->
         <div class="msg-panel glass-card" id="msgPanel">
           <div class="glass-iris"></div>
+          <div class="glass-inner"></div>
           <div class="glass-noise"></div>
           <div class="msg-head">
             <span class="msg-title">消息</span>
@@ -2129,10 +2244,10 @@ body.battery-saver .glass-card {
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
-/* ══════════════════════════════════════════════════════
-   活 · Clock  —  核心脚本 v9.2 "Drift · 浮游"
-   Landscape Ornament · Message Hub · News Digest · Aura Glass · Bio-Rhythmic · Desk Jellyfish
-   Comfort-First · OLED Perfection · Ambient Mood · Iridescent Glass
+  /* ══════════════════════════════════════════════════════
+   活 · Clock  —  核心脚本 v11.0 "Horizon"
+   Landscape Ornament · Message Hub · News Digest · Liquid Glass 7.0 · Horizon Light · Bio-Rhythmic · Desk Jellyfish
+   Comfort-First · OLED Perfection · Ambient 2.0 · Depth Glass · Solar Wind
    ══════════════════════════════════════════════════════ */
 (() => {
   'use strict';
@@ -2168,7 +2283,7 @@ body.battery-saver .glass-card {
     { name:'残月', icon:'🌘', threshold:0.97 },
   ];
 
-  /* ── OKLCH Circadian 色温 v9（24段 · 生物节律速度联动） ── */
+  /* ── OKLCH Circadian 色温 v11（24段 · 更平滑插值 · 生物节律速度联动） ── */
   const CIRCADIAN_STOPS = [
     { h:0,  accent:[42,0.042,268], bg:[2.2,0.004,262] },
     { h:1,  accent:[40,0.040,266], bg:[2.2,0.004,260] },
@@ -2363,38 +2478,43 @@ body.battery-saver .glass-card {
   }
 
   /* ══════════════════════════════════════
-     Pixel Wander v9 — OLED 烧屏保护
-     更智能的漂移：避开文字密集区边缘
+     Pixel Wander OLED Care 2.0 — 正弦漂移 + 内容感知
+     用连续正弦曲线替代随机跳变，漂移更柔和、更不易察觉
      ══════════════════════════════════════ */
   let wanderTimer = null;
+  let wanderT0 = Date.now();
   function startPixelWander() {
     if (!state.pixelWander) {
       if (dom.app) dom.app.style.transform = '';
       return;
     }
     if (wanderTimer) clearInterval(wanderTimer);
+    wanderT0 = Date.now();
     const wander = () => {
       if (!state.pixelWander) return;
-      // 更小幅度漂移，且采用曲线平滑
-      const x = (Math.random() * 3 - 1.5).toFixed(1);
-      const y = (Math.random() * 2.4 - 1.2).toFixed(1);
+      const elapsed = (Date.now() - wanderT0) / 1000;
+      /* 双轴正弦 + 次谐波叠加，形成李萨如风格柔和漂移 */
+      const x = (Math.sin(elapsed * 0.06) * 1.2 + Math.sin(elapsed * 0.041 + 0.7) * 0.5).toFixed(1);
+      const y = (Math.sin(elapsed * 0.05 + 1.2) * 1.0 + Math.cos(elapsed * 0.035) * 0.4).toFixed(1);
       document.documentElement.style.setProperty('--wander-x', x + 'px');
       document.documentElement.style.setProperty('--wander-y', y + 'px');
-      document.documentElement.style.setProperty('--wander-t', '48s');
-      if (dom.app) dom.app.style.transition = 'transform 48s linear';
+      document.documentElement.style.setProperty('--wander-t', '45s');
+      if (dom.app) dom.app.style.transition = 'transform 45s linear';
     };
     wander();
     wanderTimer = setInterval(wander, 50000);
   }
 
   /* ══════════════════════════════════════
-     AI Adaptive Engine v9
+     AI Adaptive Engine 2.0 v11
+     渐变亮度过渡 · 时段预测 · 更柔和的响应
      ══════════════════════════════════════ */
   const adaptive = {
     ambientLux: null,
     batteryLevel: 1,
     batteryCharging: true,
     lowPower: false,
+    _smoothBrightness: 1,
 
     init() {
       if (navigator.getBattery) {
@@ -2414,7 +2534,7 @@ body.battery-saver .glass-card {
       }
       if ('AmbientLightSensor' in window) {
         try {
-          const sensor = new AmbientLightSensor({ frequency: 0.35 });
+          const sensor = new AmbientLightSensor({ frequency: 0.3 });
           sensor.addEventListener('reading', () => {
             this.ambientLux = sensor.illuminance;
             this.applyAmbientAdaptation();
@@ -2424,7 +2544,9 @@ body.battery-saver .glass-card {
         } catch(e) {}
       }
       this.fallbackAmbientCheck();
-      setInterval(() => this.fallbackAmbientCheck(), 50000);
+      setInterval(() => this.fallbackAmbientCheck(), 55000);
+      /* 2.0: 平滑亮度过渡专用 RAF */
+      this._brightnessRAF();
     },
 
     fallbackAmbientCheck() {
@@ -2437,6 +2559,17 @@ body.battery-saver .glass-card {
       this.applyAmbientAdaptation();
     },
 
+    _brightnessRAF() {
+      const targetBrightness = this._targetBrightness || 1;
+      const step = (targetBrightness - this._smoothBrightness) * 0.03;
+      if (Math.abs(step) > 0.001) {
+        this._smoothBrightness += step;
+        document.documentElement.style.setProperty('--digit-glow',
+          String(Math.max(0, (this._smoothBrightness - 0.4) * 0.12)));
+      }
+      requestAnimationFrame(() => this._brightnessRAF());
+    },
+
     applyAmbientAdaptation() {
       const lux = this.ambientLux || 100;
       let brightness = 1;
@@ -2445,8 +2578,7 @@ body.battery-saver .glass-card {
       else if (lux < 80) brightness = 0.75;
       else if (lux < 400) brightness = 1.0;
       else brightness = 1.06;
-
-      document.documentElement.style.setProperty('--digit-glow', String((brightness - 0.42) * 0.15));
+      this._targetBrightness = brightness;
 
       if (dom.statusAmbient) {
         if (lux < 5) dom.statusAmbient.textContent = '🌙';
@@ -2579,7 +2711,7 @@ body.battery-saver .glass-card {
   }
 
   /* ══════════════════════════════════════
-     天气情绪系统 v9 — 背景色温随天气变化
+     天气情绪系统 v2.0 — 更精致的情绪色温 · 极光反射
      ══════════════════════════════════════ */
   const weatherMood = {
     currentCode: -1,
@@ -2592,30 +2724,30 @@ body.battery-saver .glass-card {
       let particleMode = 'none';
 
       if (weatherCode === 0) {
-        /* 晴天：暖金氛围 */
-        moodColor = 'oklch(55% 0.02 60 / 0.12)';
+        /* 晴天暖金 2.0: 更柔和 */
+        moodColor = 'oklch(58% 0.022 55 / 0.1)';
       } else if (weatherCode <= 3) {
-        /* 多云：带灰蓝调 */
-        moodColor = 'oklch(50% 0.015 250 / 0.1)';
+        /* 多云灰蓝 2.0 */
+        moodColor = 'oklch(52% 0.016 250 / 0.08)';
       } else if (weatherCode <= 48) {
-        /* 雾：冷灰 */
-        moodColor = 'oklch(45% 0.008 250 / 0.14)';
+        /* 雾冷灰 2.0 */
+        moodColor = 'oklch(48% 0.009 250 / 0.12)';
         particleMode = 'fog';
       } else if (weatherCode <= 67) {
-        /* 雨：冷蓝 */
-        moodColor = 'oklch(45% 0.02 240 / 0.12)';
+        /* 雨冷蓝 2.0 */
+        moodColor = 'oklch(48% 0.022 240 / 0.1)';
         particleMode = 'rain';
       } else if (weatherCode <= 77) {
-        /* 雪：冷亮 */
-        moodColor = 'oklch(55% 0.015 230 / 0.1)';
+        /* 雪暖白 2.0 */
+        moodColor = 'oklch(58% 0.016 230 / 0.08)';
         particleMode = 'snow';
       } else if (weatherCode <= 82) {
         /* 阵雨 */
-        moodColor = 'oklch(45% 0.025 235 / 0.12)';
+        moodColor = 'oklch(48% 0.026 235 / 0.1)';
         particleMode = 'rain';
       } else if (weatherCode <= 99) {
-        /* 雷暴：偏紫 */
-        moodColor = 'oklch(40% 0.03 280 / 0.1)';
+        /* 雷暴紫 2.0 */
+        moodColor = 'oklch(42% 0.032 280 / 0.08)';
         particleMode = 'rain';
       }
 
@@ -2992,7 +3124,6 @@ body.battery-saver .glass-card {
       const ctx = this.ctx, w = this.w, h = this.h;
       ctx.clearRect(0, 0, w, h);
       const t = now / 10000;
-      const dp = getDaypart ? getDaypart() : 'night';
 
       for (const band of this.bands) {
         ctx.beginPath();
@@ -3019,6 +3150,71 @@ body.battery-saver .glass-card {
         ctx.fillStyle = grad;
         ctx.fill();
       }
+      requestAnimationFrame(() => this.loop());
+    },
+  };
+
+  /* ══════════════════════════════════════
+     Horizon Light v11 — 地平线光带
+     模拟地平线处的柔和发光带 · 随昼夜相位变化位置和色彩
+     ══════════════════════════════════════ */
+  const horizon = {
+    canvas: null, ctx: null, w: 0, h: 0, lastFrame: 0,
+    init() {
+      this.canvas = document.getElementById('horizonCanvas');
+      if (!this.canvas) return;
+      this.ctx = this.canvas.getContext('2d');
+      this.resize();
+      this.loop();
+      window.addEventListener('resize', () => this.resize());
+    },
+    resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      this.w = window.innerWidth; this.h = window.innerHeight;
+      this.canvas.width = this.w * dpr; this.canvas.height = this.h * dpr;
+      this.canvas.style.width = this.w + 'px'; this.canvas.style.height = this.h + 'px';
+      this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    },
+    loop() {
+      const now = performance.now();
+      if (now - this.lastFrame < 35) { requestAnimationFrame(() => this.loop()); return; }
+      this.lastFrame = now;
+      const ctx = this.ctx, w = this.w, h = this.h;
+      ctx.clearRect(0, 0, w, h);
+
+      const hour = new Date().getHours() + new Date().getMinutes() / 60;
+      /* horizonY: 白天在下方(60%)，日出日落时在天际中央，夜间升到上方 */
+      let yPct, opacity, hueShift, width;
+      if (hour >= 6 && hour <= 18) {
+        /* 地平线在日间偏低 */
+        yPct = 0.6 + Math.sin((hour - 6) / 12 * Math.PI) * 0.08;
+        opacity = 0.12 + Math.sin((hour - 6) / 12 * Math.PI) * 0.06;
+        width = 30 + Math.sin((hour - 6) / 12 * Math.PI) * 15;
+        hueShift = 0;
+      } else {
+        /* 夜间：地平线隐入上方，更弱更冷 */
+        const nightH = hour >= 18 ? hour - 18 : hour + 6;
+        yPct = 0.25 + (nightH / 12) * 0.15;
+        opacity = 0.06 + Math.sin(nightH / 12 * Math.PI) * 0.04;
+        width = 25 + Math.sin(nightH / 12 * Math.PI) * 10;
+        hueShift = -15;
+      }
+
+      const cy = h * yPct;
+      const bandHeight = h * 0.08;
+      const grd = ctx.createLinearGradient(0, cy - bandHeight, 0, cy + bandHeight);
+      grd.addColorStop(0, 'transparent');
+      grd.addColorStop(0.4, `oklch(55% 0.035 ${250 + hueShift} / ${opacity * 0.6})`);
+      grd.addColorStop(0.5, `oklch(60% 0.045 ${248 + hueShift} / ${opacity})`);
+      grd.addColorStop(0.6, `oklch(55% 0.035 ${250 + hueShift} / ${opacity * 0.6})`);
+      grd.addColorStop(1, 'transparent');
+      ctx.fillStyle = grd;
+      ctx.fillRect(0, cy - bandHeight, w, bandHeight * 2);
+
+      /* 更新 CSS 变量 */
+      document.documentElement.style.setProperty('--horizon-opacity', String(opacity > 0.02 ? 1 : 0));
+      document.documentElement.style.setProperty('--horizon-y', (yPct * 100).toFixed(1) + '%');
+
       requestAnimationFrame(() => this.loop());
     },
   };
@@ -4378,6 +4574,7 @@ body.battery-saver .glass-card {
     aurora.init();
     corona.init();
     neuralAurora.init();
+    horizon.init();
     startPixelWander();
 
     mqLandscape.addEventListener('change', applyOrientation);

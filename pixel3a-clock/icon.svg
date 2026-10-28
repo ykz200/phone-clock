@@ -1,21 +1,31 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
-    <radialGradient id="glow9" cx="50%" cy="46%" r="54%">
-      <stop offset="0%" stop-color="#9ac4ff" stop-opacity="0.18"/>
-      <stop offset="50%" stop-color="#7eb8ff" stop-opacity="0.06"/>
+    <radialGradient id="glow11" cx="50%" cy="46%" r="54%">
+      <stop offset="0%" stop-color="#9ac4ff" stop-opacity="0.2"/>
+      <stop offset="50%" stop-color="#7eb8ff" stop-opacity="0.08"/>
       <stop offset="100%" stop-color="#7eb8ff" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="iris9" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ff9acd" stop-opacity="0.08"/>
-      <stop offset="25%" stop-color="#9ac4ff" stop-opacity="0.06"/>
-      <stop offset="50%" stop-color="#9affc4" stop-opacity="0.04"/>
-      <stop offset="75%" stop-color="#ffdf9a" stop-opacity="0.06"/>
-      <stop offset="100%" stop-color="#ff9acd" stop-opacity="0.08"/>
+    <linearGradient id="iris11" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff9acd" stop-opacity="0.1"/>
+      <stop offset="20%" stop-color="#9ac4ff" stop-opacity="0.08"/>
+      <stop offset="40%" stop-color="#9affc4" stop-opacity="0.06"/>
+      <stop offset="60%" stop-color="#ffdf9a" stop-opacity="0.07"/>
+      <stop offset="80%" stop-color="#c49aff" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#ff9acd" stop-opacity="0.1"/>
+    </linearGradient>
+    <linearGradient id="horizon11" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7eb8ff" stop-opacity="0"/>
+      <stop offset="30%" stop-color="#9ac4ff" stop-opacity="0.12"/>
+      <stop offset="50%" stop-color="#b8d4ff" stop-opacity="0.18"/>
+      <stop offset="70%" stop-color="#9ac4ff" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#7eb8ff" stop-opacity="0"/>
     </linearGradient>
   </defs>
   <rect width="512" height="512" rx="128" fill="#000000"/>
-  <rect x="96" y="96" width="320" height="320" rx="80" fill="url(#iris9)"/>
-  <circle cx="256" cy="244" r="148" fill="url(#glow9)"/>
+  <rect x="96" y="96" width="320" height="320" rx="80" fill="url(#iris11)"/>
+  <circle cx="256" cy="244" r="148" fill="url(#glow11)"/>
+  <!-- 地平线光带 -->
+  <ellipse cx="256" cy="320" rx="140" ry="28" fill="url(#horizon11)"/>
   <circle cx="256" cy="244" r="132" fill="none" stroke="#1a1a2e" stroke-width="0.6"/>
   <circle cx="256" cy="244" r="102" fill="none" stroke="#7eb8ff" stroke-width="0.4" opacity="0.15"/>
   <text x="256" y="244" text-anchor="middle" dominant-baseline="central"

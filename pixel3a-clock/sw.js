@@ -1,5 +1,5 @@
-/* 活 · Clock — Service Worker v10.0 Solar Flare */
-const CACHE_NAME = 'clock-v10-solar';
+/* 活 · Clock — Service Worker v11.0 Horizon */
+const CACHE_NAME = 'clock-v11-horizon';
 const ASSETS = ['./', './index.html', './icon.svg', './manifest.webmanifest'];
 
 self.addEventListener('install', e => {
