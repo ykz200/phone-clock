@@ -6,9 +6,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="活·Clock v13">
-<meta name="application-name" content="活·Clock v13">
-<meta name="description" content="活 v13.0 Zen Garden — Pixel 3a 桌面摆件时钟 · Liquid Glass 9.0 · Sand Ripple · Flowing Light · Desk Scene 3.0 · OLED Care 3.0">
+<meta name="apple-mobile-web-app-title" content="活·Clock v14">
+<meta name="application-name" content="活·Clock v14">
+<meta name="description" content="活 v14.0 Luminous Veil — Pixel 3a 桌面摆件时钟 · Liquid Glass 10.0 · Sand Ripple 2.0 · Flowing Light 2.0 · Desk Scene 4.0 · OLED Care 4.0 · Calm Pulse">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#0a0a0f" media="(prefers-color-scheme: light)">
 <link rel="manifest" href="manifest.webmanifest">
@@ -16,7 +16,7 @@
 <title>活 · Clock</title>
 <style>
 /* ════════════════════════════════════════════════════════════
-   活 · v13.0 "Zen Garden"  for Pixel 3a
+   活 · v14.0 "Luminous Veil"  for Pixel 3a
    Landscape Ornament · Message Hub · News Digest · Liquid Glass 9.0 · Sand Ripple · Flowing Light · Desk Scene 3.0 · OLED Care 3.0
    Comfort-First · Pixel-Perfect OLED · Ambient 3.0 · Zen Corridor · Mineral Vein · Ripple Field
    ════════════════════════════════════════════════════════════ */
@@ -830,7 +830,7 @@ body.land-mode .pet { --pet-scale: 0.86; }
 body.land-mode .pet-say { font-size: 0.86rem; }
 
 /* 心情：由时段 + 天气码推导，只改节奏与滤镜，不加新节点 */
-.pet[data-mood="sunny"]  { --pet-pace: 0.7; }
+.pet[data-mood="sunny"]  { --pet-pace: 0.7; filter: brightness(1.08) saturate(1.1); }
 .pet[data-mood="calm"]   { --pet-pace: 1; }
 .pet[data-mood="rain"]   { --pet-pace: 1.3; }
 .pet[data-mood="fog"]    { --pet-pace: 1.45; }
@@ -1952,20 +1952,87 @@ body.battery-saver .glass-card {
   -webkit-backdrop-filter: blur(8px);
 }
 
-/* ── v13: 季节色系（禅意自然色调 · 低饱和度微调） ── */
-body.season-spring { --season-hue-shift: 8; --season-sat-scale: 1.05; }
-body.season-summer { --season-hue-shift: -3; --season-sat-scale: 1.1; }
-body.season-autumn { --season-hue-shift: 18; --season-sat-scale: 1.15; }
-body.season-winter { --season-hue-shift: -12; --season-sat-scale: 0.75; }
+/* ════════════════════════════════════════════
+   v14: Luminous Veil — 静谧界面 · 情绪深层共鸣
+   ════════════════════════════════════════════ */
+
+/* ── 14.0: 环境情绪光谱（由 time → body class 驱动 · 日夜情绪映射更精准） ── */
+body.time-dawn {
+  --env-fog: 0.18;
+  --env-nebula: 0.55;
+  --env-aurora: 0.35;
+  --env-grain: 0.004;
+  --env-vignette-opacity: 0.42;
+  --breath-speed: 0.82;
+}
+body.time-morning {
+  --env-fog: 0.32;
+  --env-nebula: 0.8;
+  --env-aurora: 0.55;
+  --env-grain: 0.006;
+  --env-vignette-opacity: 0.38;
+  --breath-speed: 0.95;
+}
+body.time-afternoon {
+  --env-fog: 0.28;
+  --env-nebula: 0.7;
+  --env-aurora: 0.45;
+  --env-grain: 0.005;
+  --env-vignette-opacity: 0.35;
+  --breath-speed: 1;
+}
+body.time-evening {
+  --env-fog: 0.22;
+  --env-nebula: 0.65;
+  --env-aurora: 0.5;
+  --env-grain: 0.005;
+  --env-vignette-opacity: 0.45;
+  --breath-speed: 0.88;
+}
+body.time-night {
+  --env-fog: 0.08;
+  --env-nebula: 0.45;
+  --env-aurora: 0.3;
+  --env-grain: 0.003;
+  --env-vignette-opacity: 0.62;
+  --breath-speed: 0.55;
+}
+
+/* ── 14.0: 环境光谱应用到背景层 ── */
+.bg-fog { opacity: var(--env-fog, 0.28); transition: opacity 5s var(--ease-smooth); }
+.bg-nebula { opacity: var(--env-nebula, 0.75); transition: opacity 5s var(--ease-smooth); }
+.bg-aurora { opacity: var(--env-aurora, 0.45); transition: opacity 5s var(--ease-smooth); }
+.bg-noise { opacity: var(--env-grain, 0.004); transition: opacity 3s var(--ease-smooth); }
+.bg-sand-ripple { opacity: var(--sand-ripple-opacity, 0.03); transition: opacity 5s var(--ease-smooth); }
+.bg-flow-light { opacity: 0.04; transition: opacity 5s var(--ease-smooth); }
+.bg-vignette {
+  background: radial-gradient(ellipse 80% 80% at 50% 45%, transparent 30%, rgba(0,0,0,var(--env-vignette-opacity, 0.5)) 100%);
+  transition: background 5s var(--ease-smooth);
+}
+/* ── 14.0: 深夜静谧模式（进一步降低视觉噪音） ── */
+body.time-night .bg-sand-ripple { opacity: 0.01; }
+body.time-night .bg-flow-light { opacity: 0.015; }
+body.time-dawn .bg-aurora { opacity: 0.5; }
+
+/* ── 14: 季节色系（禅意自然色调 · 低饱和度微调 · 应用到视觉层） ── */
+body.season-spring { --season-hue-shift: 12; --season-sat-scale: 1.1; --env-aurora: 0.5; --env-fog: 0.32; }
+body.season-summer { --season-hue-shift: -5; --season-sat-scale: 1.15; --env-aurora: 0.6; --env-fog: 0.2; }
+body.season-autumn { --season-hue-shift: 22; --season-sat-scale: 1.2; --env-aurora: 0.45; --env-fog: 0.35; }
+body.season-winter { --season-hue-shift: -15; --season-sat-scale: 0.7; --env-aurora: 0.35; --env-fog: 0.15; --breath-speed: 0.7; }
 body[class*="season-"] .bg-vignette {
   background: radial-gradient(ellipse 80% 80% at 50% 45%, transparent 30%, oklch(0% 0 0 / calc(0.48 * var(--season-sat-scale, 1))) 100%);
 }
-body[class*="season-"] .bg-sand-ripple {
-  opacity: calc(0.03 * var(--season-sat-scale, 1));
-}
-body[class*="season-"] .bg-flow-light {
-  opacity: calc(0.04 * var(--season-sat-scale, 1));
-}
+body[class*="season-"] .bg-sand-ripple { opacity: calc(0.03 * var(--season-sat-scale, 1)); }
+body[class*="season-"] .bg-flow-light { opacity: calc(0.04 * var(--season-sat-scale, 1)); }
+/* 14.0: 季节色相旋转（星云/极光随季节微调色相） */
+body.season-spring .bg-nebula,
+body.season-spring .bg-aurora { filter: hue-rotate(calc(var(--season-hue-shift, 0) * 0.6deg)); }
+body.season-summer .bg-nebula,
+body.season-summer .bg-aurora { filter: hue-rotate(calc(var(--season-hue-shift, 0) * 0.6deg)) brightness(1.05); }
+body.season-autumn .bg-nebula,
+body.season-autumn .bg-aurora { filter: hue-rotate(calc(var(--season-hue-shift, 0) * 0.8deg)) saturate(1.1); }
+body.season-winter .bg-nebula,
+body.season-winter .bg-aurora { filter: hue-rotate(calc(var(--season-hue-shift, 0) * 0.5deg)) saturate(0.75); }
 
 /* ── 隐藏工具 ── */
 .hidden { display: none !important; }
@@ -2321,9 +2388,9 @@ body[class*="season-"] .bg-flow-light {
 
 <script>
 /* ══════════════════════════════════════════════════════
-活 · Clock  —  核心脚本 v13.0 "Zen Garden"
-Landscape Ornament · Message Hub · News Digest · Liquid Glass 9.0 · Sand Ripple · Flow Light · Desk Scene 3.0
-Comfort-First · OLED Perfection · Ambient 3.0 · Zen Corridor · Mineral Vein · Ripple Field
+活 · Clock  —  核心脚本 v14.0 "Luminous Veil"
+Landscape Ornament · Message Hub · News Digest · Liquid Glass 10.0 · Sand Ripple 2.0 · Flowing Light 2.0 · Desk Scene 4.0
+Comfort-First · OLED Perfection · Ambient 4.0 · Luminous Corridor · Mineral Vein 2.0 · Ripple Field 2.0
 ══════════════════════════════════════════════════════ */
 (() => {
   'use strict';
@@ -2820,6 +2887,25 @@ function oklchToRgb(L, C, H) {
     else body.classList.add('season-winter');
   }
   applySeason();
+
+  /* ══════════════════════════════════════
+     v14: 环境光谱（时段驱动 · 更精准的情绪映射 · 静谧界面核心）
+     ══════════════════════════════════════ */
+  function applyTimeClass() {
+    const h = new Date().getHours();
+    const body = document.body;
+    /* 移除旧的时间段类 */
+    body.classList.remove('time-dawn', 'time-morning', 'time-afternoon', 'time-evening', 'time-night', 'time-noon');
+    /* 新的 5 段精准映射（比 v13 的 4 段更细腻） */
+    if (h >= 5 && h < 8) body.classList.add('time-dawn');
+    else if (h >= 8 && h < 12) body.classList.add('time-morning');
+    else if (h >= 12 && h < 14) body.classList.add('time-noon');
+    else if (h >= 14 && h < 18) body.classList.add('time-afternoon');
+    else if (h >= 18 && h < 22) body.classList.add('time-evening');
+    else body.classList.add('time-night');
+  }
+  applyTimeClass();
+  setInterval(applyTimeClass, 60000);  // 每分钟检查一次
 
 /* ══════════════════════════════════════
 天气情绪系统 v2.0 — 更精致的情绪色温 · 极光反射

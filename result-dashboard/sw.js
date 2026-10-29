@@ -1,5 +1,5 @@
-/* SmileTracker v12.0 — Service Worker · Resonance Bloom */
-const CACHE_NAME = 'st-v12-resonance';
+/* SmileTracker v13.0 — Service Worker · Pulse Garden */
+const CACHE_NAME = 'st-v13-pulse-garden';
 const ASSETS = ['./', './index.html', './icon.svg', './manifest.webmanifest'];
 
 self.addEventListener('install', e => {

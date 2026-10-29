@@ -1,5 +1,5 @@
-/* 活 · Clock — Service Worker v13.0 Zen Garden */
-const CACHE_NAME = 'clock-v13-zen-garden';
+/* 活 · Clock — Service Worker v14.0 Luminous Veil */
+const CACHE_NAME = 'clock-v14-luminous-veil';
 const ASSETS = ['./', './index.html', './icon.svg', './manifest.webmanifest'];
 
 self.addEventListener('install', e => {

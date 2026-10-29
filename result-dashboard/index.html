@@ -10,11 +10,11 @@
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg">
-<title>SmileTracker v12.0 Resonance Bloom</title>
+<title>SmileTracker v13.0 Pulse Garden</title>
 <style>
 /* ══════════════════════════════════════════════════════════════
-   SmileTracker v12.0 "Resonance Bloom" — 共鸣绽放
-   OLED 友好 · Liquid Glass 8.0 · 联网智能 · 情绪神经科学 · 共鸣绽放
+   SmileTracker v13.0 "Pulse Garden" — 脉动花园
+   OLED 友好 · Liquid Glass 10.0 · 联网智能 · 情绪神经科学 2.0 · 脉动花园 · 静谧共鸣
    ══════════════════════════════════════════════════════════════ */
 :root {
   /* ── OKLCH 动态色板 ── */
@@ -62,7 +62,7 @@
   --text-disabled: oklch(34% 0.004 var(--accent-h));
   --text-glow: oklch(96% 0.03 90);
 
-  /* ── 玻璃拟态参数（Liquid Glass 6.0 · 棱镜增强） ── */
+  /* ── 玻璃拟态参数（Liquid Glass 10.0 · 静谧棱镜） ── */
   --glass-highlight: oklch(100% 0 0 / 0.07);
   --glass-border: oklch(100% 0 0 / 0.07);
   --glass-glow: oklch(100% 0 0 / 0.028);
@@ -72,7 +72,7 @@
   /* ── Liquid Glass 6.0 新增棱镜参数 ── */
   --glass-prism: oklch(85% 0.04 var(--accent-h) / 0.04);
   --glass-iris-speed: 180s;
-  /* ── Liquid Glass 8.0 新增 ── */
+  /* ── Liquid Glass 10.0 新增（静谧棱镜 · 更柔和的色散） ── */
   --glass-chromatic: oklch(85% 0.05 var(--accent-h) / 0.025);
   --glass-thermal: oklch(90% 0.03 50 / 0.015);
   --glass-edge-glow: 0;
@@ -681,6 +681,83 @@ body::-webkit-scrollbar { width: 0; height: 0 }
   }
   .particles-canvas, .aurora-layer { max-width: 420px; left: 50%; transform: translateX(-50%) }
 }
+
+/* ═══════════════════════════════════════════════
+   v13.0 Pulse Garden — 静谧界面 · 环境光谱
+   ═══════════════════════════════════════════════ */
+
+/* ── 环境情绪光谱（由 getDaypart() → body class 驱动） ── */
+body.dp-night   { --biolum-intensity: 0.35; --orb-pulse: 0.4; --glass-edge-glow: 0.3; }
+body.dp-morning { --biolum-intensity: 0.55; --orb-pulse: 0.6; --glass-edge-glow: 0.5; }
+body.dp-noon    { --biolum-intensity: 0.5;  --orb-pulse: 0.5; --glass-edge-glow: 0.4; }
+body.dp-afternoon { --biolum-intensity: 0.45; --orb-pulse: 0.5; --glass-edge-glow: 0.4; }
+body.dp-evening { --biolum-intensity: 0.6;  --orb-pulse: 0.7; --glass-edge-glow: 0.55; }
+body.dp-lateNight { --biolum-intensity: 0.2; --orb-pulse: 0.25; --glass-edge-glow: 0.15; }
+
+/* ── 静谧微动效（动即意义 · 非装饰性） ── */
+@keyframes calmPulse {
+  0%, 100% { opacity: 0.03; transform: scale(1); }
+  50%      { opacity: 0.06; transform: scale(1.015); }
+}
+
+/* ── 玻璃卡片静谧悬停（更克制 · 更自然） ── */
+.glass-card {
+  transition: transform 0.5s var(--ease-out-expo), box-shadow 0.5s var(--ease-out-expo);
+}
+.glass-card:hover {
+  transform: translateY(-2px) scale(1.008);
+  box-shadow: 0 6px 28px oklch(0% 0 0 / 0.4), inset 0 0 0 1px var(--glass-border-strong);
+}
+
+/* ── 情绪共振球（更慢的呼吸 · 更静谧） ── */
+.emotion-orb {
+  animation: orbPulse calc(5.5s) ease-in-out infinite;
+}
+@keyframes orbPulse {
+  0%, 100% { transform: scale(0.82); opacity: calc(0.25 + var(--orb-pulse, 0.5) * 0.2); }
+  50%      { transform: calc(1.08 + var(--orb-pulse, 0.5) * 0.08); opacity: calc(0.45 + var(--orb-pulse, 0.5) * 0.2); }
+}
+
+/* ── 生物荧光层（环境节律联动） ── */
+.biolum-layer {
+  animation: biolumDrift calc(36s) ease-in-out infinite;
+}
+
+/* ── 桌面预览 v13 — Pulse Garden 环境氛围 ── */
+@media (min-width: 900px) {
+  .app-container {
+    max-width: 420px;
+    margin: 0 auto;
+    border-left: 1px solid oklch(100% 0 0 / 0.04);
+    border-right: 1px solid oklch(100% 0 0 / 0.04);
+    min-height: 100vh;
+    background: oklch(0.8% 0.003 var(--accent-h));
+    border-radius: 32px;
+    box-shadow: 0 0 0 1px oklch(100% 0 0 / 0.03), 0 24px 80px oklch(0% 0 0 / 0.55);
+    margin-top: 24px;
+    margin-bottom: 24px;
+    max-height: calc(100vh - 48px);
+    overflow: hidden;
+  }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: oklch(0.3% 0.002 var(--accent-h));
+  }
+  /* 环境氛围光 */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 50% 60% at 15% 90%, oklch(from var(--accent) 3% 0.012 h / 0.12) 0%, transparent 50%),
+      radial-gradient(ellipse 45% 55% at 88% 8%, oklch(from var(--accent) 2.5% 0.015 h / 0.08) 0%, transparent 45%),
+      radial-gradient(ellipse 60% 40% at 50% 100%, oklch(1.5% 0.008 260 / 0.15) 0%, transparent 50%);
+    z-index: -1;
+    pointer-events: none;
+    animation: calmPulse 12s ease-in-out infinite;
+  }
+}
 </style>
 </head>
 <body>
@@ -822,15 +899,15 @@ body::-webkit-scrollbar { width: 0; height: 0 }
   <div class="glass-card milestone-card fade-in-up" style="animation-delay: 360ms;">
     <div class="milestone-icon">✨</div>
     <div class="milestone-info">
-      <div class="milestone-title">v12.0 · Resonance Bloom</div>
-      <div class="milestone-desc" id="milestoneDesc">共鸣绽放 — Liquid Glass 8.0 · 生物荧光 · 情绪共振球 · 季节律动</div>
+      <div class="milestone-title">v13.0 · Pulse Garden</div>
+      <div class="milestone-desc" id="milestoneDesc">脉动花园 — Liquid Glass 10.0 · 生物荧光 2.0 · 情绪季节 · 静谧共鸣</div>
     </div>
   </div>
 
   <!-- K. 升级亮点 -->
   <div class="glass-card fade-in-up" style="animation-delay: 400ms; text-align: center;">
     <div style="margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;">
-      <span class="upgrade-badge">✦ v12.0 RESONANCE BLOOM</span>
+      <span class="upgrade-badge">✦ v13.0 PULSE GARDEN</span>
       <span class="online-badge" id="onlineBadge"><span class="dot"></span>在线</span>
     </div>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px; color: var(--text-muted);">
@@ -846,7 +923,7 @@ body::-webkit-scrollbar { width: 0; height: 0 }
       <div style="padding: 8px; background: oklch(100% 0 0 / 0.02); border-radius: 12px;">🧠 情绪神经科学</div>
     </div>
     <div style="margin-top: 10px; font-size: 11px; color: var(--text-muted);">
-      © 2026 ykz200 · SmileTracker · MIT License
+      © 2026 ykz200 · SmileTracker v13.0 · MIT License
     </div>
   </div>
 
@@ -854,8 +931,8 @@ body::-webkit-scrollbar { width: 0; height: 0 }
 
 <script>
 /* ═══════════════════════════════════════════════════════════════
-   SmileTracker v12.0 "Resonance Bloom" — 核心脚本
-   功能：时钟、联网天气、智能分析、数据可视化、动画系统、情绪神经科学、共鸣绽放
+   SmileTracker v13.0 "Pulse Garden" — 核心脚本
+   功能：时钟、联网天气、智能分析、数据可视化、动画系统、情绪神经科学 2.0、脉动花园、静谧共鸣
    ═══════════════════════════════════════════════════════════════ */
 
 (function() {
@@ -883,6 +960,17 @@ body::-webkit-scrollbar { width: 0; height: 0 }
 
   function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
+  /* ── v13: 环境光谱驱动（根据时段注入 body class · 静谧界面） ── */
+  function applyDaypartClass() {
+    const dp = getDaypart();
+    const body = document.body;
+    const classes = ['dp-night','dp-morning','dp-noon','dp-afternoon','dp-evening','dp-lateNight'];
+    classes.forEach(c => body.classList.remove(c));
+    body.classList.add('dp-' + dp);
+  }
+  applyDaypartClass();
+  setInterval(applyDaypartClass, 60000);
+
   function updateClock() {
     const now = new Date();
     const h = String(now.getHours()).padStart(2, '0');
@@ -896,7 +984,7 @@ body::-webkit-scrollbar { width: 0; height: 0 }
     document.getElementById('clockDate').textContent = `${month}月${date}日 · 周${day}`;
 
     const dp = getDaypart();
-    document.getElementById('clockGreeting').textContent = pick(greetings[dp]) + ' · v11.0';
+    document.getElementById('clockGreeting').textContent = pick(greetings[dp]) + ' · v13.0 Pulse Garden';
   }
   updateClock();
   setInterval(updateClock, 10000);
