@@ -1,37 +1,48 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
-    <radialGradient id="glow11" cx="50%" cy="46%" r="54%">
-      <stop offset="0%" stop-color="#9ac4ff" stop-opacity="0.2"/>
-      <stop offset="50%" stop-color="#7eb8ff" stop-opacity="0.08"/>
+    <radialGradient id="glow13" cx="50%" cy="46%" r="54%">
+      <stop offset="0%" stop-color="#9ac4ff" stop-opacity="0.22"/>
+      <stop offset="50%" stop-color="#7eb8ff" stop-opacity="0.09"/>
       <stop offset="100%" stop-color="#7eb8ff" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="iris11" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ff9acd" stop-opacity="0.1"/>
-      <stop offset="20%" stop-color="#9ac4ff" stop-opacity="0.08"/>
-      <stop offset="40%" stop-color="#9affc4" stop-opacity="0.06"/>
-      <stop offset="60%" stop-color="#ffdf9a" stop-opacity="0.07"/>
-      <stop offset="80%" stop-color="#c49aff" stop-opacity="0.06"/>
-      <stop offset="100%" stop-color="#ff9acd" stop-opacity="0.1"/>
+    <linearGradient id="iris13" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a8d4ff" stop-opacity="0.08"/>
+      <stop offset="25%" stop-color="#9ac4ff" stop-opacity="0.06"/>
+      <stop offset="50%" stop-color="#c4d4ff" stop-opacity="0.07"/>
+      <stop offset="75%" stop-color="#9ab4e8" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#a8d4ff" stop-opacity="0.08"/>
     </linearGradient>
-    <linearGradient id="horizon11" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#7eb8ff" stop-opacity="0"/>
-      <stop offset="30%" stop-color="#9ac4ff" stop-opacity="0.12"/>
-      <stop offset="50%" stop-color="#b8d4ff" stop-opacity="0.18"/>
-      <stop offset="70%" stop-color="#9ac4ff" stop-opacity="0.12"/>
-      <stop offset="100%" stop-color="#7eb8ff" stop-opacity="0"/>
+    <!-- v13: 沙纹涟漪 -->
+    <radialGradient id="ripple13" cx="50%" cy="60%" r="40%">
+      <stop offset="60%" stop-color="#9ac4ff" stop-opacity="0"/>
+      <stop offset="75%" stop-color="#9ac4ff" stop-opacity="0.06"/>
+      <stop offset="85%" stop-color="#9ac4ff" stop-opacity="0.03"/>
+      <stop offset="100%" stop-color="#9ac4ff" stop-opacity="0"/>
+    </radialGradient>
+    <!-- v13: 矿物边缘光泽 -->
+    <linearGradient id="mineral13" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#c8dff8" stop-opacity="0.12"/>
+      <stop offset="50%" stop-color="#9ac4ff" stop-opacity="0.02"/>
+      <stop offset="100%" stop-color="#c8dff8" stop-opacity="0.08"/>
     </linearGradient>
   </defs>
   <rect width="512" height="512" rx="128" fill="#000000"/>
-  <rect x="96" y="96" width="320" height="320" rx="80" fill="url(#iris11)"/>
-  <circle cx="256" cy="244" r="148" fill="url(#glow11)"/>
-  <!-- 地平线光带 -->
-  <ellipse cx="256" cy="320" rx="140" ry="28" fill="url(#horizon11)"/>
-  <circle cx="256" cy="244" r="132" fill="none" stroke="#1a1a2e" stroke-width="0.6"/>
-  <circle cx="256" cy="244" r="102" fill="none" stroke="#7eb8ff" stroke-width="0.4" opacity="0.15"/>
+  <rect x="96" y="96" width="320" height="320" rx="80" fill="url(#iris13)"/>
+  <circle cx="256" cy="244" r="148" fill="url(#glow13)"/>
+  <!-- v13: 沙纹涟漪同心环 -->
+  <circle cx="256" cy="310" rx="100" ry="20" fill="url(#ripple13)"/>
+  <circle cx="256" cy="310" rx="80" ry="15" fill="none" stroke="#9ac4ff" stroke-width="0.3" opacity="0.06"/>
+  <circle cx="256" cy="310" rx="60" ry="11" fill="none" stroke="#9ac4ff" stroke-width="0.3" opacity="0.04"/>
+  <!-- 矿物边缘 -->
+  <circle cx="256" cy="244" r="134" fill="none" stroke="url(#mineral13)" stroke-width="1.2"/>
+  <circle cx="256" cy="244" r="130" fill="none" stroke="#1a1a2e" stroke-width="0.5"/>
+  <circle cx="256" cy="244" r="102" fill="none" stroke="#7eb8ff" stroke-width="0.4" opacity="0.12"/>
+  <!-- 时钟数字 -->
   <text x="256" y="244" text-anchor="middle" dominant-baseline="central"
         font-family="ui-rounded, SF Pro Rounded, Roboto, system-ui, sans-serif" 
         font-weight="200" font-size="168" fill="#8ab8ff"
         letter-spacing="-5">10:09</text>
+  <!-- 秒针点 · 浮动 -->
   <circle cx="256" cy="302" r="5" fill="#7eb8ff" opacity="0.45">
     <animate attributeName="cy" values="302;278;302" dur="2.6s" repeatCount="indefinite"/>
     <animate attributeName="opacity" values="0.45;0.8;0.45" dur="2.6s" repeatCount="indefinite"/>

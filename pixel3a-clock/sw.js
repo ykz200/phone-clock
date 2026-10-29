@@ -1,5 +1,5 @@
-/* 活 · Clock — Service Worker v12.0 Aurora Weave */
-const CACHE_NAME = 'clock-v12-aurora-weave';
+/* 活 · Clock — Service Worker v13.0 Zen Garden */
+const CACHE_NAME = 'clock-v13-zen-garden';
 const ASSETS = ['./', './index.html', './icon.svg', './manifest.webmanifest'];
 
 self.addEventListener('install', e => {

@@ -6,9 +6,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="活·Clock v12">
-<meta name="application-name" content="活·Clock v12">
-<meta name="description" content="活 v12.0 Aurora Weave — Pixel 3a 桌面摆件时钟 · Liquid Glass 8.0 · Aurora Weave · 季节色系 · 环境智能 2.0">
+<meta name="apple-mobile-web-app-title" content="活·Clock v13">
+<meta name="application-name" content="活·Clock v13">
+<meta name="description" content="活 v13.0 Zen Garden — Pixel 3a 桌面摆件时钟 · Liquid Glass 9.0 · Sand Ripple · Flowing Light · Desk Scene 3.0 · OLED Care 3.0">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#0a0a0f" media="(prefers-color-scheme: light)">
 <link rel="manifest" href="manifest.webmanifest">
@@ -16,9 +16,9 @@
 <title>活 · Clock</title>
 <style>
 /* ════════════════════════════════════════════════════════════
-   活 · v12.0 "Aurora Weave"  for Pixel 3a
-   Landscape Ornament · Message Hub · News Digest · Liquid Glass 8.0 · Aurora Weave · Corona Flare · Bio-Rhythmic · Desk Jellyfish
-   Comfort-First · Pixel-Perfect OLED · Ambient 2.0 · Depth Glass · Solar Wind · Neural Aurora
+   活 · v13.0 "Zen Garden"  for Pixel 3a
+   Landscape Ornament · Message Hub · News Digest · Liquid Glass 9.0 · Sand Ripple · Flowing Light · Desk Scene 3.0 · OLED Care 3.0
+   Comfort-First · Pixel-Perfect OLED · Ambient 3.0 · Zen Corridor · Mineral Vein · Ripple Field
    ════════════════════════════════════════════════════════════ */
 
 :root {
@@ -29,45 +29,48 @@
   --accent-c: 0.10;
   --accent-h: 250;
 
-  /* ── Liquid Glass 7.0（流体玻璃 · 深度折射 · 彩虹边缘光 · 曲面光感） ── */
-  --glass-bg: oklch(100% 0 0 / 0.028);
-  --glass-bg-strong: oklch(100% 0 0 / 0.052);
-  --glass-border: oklch(100% 0 0 / 0.045);
-  --glass-border-strong: oklch(100% 0 0 / 0.085);
-  --glass-highlight: oklch(100% 0 0 / 0.115);
-  --glass-reflect: oklch(100% 0 0 / 0.016);
-  --glass-noise-opacity: 0.006;
-  --glass-iridescence: oklch(80% 0.04 280 / 0.05);
-  --glass-depth-1: oklch(100% 0 0 / 0.01);
-  --glass-depth-2: oklch(100% 0 0 / 0.022);
-  --glass-depth-3: oklch(100% 0 0 / 0.035);
-  --glass-prism: oklch(85% 0.045 var(--accent-h) / 0.032);
-  --glass-frost: oklch(95% 0.012 var(--accent-h) / 0.038);
+  /* ── Liquid Glass 9.0（禅意流体 · 沙纹折射 · 矿物光泽 · 水波纹） ── */
+  --glass-bg: oklch(100% 0 0 / 0.022);
+  --glass-bg-strong: oklch(100% 0 0 / 0.042);
+  --glass-border: oklch(100% 0 0 / 0.038);
+  --glass-border-strong: oklch(100% 0 0 / 0.072);
+  --glass-highlight: oklch(100% 0 0 / 0.095);
+  --glass-reflect: oklch(100% 0 0 / 0.012);
+  --glass-noise-opacity: 0.004;
+  --glass-iridescence: oklch(80% 0.04 280 / 0.04);
+  --glass-depth-1: oklch(100% 0 0 / 0.008);
+  --glass-depth-2: oklch(100% 0 0 / 0.018);
+  --glass-depth-3: oklch(100% 0 0 / 0.028);
+  --glass-prism: oklch(85% 0.045 var(--accent-h) / 0.025);
+  --glass-frost: oklch(95% 0.012 var(--accent-h) / 0.03);
   --glass-bend-x: 0.6px;
   --glass-bend-y: 0.4px;
   --glass-spread: 0px;
-  --glass-inner-glow: oklch(100% 0 0 / 0.04);
-  /* ── Liquid Glass 8.0 新增 ── */
-  --glass-chromatic: oklch(85% 0.05 var(--accent-h) / 0.018);
-  --glass-thermal: oklch(90% 0.03 50 / 0.012);
-  --iris-speed: 140s;
+  --glass-inner-glow: oklch(100% 0 0 / 0.032);
+  --glass-chromatic: oklch(85% 0.05 var(--accent-h) / 0.014);
+  --glass-thermal: oklch(90% 0.03 50 / 0.009);
+  /* 9.0: 流动水波纹增强 */
+  --glass-ripple-opacity: 0.015;
+  --glass-ripple-speed: 8s;
+  --glass-vein: oklch(80% 0.06 var(--accent-h) / 0.02);
+  --iris-speed: 160s;
   --glass-edge-glow: 0;
 
-  /* ── 文字 v11（节律可变字重 · 夜间更轻 · 摆件优化） ── */
+  /* ── 文字 v13（禅语 ·更轻盈 ·夜更柔） ── */
   --text-1: oklch(95% 0.004 var(--accent-h));
   --text-2: oklch(74% 0.008 var(--accent-h));
   --text-3: oklch(54% 0.006 var(--accent-h));
   --text-4: oklch(36% 0.004 var(--accent-h));
-  --text-weight-primary: 350;
-  --text-weight-secondary: 450;
+  --text-weight-primary: 340;
+  --text-weight-secondary: 440;
 
-  /* ── 背景（OLED 纯黑优化 · v11 层次化） ── */
+  /* ── 背景（OLED 纯黑优化 · v13 禅意深化） ── */
   --bg-deep: #000000;
   --bg-base: oklch(3% 0.005 var(--accent-h));
   --bg-shift: oklch(5% 0.007 var(--accent-h));
   --bg-mood-tint: oklch(50% 0.02 var(--accent-h) / 0);
 
-  /* ── Horizon 地平线光 v11 ── */
+  /* ── Horizon 地平线光 v13 ── */
   --horizon-y: 60%;
   --horizon-opacity: 0;
   --horizon-width: 35%;
@@ -81,17 +84,18 @@
   --safe-right: env(safe-area-inset-right, 0px);
   --punchhole-safe: 34px;
 
-  /* ── 生物节律速度（夜间更慢） ── */
+  /* ── 生物节律速度（夜间更慢 ·v13:更缓） ── */
   --breath-speed: 1;
 
-  /* ── 缓动系统 v11（新增 horizon 渐变缓动） ── */
+  /* ── 缓动系统 v13（新增 zen 缓动） ── */
   --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-smooth: cubic-bezier(0.4, 0.0, 0.2, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
   --ease-horizon: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-zen: cubic-bezier(0.22, 0.61, 0.36, 1);
 
-  /* ── 像素漂移偏移 v10（正弦曲线平滑 · OLED Care 2.0） ── */
+  /* ── 像素漂移偏移 v13（Zen Care 3.0 ·三重李萨如叠加） ── */
   --wander-x: 0px;
   --wander-y: 0px;
   --wander-t: 0s;
@@ -111,6 +115,12 @@
   --solar-wind-angle: 0deg;
   --nebula-hue-shift: 0deg;
   --flare-intensity: 0.5;
+
+  /* ── v13: 沙纹涟漪光场 ── */
+  --sand-ripple-opacity: 0.03;
+  --flow-light-angle: 0deg;
+  --mineral-pulse: 0;
+  --zen-glow: 0;
 }
 
 /* ── Reset ── */
@@ -135,7 +145,7 @@ body {
 }
 
 /* ════════════════════════════════════════════
-   背景系统 v11（Horizon 地平线光带 + 多层氛围）
+   背景系统 v13（Zen Garden · 沙纹 · 流动光 · 地平线）
    ════════════════════════════════════════════ */
 .bg-base {
   position: fixed; inset: 0;
@@ -143,210 +153,210 @@ body {
   z-index: 0;
   transition: background 4s var(--ease-smooth);
 }
-.bg-mood {
+/* v13: 沙纹涟漪光场 */
+.bg-sand-ripple {
   position: fixed; inset: 0;
   z-index: 1; pointer-events: none;
+  opacity: var(--sand-ripple-opacity, 0.03);
+  mix-blend-mode: screen;
+  transition: opacity 8s var(--ease-smooth);
+}
+/* v13: 流动光河 */
+.bg-flow-light {
+  position: fixed; inset: 0;
+  z-index: 1; pointer-events: none;
+  opacity: 0.04;
+  mix-blend-mode: screen;
+  transition: opacity 6s var(--ease-smooth);
+}
+.bg-mood {
+  position: fixed; inset: 0;
+  z-index: 2; pointer-events: none;
   background: var(--weather-mood);
   mix-blend-mode: soft-light;
   transition: background 6s var(--ease-smooth);
-  opacity: 0.6;
+  opacity: 0.5;
 }
 .bg-horizon {
   position: fixed; inset: 0;
-  z-index: 1; pointer-events: none;
+  z-index: 2; pointer-events: none;
   opacity: var(--horizon-opacity, 0);
   transition: opacity 5s var(--ease-horizon);
 }
 .bg-nebula {
   position: fixed; inset: 0;
-  z-index: 2; pointer-events: none;
-  opacity: 0.82;
+  z-index: 3; pointer-events: none;
+  opacity: 0.75;
 }
 .bg-aurora {
   position: fixed; inset: 0;
-  z-index: 3; pointer-events: none;
+  z-index: 4; pointer-events: none;
   mix-blend-mode: screen;
-  opacity: 0.5;
+  opacity: 0.45;
 }
 .bg-fog {
   position: fixed; inset: 0;
-  z-index: 4; pointer-events: none;
-  opacity: 0.32;
+  z-index: 5; pointer-events: none;
+  opacity: 0.28;
   background:
-    radial-gradient(ellipse 80% 60% at 20% 80%, oklch(from var(--accent) 30% 0.02 h / 0.035) 0%, transparent 70%),
-    radial-gradient(ellipse 70% 50% at 85% 20%, oklch(from var(--accent) 25% 0.015 h / 0.025) 0%, transparent 65%);
+    radial-gradient(ellipse 80% 60% at 20% 80%, oklch(from var(--accent) 30% 0.02 h / 0.03) 0%, transparent 70%),
+    radial-gradient(ellipse 70% 50% at 85% 20%, oklch(from var(--accent) 25% 0.015 h / 0.02) 0%, transparent 65%);
   transition: opacity 6s var(--ease-smooth);
 }
 .bg-noise {
   position: fixed; inset: 0;
-  z-index: 5; pointer-events: none;
+  z-index: 6; pointer-events: none;
   opacity: var(--glass-noise-opacity);
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 200px 200px;
 }
 .bg-vignette {
   position: fixed; inset: 0;
-  z-index: 6; pointer-events: none;
-  background: radial-gradient(ellipse 78% 78% at 50% 45%, transparent 30%, rgba(0,0,0,0.55) 100%);
+  z-index: 7; pointer-events: none;
+  background: radial-gradient(ellipse 80% 80% at 50% 45%, transparent 30%, rgba(0,0,0,0.5) 100%);
   transition: background 4s var(--ease-smooth);
 }
 .bg-pulse {
   position: fixed; inset: 0;
-  z-index: 7; pointer-events: none;
+  z-index: 8; pointer-events: none;
   opacity: 0;
-  background: radial-gradient(circle at 50% 45%, oklch(from var(--accent) l c h / 0.04) 0%, transparent 50%);
+  background: radial-gradient(circle at 50% 45%, oklch(from var(--accent) l c h / 0.035) 0%, transparent 50%);
   transition: opacity 3s var(--ease-smooth);
 }
 .bg-pulse.active { opacity: 1; }
 .bg-light-cone {
   position: fixed; inset: 0;
-  z-index: 8; pointer-events: none;
-  background: radial-gradient(ellipse 55% 30% at 50% -8%, oklch(from var(--accent) 95% 0.008 h / 0.02) 0%, transparent 70%);
+  z-index: 9; pointer-events: none;
+  background: radial-gradient(ellipse 55% 30% at 50% -8%, oklch(from var(--accent) 95% 0.008 h / 0.018) 0%, transparent 70%);
 }
 .bg-weather-particles {
   position: fixed; inset: 0;
-  z-index: 9; pointer-events: none;
+  z-index: 10; pointer-events: none;
   opacity: 0;
   transition: opacity 4s var(--ease-smooth);
 }
 .bg-weather-particles.active { opacity: 1; }
 .bg-corona {
   position: fixed; inset: 0;
-  z-index: 10; pointer-events: none;
+  z-index: 11; pointer-events: none;
   opacity: var(--corona-opacity, 0);
   transition: opacity 4s var(--ease-smooth);
 }
 .bg-corona.active { opacity: var(--flare-intensity, 0.5); }
 .bg-neural-aurora {
   position: fixed; inset: 0;
-  z-index: 2; pointer-events: none;
-  opacity: 0.65;
+  z-index: 3; pointer-events: none;
+  opacity: 0.55;
 }
-/* v11: Horizon canvas for the horizon light band */
 .bg-horizon-canvas {
   position: fixed; inset: 0;
-  z-index: 1; pointer-events: none;
+  z-index: 2; pointer-events: none;
   opacity: var(--horizon-opacity, 0);
   transition: opacity 5s var(--ease-horizon);
   mix-blend-mode: screen;
 }
 
 /* ════════════════════════════════════════════
-   Liquid Glass 7.0（流体玻璃 · 深度折射 · 曲面光感 · 内部辉光）
+   Liquid Glass 9.0（禅意流体 · 沙纹折射 · 矿物脉络 · 水波纹扩散）
    ════════════════════════════════════════════ */
 .glass-card {
   background: linear-gradient(150deg, var(--glass-bg) 0%, var(--glass-depth-1) 40%, var(--glass-depth-2) 70%, var(--glass-depth-3) 100%);
-  backdrop-filter: blur(46px) saturate(1.35) brightness(1.04) contrast(1.02);
-  -webkit-backdrop-filter: blur(46px) saturate(1.35) brightness(1.04) contrast(1.02);
+  backdrop-filter: blur(52px) saturate(1.3) brightness(1.03) contrast(1.02);
+  -webkit-backdrop-filter: blur(52px) saturate(1.3) brightness(1.03) contrast(1.02);
   border: 1px solid var(--glass-border);
   border-radius: 20px;
   position: relative;
   overflow: hidden;
-  transition: transform 0.42s var(--spring), background 0.42s var(--ease-smooth), border-color 0.42s, box-shadow 0.42s var(--ease-smooth);
+  transition: transform 0.5s var(--ease-zen), background 0.42s var(--ease-smooth), border-color 0.42s, box-shadow 0.5s var(--ease-zen);
 }
-/* 彩虹边缘光 — conic-gradient 模拟棱镜散射 · 7.0: 更宽频、更柔和 */
 .glass-card .glass-iris {
   position: absolute;
   inset: -60%;
   background: conic-gradient(from var(--iris-angle, 0deg),
-    oklch(80% 0.065 0 / 0.032),
-    oklch(80% 0.065 50 / 0.022),
-    oklch(80% 0.065 110 / 0.028),
-    oklch(80% 0.065 180 / 0.02),
-    oklch(80% 0.065 240 / 0.032),
-    oklch(80% 0.065 300 / 0.022),
-    oklch(80% 0.065 350 / 0.03),
-    oklch(80% 0.065 0 / 0.032)
-  );
-  pointer-events: none;
-  z-index: 0;
-  border-radius: inherit;
-  animation: irisSpin calc(140s * var(--breath-speed, 1)) linear infinite;
-  opacity: 0.75;
-}
-.glass-card .glass-noise {
-  position: absolute;
-  inset: 0;
-  opacity: 0.006;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 120px 120px;
-  pointer-events: none;
-  border-radius: inherit;
-  z-index: 0;
-}
-/* 顶边高光 · 7.0: 3层渐变模拟曲面折射 */
-.glass-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(165deg, var(--glass-highlight) 0%, transparent 22%, transparent 78%, oklch(100% 0 0 / 0.018) 100%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-  z-index: 2;
-}
-/* 底部曲面反光 · 7.0: 更宽更柔和 */
-.glass-card::after {
-  content: '';
-  position: absolute;
-  left: 8%; right: 8%; bottom: 0;
-  height: 38%;
-  background: linear-gradient(to top, var(--glass-reflect), transparent);
-  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-  pointer-events: none;
-  opacity: 0.4;
-  z-index: 1;
-}
-/* 7.0: 内部辉光层 */
-.glass-card .glass-inner {
-  position: absolute;
-  inset: 2px;
-  border-radius: inherit;
-  background: radial-gradient(ellipse 70% 50% at 50% 0%, var(--glass-inner-glow) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0.6;
-}
-/* 8.0: 彩虹边缘色散 */
-.glass-card .glass-chromatic {
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  pointer-events: none;
-  z-index: 1;
-  opacity: var(--glass-edge-glow, 0);
-  transition: opacity 1.2s var(--ease-smooth);
-  padding: 1px;
-  background: conic-gradient(from var(--iris-angle, 0deg),
-    oklch(80% 0.06 0 / 0.08),
-    oklch(80% 0.06 60 / 0.05),
-    oklch(80% 0.06 120 / 0.07),
-    oklch(80% 0.06 240 / 0.09),
-    oklch(80% 0.06 300 / 0.06),
-    oklch(80% 0.06 0 / 0.08)
-  );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  animation: irisSpin calc(var(--iris-speed, 140s) * var(--breath-speed, 1)) linear infinite;
-}
-@keyframes irisSpin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-/* ── v12: 玻璃律动呼吸 + 悬停回应 ── */
-.glass-card:hover {
-  transform: translateY(-2px) scale(1.008);
-  box-shadow: 0 8px 36px oklch(0% 0 0 / 0.5), inset 0 0 0 1px var(--glass-border-strong);
-}
-.glass-card:hover .glass-chromatic {
+    oklch(80% 0.06 0 / 0.028), oklch(80% 0.06 50 / 0.018), oklch(80% 0.06 110 / 0.024),
+    oklch(80% 0.06 180 / 0.016), oklch(80% 0.06 240 / 0.028), oklch(80% 0.06 300 / 0.018),
+    oklch(80% 0.06 350 / 0.026), oklch(80% 0.06 0 / 0.028));
+  pointer-events: none; z-index: 0; border-radius: inherit;
+  animation: irisSpin calc(var(--iris-speed, 160s) * var(--breath-speed, 1)) linear infinite;
   opacity: 0.7;
 }
+.glass-card .glass-noise {
+  position: absolute; inset: 0;
+  opacity: 0.004;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 120px 120px;
+  pointer-events: none; border-radius: inherit; z-index: 0;
+}
+/* 9.0: 矿物脉络层 */
+.glass-card .glass-vein {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0; border-radius: inherit; opacity: 0.5;
+  background:
+    radial-gradient(ellipse 30% 12% at 20% 40%, var(--glass-vein) 0%, transparent 70%),
+    radial-gradient(ellipse 18% 8% at 70% 65%, var(--glass-vein) 0%, transparent 65%),
+    radial-gradient(ellipse 25% 10% at 50% 25%, oklch(80% 0.04 var(--accent-h) / 0.012) 0%, transparent 70%);
+  animation: mineralShimmer calc(18s * var(--breath-speed, 1)) ease-in-out infinite;
+}
+/* 9.0: 水波纹扩散层 */
+.glass-card .glass-ripple {
+  position: absolute; top: 50%; left: 50%; width: 200%; height: 200%;
+  transform: translate(-50%, -50%); pointer-events: none; z-index: 0; border-radius: inherit;
+  opacity: 0;
+  background: radial-gradient(circle at center, transparent 30%, var(--glass-ripple-opacity) 35%, transparent 40%);
+  transition: opacity 0.6s;
+}
+.glass-card:hover .glass-ripple {
+  opacity: 1;
+  animation: rippleExpand var(--glass-ripple-speed, 8s) ease-out infinite;
+}
+/* 顶边高光 · 9.0: 三层渐变模拟曲面折射 */
+.glass-card::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+  background: linear-gradient(165deg, var(--glass-highlight) 0%, transparent 22%, transparent 78%, oklch(100% 0 0 / 0.014) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  pointer-events: none; z-index: 2;
+}
+/* 底部曲面反光 · 9.0 */
+.glass-card::after {
+  content: ''; position: absolute; left: 8%; right: 8%; bottom: 0; height: 38%;
+  background: linear-gradient(to top, var(--glass-reflect), transparent);
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  pointer-events: none; opacity: 0.35; z-index: 1;
+}
+.glass-card .glass-inner {
+  position: absolute; inset: 2px; border-radius: inherit;
+  background: radial-gradient(ellipse 70% 50% at 50% 0%, var(--glass-inner-glow) 0%, transparent 70%);
+  pointer-events: none; z-index: 1; opacity: 0.5;
+}
+.glass-card .glass-chromatic {
+  position: absolute; inset: -1px; border-radius: inherit; pointer-events: none; z-index: 1;
+  opacity: var(--glass-edge-glow, 0); transition: opacity 1.2s var(--ease-smooth); padding: 1px;
+  background: conic-gradient(from var(--iris-angle, 0deg),
+    oklch(80% 0.06 0 / 0.07), oklch(80% 0.06 60 / 0.04), oklch(80% 0.06 120 / 0.06),
+    oklch(80% 0.06 240 / 0.08), oklch(80% 0.06 300 / 0.05), oklch(80% 0.06 0 / 0.07));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  animation: irisSpin calc(var(--iris-speed, 160s) * var(--breath-speed, 1)) linear infinite;
+}
+@keyframes irisSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+/* 9.0: 矿物呼吸 + 水波纹 */
+@keyframes mineralShimmer {
+  0%, 100% { opacity: 0.4; filter: brightness(1); }
+  50% { opacity: 0.6; filter: brightness(1.15); }
+}
+@keyframes rippleExpand {
+  0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.04; }
+  50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.015; }
+  100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
+}
+/* ── v13: 玻璃律动呼吸 + 悬停回应 ── */
+.glass-card:hover {
+  transform: translateY(-2px) scale(1.006);
+  box-shadow: 0 8px 36px oklch(0% 0 0 / 0.45), inset 0 0 0 1px var(--glass-border-strong);
+}
+.glass-card:hover .glass-chromatic { opacity: 0.6; }
 /* ── v10: 日冕脉动 ── */
 @keyframes coronaPulse {
   0%, 100% { transform: scale(1); opacity: 0.5; }
@@ -366,7 +376,7 @@ body {
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
-/* ── v11: Horizon 地平线光动画 ── */
+/* ── v13: Horizon 地平线光动画 ── */
 @keyframes horizonBreath {
   0%, 100% { transform: scaleX(1) scaleY(1); }
   50% { transform: scaleX(1.03) scaleY(1.1); }
@@ -374,6 +384,16 @@ body {
 @keyframes horizonGlow {
   0%, 100% { filter: blur(30px) brightness(1); }
   50% { filter: blur(35px) brightness(1.15); }
+}
+/* ── v13: Zen Garden 沙纹 + 流动光 ── */
+@keyframes sandDrift {
+  0% { transform: translateY(0) scale(1); opacity: 0.03; }
+  50% { transform: translateY(-2px) scale(1.01); opacity: 0.045; }
+  100% { transform: translateY(0) scale(1); opacity: 0.03; }
+}
+@keyframes flowLightDrift {
+  0% { transform: rotate(var(--flow-light-angle)) translateX(0); }
+  100% { transform: rotate(var(--flow-light-angle)) translateX(8px); }
 }
 
 /* ── 主体应用容器 ── */
@@ -496,7 +516,7 @@ body {
   transform: translateY(0) scale(1);
 }
 
-/* ── 数字面 v9 ── */
+/* ── 数字面 v13 ── */
 .numeric-digits {
   display: flex;
   align-items: center;
@@ -506,8 +526,8 @@ body {
   letter-spacing: 0.03em;
   color: var(--text-1);
   font-variant-numeric: tabular-nums;
-  /* 温和的亮度微调代替刺眼明灭 */
-  text-shadow: 0 0 calc(8px * (0.5 + var(--digit-glow) * 0.5)) oklch(from var(--accent) l c h / calc(0.04 + var(--digit-glow) * 0.04));
+  /* v13: 更温和的微光 · 沙纹质感 */
+  text-shadow: 0 0 calc(6px * (0.5 + var(--digit-glow) * 0.5)) oklch(from var(--accent) l c h / calc(0.025 + var(--digit-glow) * 0.025));
   transition: text-shadow 2.5s var(--ease-smooth), font-weight 2s var(--ease-smooth);
 }
 .num-sep {
@@ -1685,41 +1705,41 @@ body.zen-mode .settings-panel { opacity: 0; }
 body.zen-mode.numeric-mode .numeric-digits { font-size: clamp(3.4rem, 18vw, 4.8rem); }
 
 /* ════════════════════════════════════════════
-   桌面预览 v11 — 沉浸式 Pixel 3a 场景
-   真实按键细节 · 摄像头位置修正 · 屏幕反射 · 环境光交互
+   桌面预览 v13 — Zen Garden 禅意桌面
+   沙纹光场 · 矿物光泽 · 桌面反射 · 环境氛围
    ════════════════════════════════════════════ */
 @media (min-width: 900px) {
   body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #01010a;
-    perspective: 1800px;
+    background: #020208;
+    perspective: 2000px;
     overflow: hidden;
   }
-  /* 环境光 v11 — 多方向动态光 · 色温随昼夜渐变 */
+  /* 环境光 v13 — 多方向动态光 · 沙纹 · 矿物光泽 */
   body::before {
     content:'';
     position: fixed; inset: 0;
     background:
-      radial-gradient(ellipse 45% 55% at 15% 85%, oklch(8% 0.025 290) 0%, transparent 50%),
-      radial-gradient(ellipse 40% 45% at 88% 8%, oklch(7% 0.03 20) 0%, transparent 45%),
-      radial-gradient(ellipse 55% 35% at 50% 100%, oklch(4% 0.015 260) 0%, transparent 45%),
-      radial-gradient(ellipse 30% 25% at 75% 70%, oklch(5% 0.01 200) 0%, transparent 40%),
-      radial-gradient(ellipse 25% 35% at 50% 50%, oklch(from var(--accent) 6% 0.02 h / 0.15) 0%, transparent 50%);
+      radial-gradient(ellipse 45% 55% at 15% 85%, oklch(6% 0.02 290) 0%, transparent 50%),
+      radial-gradient(ellipse 40% 45% at 88% 8%, oklch(5% 0.025 20) 0%, transparent 45%),
+      radial-gradient(ellipse 55% 35% at 50% 100%, oklch(3% 0.012 260) 0%, transparent 45%),
+      radial-gradient(ellipse 30% 25% at 75% 70%, oklch(4% 0.008 200) 0%, transparent 40%),
+      radial-gradient(ellipse 25% 35% at 50% 50%, oklch(from var(--accent) 5% 0.018 h / 0.12) 0%, transparent 50%);
     z-index: -1;
     pointer-events: none;
-    animation: envLightDrift calc(22s * var(--breath-speed, 1)) var(--ease-in-out-quart) infinite;
+    animation: envLightDrift calc(26s * var(--breath-speed, 1)) var(--ease-in-out-quart) infinite;
   }
-  /* 桌面反射 v11 — 更真实的散射反射 */
+  /* 桌面反射 v13 — 禅意桌面 · 柔和散射 */
   body::after {
     content:'';
     position: fixed;
     bottom: 0; left: 0; right: 0;
-    height: 30vh;
+    height: 35vh;
     background:
-      radial-gradient(ellipse 40% 30% at 50% 100%, oklch(3.5% 0.012 260 / 0.25) 0%, transparent 60%),
-      linear-gradient(0deg, oklch(2.5% 0.008 260 / 0.22) 0%, transparent 80%);
+      radial-gradient(ellipse 40% 28% at 50% 100%, oklch(2.8% 0.01 260 / 0.22) 0%, transparent 60%),
+      linear-gradient(0deg, oklch(2% 0.006 260 / 0.18) 0%, transparent 80%);
     pointer-events: none;
     z-index: -1;
   }
@@ -1728,42 +1748,42 @@ body.zen-mode.numeric-mode .numeric-digits { font-size: clamp(3.4rem, 18vw, 4.8r
     50% { opacity: 1; filter: brightness(1.06); }
   }
 
-  /* 设备主体 v11 — 精准 Pixel 3a 机身 · 按键 · 传感器 */
+  /* 设备主体 v13 — Pixel 3a 机身 · 禅意光泽 · 矿物色 */
   .app {
     width: 412px;
     height: 82vh;
     max-height: 760px;
     border-radius: 42px;
     background:
-      linear-gradient(135deg, oklch(2.8% 0.005 260 / 0.9) 0%, oklch(1.2% 0.003 260 / 0.95) 50%, oklch(2% 0.004 260 / 0.9) 100%);
-    border: 1.4px solid oklch(100% 0 0 / 0.022);
+      linear-gradient(135deg, oklch(2.2% 0.004 260 / 0.92) 0%, oklch(1% 0.002 260 / 0.96) 50%, oklch(1.6% 0.003 260 / 0.92) 100%);
+    border: 1.4px solid oklch(100% 0 0 / 0.018);
     box-shadow:
-      0 0 0 0.8px oklch(0% 0 0 / 0.55),
-      0 28px 95px oklch(0% 0 0 / 0.75),
-      0 0 120px oklch(from var(--accent) l c h / 0.01),
-      0 0 0 0.4px oklch(100% 0 0 / 0.014),
-      inset 0 0.8px 0 oklch(100% 0 0 / 0.06),
-      inset 0 -0.8px 0 oklch(0% 0 0 / 0.35),
-      0 0 60px oklch(from var(--accent) 50% 0.03 h / 0.012),
-      inset 0 0 80px oklch(0% 0 0 / 0.08);
+      0 0 0 0.8px oklch(0% 0 0 / 0.5),
+      0 28px 95px oklch(0% 0 0 / 0.7),
+      0 0 120px oklch(from var(--accent) l c h / 0.008),
+      0 0 0 0.4px oklch(100% 0 0 / 0.012),
+      inset 0 0.8px 0 oklch(100% 0 0 / 0.05),
+      inset 0 -0.8px 0 oklch(0% 0 0 / 0.3),
+      0 0 60px oklch(from var(--accent) 50% 0.025 h / 0.01),
+      inset 0 0 80px oklch(0% 0 0 / 0.06);
     padding-top: calc(var(--punchhole-safe) + 14px);
     transform: rotateX(1deg) scale(0.95);
     transform-style: preserve-3d;
-    transition: transform 0.7s var(--ease-out-expo), box-shadow 0.7s, border-color 0.5s;
+    transition: transform 0.8s var(--ease-zen), box-shadow 0.8s, border-color 0.6s;
     position: relative;
     overflow: hidden;
   }
-  /* 设备边框光泽 · v11: 更细致的金属中框 */
+  /* 设备边框光泽 · v13: 矿物金属中框 */
   .app::before {
     content:'';
     position: absolute;
     inset: -1px;
     border-radius: 42px;
-    border: 1px solid oklch(100% 0 0 / 0.04);
+    border: 1px solid oklch(100% 0 0 / 0.035);
     pointer-events: none;
     z-index: 24;
   }
-  /* 打孔屏 v11 — Pixel 3a 前置摄像头在左上角 */
+  /* 打孔屏 v13 — Pixel 3a 前置摄像头在左上角 */
   .app::after {
     content:'';
     position: absolute;
@@ -1771,34 +1791,34 @@ body.zen-mode.numeric-mode .numeric-digits { font-size: clamp(3.4rem, 18vw, 4.8r
     left: 22px;
     width: 13px; height: 13px;
     border-radius: 50%;
-    background: radial-gradient(circle at 38% 36%, oklch(2.5% 0.004 250) 0%, oklch(0.6% 0 0) 55%, oklch(1.2% 0 0) 100%);
-    border: 1px solid oklch(100% 0 0 / 0.025);
+    background: radial-gradient(circle at 38% 36%, oklch(2% 0.003 250) 0%, oklch(0.5% 0 0) 55%, oklch(1% 0 0) 100%);
+    border: 1px solid oklch(100% 0 0 / 0.02);
     z-index: 25;
     pointer-events: none;
-    box-shadow: inset 0 0 3px oklch(0% 0 0 / 0.85), 0 0 1.5px oklch(100% 0 0 / 0.03);
+    box-shadow: inset 0 0 3px oklch(0% 0 0 / 0.85), 0 0 1.5px oklch(100% 0 0 / 0.025);
   }
-  /* v11: 屏幕反射层 */
+  /* v13: 屏幕反射层 */
   .app > .screen-reflection {
     display: block;
     position: absolute;
     top: 0; right: 0;
     width: 45%;
     height: 100%;
-    background: linear-gradient(195deg, oklch(100% 0 0 / 0.03) 0%, transparent 50%);
+    background: linear-gradient(195deg, oklch(100% 0 0 / 0.025) 0%, transparent 50%);
     pointer-events: none;
     z-index: 23;
     border-radius: 0 42px 42px 0;
   }
-  /* v11: 右侧按键（音量/电源） */
+  /* v13: 右侧按键（音量/电源） */
   .app .btn-power,
   .app .btn-vol {
     display: block;
     position: absolute;
     width: 3px;
     border-radius: 2px;
-    background: oklch(1.8% 0.006 260 / 0.7);
+    background: oklch(1.5% 0.005 260 / 0.65);
     z-index: -1;
-    box-shadow: 0 0 4px oklch(0% 0 0 / 0.4), inset 0 0.5px 0 oklch(100% 0 0 / 0.04);
+    box-shadow: 0 0 4px oklch(0% 0 0 / 0.35), inset 0 0.5px 0 oklch(100% 0 0 / 0.035);
   }
   .app .btn-vol {
     top: 120px; right: -3px;
@@ -1812,37 +1832,37 @@ body.zen-mode.numeric-mode .numeric-digits { font-size: clamp(3.4rem, 18vw, 4.8r
     width: 3px;
     height: 38px;
     border-radius: 2px;
-    background: oklch(1.8% 0.006 260 / 0.7);
-    box-shadow: 0 0 4px oklch(0% 0 0 / 0.4), inset 0 0.5px 0 oklch(100% 0 0 / 0.04);
+    background: oklch(1.5% 0.005 260 / 0.65);
+    box-shadow: 0 0 4px oklch(0% 0 0 / 0.35), inset 0 0.5px 0 oklch(100% 0 0 / 0.035);
   }
   .app .btn-power {
     top: 210px; right: -3px;
     height: 72px;
   }
-  /* v11: 左侧 SIM 卡槽 */
+  /* v13: 左侧 SIM 卡槽 */
   .app .sim-tray {
     display: block;
     position: absolute;
     top: 100px; left: -2px;
     width: 2px; height: 30px;
     border-radius: 1.5px;
-    background: oklch(1.5% 0.005 260 / 0.6);
+    background: oklch(1.2% 0.004 260 / 0.55);
     z-index: -1;
-    box-shadow: 0 0 3px oklch(0% 0 0 / 0.3);
+    box-shadow: 0 0 3px oklch(0% 0 0 / 0.25);
   }
   .app:hover {
     transform: rotateX(0deg) scale(0.96);
     box-shadow:
-      0 0 0 1px oklch(0% 0 0 / 0.5),
-      0 30px 105px oklch(0% 0 0 / 0.78),
-      0 0 150px oklch(from var(--accent) l c h / 0.016),
-      inset 0 0.8px 0 oklch(100% 0 0 / 0.06),
-      inset 0 -0.8px 0 oklch(0% 0 0 / 0.35),
-      0 0 80px oklch(from var(--accent) 55% 0.04 h / 0.018);
+      0 0 0 1px oklch(0% 0 0 / 0.45),
+      0 30px 105px oklch(0% 0 0 / 0.72),
+      0 0 150px oklch(from var(--accent) l c h / 0.012),
+      inset 0 0.8px 0 oklch(100% 0 0 / 0.05),
+      inset 0 -0.8px 0 oklch(0% 0 0 / 0.3),
+      0 0 80px oklch(from var(--accent) 55% 0.03 h / 0.014);
   }
   .face-dots { display: flex; }
 
-  /* 横屏摆件预览 v11 */
+  /* 横屏摆件预览 v13 */
   body.land-mode .app {
     width: min(860px, 92vw, (100vh - 96px) * 807 / 393);
     height: auto;
@@ -1932,13 +1952,19 @@ body.battery-saver .glass-card {
   -webkit-backdrop-filter: blur(8px);
 }
 
-/* ── v12: 季节色系（CSS类由 JS 注入） ── */
-body.season-spring { --season-hue-shift: 10; --season-sat-scale: 1.1; }
-body.season-summer { --season-hue-shift: -5; --season-sat-scale: 1.2; }
-body.season-autumn { --season-hue-shift: 25; --season-sat-scale: 1.3; }
-body.season-winter { --season-hue-shift: -15; --season-sat-scale: 0.8; }
+/* ── v13: 季节色系（禅意自然色调 · 低饱和度微调） ── */
+body.season-spring { --season-hue-shift: 8; --season-sat-scale: 1.05; }
+body.season-summer { --season-hue-shift: -3; --season-sat-scale: 1.1; }
+body.season-autumn { --season-hue-shift: 18; --season-sat-scale: 1.15; }
+body.season-winter { --season-hue-shift: -12; --season-sat-scale: 0.75; }
 body[class*="season-"] .bg-vignette {
-  background: radial-gradient(ellipse 78% 78% at 50% 45%, transparent 30%, oklch(0% 0 0 / calc(0.55 * var(--season-sat-scale, 1))) 100%);
+  background: radial-gradient(ellipse 80% 80% at 50% 45%, transparent 30%, oklch(0% 0 0 / calc(0.48 * var(--season-sat-scale, 1))) 100%);
+}
+body[class*="season-"] .bg-sand-ripple {
+  opacity: calc(0.03 * var(--season-sat-scale, 1));
+}
+body[class*="season-"] .bg-flow-light {
+  opacity: calc(0.04 * var(--season-sat-scale, 1));
 }
 
 /* ── 隐藏工具 ── */
@@ -1948,8 +1974,10 @@ body[class*="season-"] .bg-vignette {
 </head>
 <body>
 
-<!-- 背景系统 v11 -->
+<!-- 背景系统 v13 -->
 <div class="bg-base"></div>
+<canvas class="bg-sand-ripple" id="sandRippleCanvas"></canvas>
+<canvas class="bg-flow-light" id="flowLightCanvas"></canvas>
 <div class="bg-mood" id="bgMood"></div>
 <canvas class="bg-horizon-canvas" id="horizonCanvas"></canvas>
 <canvas class="bg-nebula" id="nebulaCanvas"></canvas>
@@ -2092,6 +2120,7 @@ body[class*="season-"] .bg-vignette {
         <div class="wx-card glass-card highlight" id="cardWeather">
           <div class="glass-iris"></div>
           <div class="glass-inner"></div>
+          <div class="glass-vein"></div>
           <div class="glass-noise"></div>
           <div class="wx-top">
             <span class="wx-icon" id="weatherIcon">⛅</span>
@@ -2126,6 +2155,7 @@ body[class*="season-"] .bg-vignette {
         <div class="msg-panel glass-card" id="msgPanel">
           <div class="glass-iris"></div>
           <div class="glass-inner"></div>
+          <div class="glass-vein"></div>
           <div class="glass-noise"></div>
           <div class="msg-head">
             <span class="msg-title">消息</span>
@@ -2291,9 +2321,9 @@ body[class*="season-"] .bg-vignette {
 
 <script>
 /* ══════════════════════════════════════════════════════
-活 · Clock  —  核心脚本 v12.0 "Aurora Weave"
-Landscape Ornament · Message Hub · News Digest · Liquid Glass 8.0 · Aurora Weave · Bio-Rhythmic · Desk Jellyfish
-Comfort-First · OLED Perfection · Ambient 2.0 · Depth Glass · Solar Wind
+活 · Clock  —  核心脚本 v13.0 "Zen Garden"
+Landscape Ornament · Message Hub · News Digest · Liquid Glass 9.0 · Sand Ripple · Flow Light · Desk Scene 3.0
+Comfort-First · OLED Perfection · Ambient 3.0 · Zen Corridor · Mineral Vein · Ripple Field
 ══════════════════════════════════════════════════════ */
 (() => {
   'use strict';
@@ -2487,10 +2517,19 @@ Comfort-First · OLED Perfection · Ambient 2.0 · Depth Glass · Solar Wind
     focusToday: $('focusToday'), focusWeek: $('focusWeek'), focusStreak: $('focusStreak'),
     weekHeatmap: $('weekHeatmap'),
     faceDots: $('faceDots'),
-    bgNebula: $('nebulaCanvas'), bgAurora: $('auroraCanvas'),
-    bgPulse: $('bgPulse'), bgMood: $('bgMood'),
+    // v13: Zen Garden background canvases
+    sandRippleCanvas: $('sandRippleCanvas'),
+    flowLightCanvas: $('flowLightCanvas'),
+    horizonCanvas: $('horizonCanvas'),
+    nebulaCanvas: $('nebulaCanvas'),
+    auroraCanvas: $('auroraCanvas'),
+    coronaCanvas: $('coronaCanvas'),
+    neuralAuroraCanvas: $('neuralAuroraCanvas'),
     weatherParticles: $('weatherParticles'),
+    bgPulse: $('bgPulse'),
+    bgMood: $('bgMood'),
   };
+  /* ── 空引用安全网 ── */
 
   /* ══════════════════════════════════════
      工具函数
@@ -2524,8 +2563,8 @@ Comfort-First · OLED Perfection · Ambient 2.0 · Depth Glass · Solar Wind
   }
 
   /* ══════════════════════════════════════
-     Pixel Wander OLED Care 2.0 — 正弦漂移 + 内容感知
-     用连续正弦曲线替代随机跳变，漂移更柔和、更不易察觉
+     Pixel Wander OLED Care 3.0 — 三重李萨如 + 呼吸调制
+     禅意漂移：更连续、更柔和、整点前后微妙加速
      ══════════════════════════════════════ */
   let wanderTimer = null;
   let wanderT0 = Date.now();
@@ -2539,16 +2578,28 @@ Comfort-First · OLED Perfection · Ambient 2.0 · Depth Glass · Solar Wind
     const wander = () => {
       if (!state.pixelWander) return;
       const elapsed = (Date.now() - wanderT0) / 1000;
-      /* 双轴正弦 + 次谐波叠加，形成李萨如风格柔和漂移 */
-      const x = (Math.sin(elapsed * 0.06) * 1.2 + Math.sin(elapsed * 0.041 + 0.7) * 0.5).toFixed(1);
-      const y = (Math.sin(elapsed * 0.05 + 1.2) * 1.0 + Math.cos(elapsed * 0.035) * 0.4).toFixed(1);
+      /* v13: 三重李萨如 + 呼吸调制振幅，主轴 + 副轴 + 微抖动 */
+      const breathAmp = 0.88 + 0.12 * Math.sin(elapsed * 0.018);
+      const rawX = (
+        Math.sin(elapsed * 0.06) * 1.2 +
+        Math.sin(elapsed * 0.041 + 0.7) * 0.5 +
+        Math.sin(elapsed * 0.027 + 2.1) * 0.2
+      );
+      const rawY = (
+        Math.sin(elapsed * 0.05 + 1.2) * 1.0 +
+        Math.cos(elapsed * 0.035) * 0.4 +
+        Math.sin(elapsed * 0.019 + 3.4) * 0.15
+      );
+      const x = (rawX * breathAmp).toFixed(2);
+      const y = (rawY * breathAmp).toFixed(2);
       document.documentElement.style.setProperty('--wander-x', x + 'px');
       document.documentElement.style.setProperty('--wander-y', y + 'px');
-      document.documentElement.style.setProperty('--wander-t', '45s');
-      if (dom.app) dom.app.style.transition = 'transform 45s linear';
+      /* 长过渡让漂移近乎不可察觉 */
+      document.documentElement.style.setProperty('--wander-t', '52s');
+      if (dom.app) dom.app.style.transition = 'transform 52s linear';
     };
     wander();
-    wanderTimer = setInterval(wander, 50000);
+    wanderTimer = setInterval(wander, 52000);
   }
 
   /* ══════════════════════════════════════
@@ -2757,7 +2808,7 @@ function oklchToRgb(L, C, H) {
 }
 
   /* ══════════════════════════════════════
-     Seasonal 季节色系 v12
+     Seasonal 季节色系 v13
      ══════════════════════════════════════ */
   function applySeason() {
     const m = new Date().getMonth() + 1;
@@ -3275,6 +3326,129 @@ function oklchToRgb(L, C, H) {
       document.documentElement.style.setProperty('--horizon-opacity', String(opacity > 0.02 ? 1 : 0));
       document.documentElement.style.setProperty('--horizon-y', (yPct * 100).toFixed(1) + '%');
 
+      requestAnimationFrame(() => this.loop());
+    },
+  };
+
+  /* ══════════════════════════════════════
+     v13: Sand Ripple Zen — 沙纹涟漪光场
+     模拟枯山水沙纹 · 同心圆波动 · 极低频率 · 养眼养心
+     ══════════════════════════════════════ */
+  const sandRipple = {
+    canvas: null, ctx: null, w: 0, h: 0, lastFrame: 0,
+    ripples: [], t: 0,
+    init() {
+      this.canvas = dom.sandRippleCanvas;
+      if (!this.canvas) return;
+      this.ctx = this.canvas.getContext('2d');
+      this.resize();
+      this.spawnRipple();
+      this.loop();
+      window.addEventListener('resize', () => this.resize());
+    },
+    resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      this.w = window.innerWidth; this.h = window.innerHeight;
+      this.canvas.width = this.w * dpr; this.canvas.height = this.h * dpr;
+      this.canvas.style.width = this.w + 'px'; this.canvas.style.height = this.h + 'px';
+      this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    },
+    spawnRipple() {
+      this.ripples.push({
+        x: Math.random() * this.w,
+        y: this.h * (0.4 + Math.random() * 0.3),
+        r: 0, maxR: 60 + Math.random() * 120,
+        speed: 0.15 + Math.random() * 0.2,
+        opacity: 0.012 + Math.random() * 0.015,
+        hue: 240 + Math.random() * 30,
+      });
+    },
+    loop() {
+      const now = performance.now();
+      if (now - this.lastFrame < 50) { requestAnimationFrame(() => this.loop()); return; }
+      this.lastFrame = now;
+      this.t += 0.016;
+      const ctx = this.ctx, w = this.w, h = this.h;
+      ctx.clearRect(0, 0, w, h);
+
+      /* 缓慢漂移的沙纹同心圆 */
+      if (this.ripples.length < 3 && Math.random() < 0.008) this.spawnRipple();
+      for (let i = this.ripples.length - 1; i >= 0; i--) {
+        const rp = this.ripples[i];
+        rp.r += rp.speed;
+        if (rp.r > rp.maxR) { this.ripples.splice(i, 1); continue; }
+        const alpha = rp.opacity * (1 - rp.r / rp.maxR);
+        ctx.beginPath();
+        ctx.arc(rp.x, rp.y, rp.r, 0, Math.PI * 2);
+        ctx.strokeStyle = `oklch(55% 0.03 ${rp.hue} / ${alpha})`;
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+      }
+      requestAnimationFrame(() => this.loop());
+    },
+  };
+
+  /* ══════════════════════════════════════
+     v13: Flow Light River — 流动光河
+     沿固定方向缓慢流动的光带 · 如同砂纹中的光线流动
+     ══════════════════════════════════════ */
+  const flowLight = {
+    canvas: null, ctx: null, w: 0, h: 0, lastFrame: 0,
+    particles: [], t: 0,
+    init() {
+      this.canvas = dom.flowLightCanvas;
+      if (!this.canvas) return;
+      this.ctx = this.canvas.getContext('2d');
+      this.resize();
+      for (let i = 0; i < 5; i++) this.spawnParticle();
+      this.loop();
+      window.addEventListener('resize', () => this.resize());
+    },
+    resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      this.w = window.innerWidth; this.h = window.innerHeight;
+      this.canvas.width = this.w * dpr; this.canvas.height = this.h * dpr;
+      this.canvas.style.width = this.w + 'px'; this.canvas.style.height = this.h + 'px';
+      this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    },
+    spawnParticle() {
+      this.particles.push({
+        x: Math.random() * this.w,
+        y: this.h * (0.3 + Math.random() * 0.5),
+        vx: 0.08 + Math.random() * 0.12,
+        len: 40 + Math.random() * 80,
+        opacity: 0.015 + Math.random() * 0.02,
+        hue: 240 + Math.random() * 40,
+        life: 0, maxLife: 200 + Math.random() * 300,
+      });
+    },
+    loop() {
+      const now = performance.now();
+      if (now - this.lastFrame < 50) { requestAnimationFrame(() => this.loop()); return; }
+      this.lastFrame = now;
+      this.t += 0.016;
+      const ctx = this.ctx, w = this.w, h = this.h;
+      ctx.clearRect(0, 0, w, h);
+
+      if (this.particles.length < 5 && Math.random() < 0.02) this.spawnParticle();
+      for (let i = this.particles.length - 1; i >= 0; i--) {
+        const p = this.particles[i];
+        p.x += p.vx + Math.sin(this.t * 0.3 + p.y * 0.01) * 0.02;
+        p.life++;
+        if (p.life > p.maxLife || p.x > w + p.len) { this.particles.splice(i, 1); continue; }
+        const lifeFade = Math.sin((p.life / p.maxLife) * Math.PI);
+        const alpha = p.opacity * lifeFade;
+        const grd = ctx.createLinearGradient(p.x - p.len, p.y, p.x, p.y);
+        grd.addColorStop(0, `oklch(60% 0.04 ${p.hue} / 0)`);
+        grd.addColorStop(0.5, `oklch(60% 0.04 ${p.hue} / ${alpha})`);
+        grd.addColorStop(1, `oklch(60% 0.04 ${p.hue} / 0)`);
+        ctx.strokeStyle = grd;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(p.x - p.len, p.y);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+      }
       requestAnimationFrame(() => this.loop());
     },
   };
@@ -4635,6 +4809,8 @@ function oklchToRgb(L, C, H) {
     corona.init();
     neuralAurora.init();
     horizon.init();
+    sandRipple.init();
+    flowLight.init();
     startPixelWander();
 
     mqLandscape.addEventListener('change', applyOrientation);
@@ -4675,7 +4851,7 @@ function oklchToRgb(L, C, H) {
     registerSW();
     requestAnimationFrame(mainLoop);
 
-    setTimeout(function() { toast('长按进入禅模式 | 双击专注'); }, 1500);
+    setTimeout(function() { toast('长按进入禅模式 | 双击专注 · 沙纹养心'); }, 1500);
   }
 
   if (document.readyState === 'loading') {
